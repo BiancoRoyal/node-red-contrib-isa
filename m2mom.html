@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    RED.nodes.registerType('m2mom',{
+        category: 'isa',
+        color: '#baacc4',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "file.png",
+        label: function() {
+            return this.name||"M2MOM";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="m2mom">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="m2mom">
+    <p>A simple node that work as wrapper for M2MOM</p>
+</script>

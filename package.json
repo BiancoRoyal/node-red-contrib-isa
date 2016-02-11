@@ -1,0 +1,28 @@
+ {
+	"name": "node-red-contrib-isa",
+	"version": "0.1.0",
+	"description": "A Node-RED node to build ISA-95 and ISA-88 models.",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/biancode/node-red-contrib-isa.git"
+	},
+	"keywords": [ "node-red", "ISA-95", "ISA-88", "ISA" ],
+	"author": {
+		"name": "Klaus Landsdorf",
+		"email" : "klaus.landsdorf@bianco-royal.de"
+	},
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/mikakaraila/node-red-contrib-isa/issues"
+	},
+	"node-red": {
+		"nodes": {
+			"ISA95EquipmentType": "isa95equipment.js",
+			"ISA95PhysicalAssetType": "isa95equipment.js",
+			"MOM2M": "mom2m.js",
+			"M2MOM": "m2mom.js"
+		}
+	},
+	"dependencies": {
+	}
+}

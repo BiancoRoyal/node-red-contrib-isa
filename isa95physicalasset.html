@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    RED.nodes.registerType('isa95physicalasset',{
+        category: 'isa',
+        color: '#a6abaf',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "file.png",
+        label: function() {
+            return this.name||"ISA95PhysicalAssetType";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="isa95physicalasset">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="isa95physicalasset">
+    <p>A simple node that converts to an ISA-95 Physical Asset Type Model</p>
+</script>

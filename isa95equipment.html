@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    RED.nodes.registerType('isa95equipment',{
+        category: 'isa',
+        color: '#a6abaf',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "file.png",
+        label: function() {
+            return this.name||"ISA95EquipmentType";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="isa95equipment">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="isa95equipment">
+    <p>A simple node that converts to an ISA-95 EquipmentType Model</p>
+</script>
