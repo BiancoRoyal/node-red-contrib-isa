@@ -35,7 +35,13 @@ module.exports = function(RED) {
             if ((typeof data === "object") && (!Buffer.isBuffer(data))) {
                 data = JSON.stringify(data);
             }
-            msg.payload = data
+
+            var newMsg = { payload: { 'm2m': 'M2M Node action', 'data': data } };
+
+            var newMsgLength = { payload: data.length };
+
+            msg = [newMsg, newMsgLength];
+
             node.send(msg);
         });
     }

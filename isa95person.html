@@ -26,7 +26,7 @@ SOFTWARE.
 -->
 
 <script type="text/javascript">
-    RED.nodes.registerType('physicalasset',{
+    RED.nodes.registerType('person',{
         category: 'isa',
         color: '#ffbe3c',
         defaults: {
@@ -37,12 +37,12 @@ SOFTWARE.
         outputs:1,
         icon: "isa95-icon.png",
         label: function() {
-            return this.name||"ISA-95 PhysicalAssetType";
+            return this.name||"ISA-95 PersonType";
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="physicalasset">
+<script type="text/x-red" data-template-name="person">
      <div class="form-row">
         <label for="node-input-action"><i class="fa fa-tasks"></i> Action</label>
         <select type="text" id="node-input-action" style="width:72%;">
@@ -56,7 +56,7 @@ SOFTWARE.
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="physicalasset">
-    <p>ISA-95 PhysicalAssetType Model</p>
+<script type="text/x-red" data-help-name="person">
+    <p>ISA-95 PersonType Model</p>
     <p>Action is default or extended.</p>
 </script>

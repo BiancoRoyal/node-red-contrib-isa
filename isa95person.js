@@ -26,46 +26,45 @@
 
  **/
 
-module.exports = function (RED) {
-    function ISA95EquipmentTypeNode(config) {
+module.exports = function(RED) {
+    function ISA95PersonTypeNode(config) {
 
         RED.nodes.createNode(this, config);
         this.action = config.action;
 
         var node = this;
         this.on('input', function (msg) {
-            console.log("ISA95EquipmentTypeNode Action: " + node.action);
+            console.log("ISA95PersonTypeNode Action: " + node.action);
 
             var data = msg.payload;
-            console.log("ISA95EquipmentTypeNode Type:" + typeof data);
+            console.log("ISA95PersonTypeNode Type:" + typeof data);
 
             switch (node.action) {
                 case "default":
                     if (typeof data === "string") {
-                        data = { 'version': 'EquipmentType', 'data': data };
+                        data = { 'version': 'PersonType', 'data': data };
                     }
                     else
                     {
-                        data = { 'info': 'ISA95EquipmentTypeNode unknown data type for default action', 'data': data, 'type': typeof data }
+                        data = { 'info': 'ISA95PersonTypeNode unknown data type for default action', 'data': data, 'type': typeof data }
                     }
                     break;
                 case "extended":
                     if (typeof data === "string") {
-                        data = { 'version': 'EquipmentTypeExtended', 'data': data };
+                        data = { 'version': 'PersonTypeExtended', 'data': data };
                     }
                     else
                     {
-                        data = { 'info': 'ISA95EquipmentTypeNode unknown data type for extended action', 'data': data, 'type': typeof data }
+                        data = { 'info': 'ISA95PersonTypeNode unknown data type for extended action', 'data': data, 'type': typeof data }
                     }
                     break;
                 default:
-                    data = { 'info': 'ISA95EquipmentTypeNode unknown action or data type', 'data': data, 'type': typeof data };
+                    data = { 'info': 'ISA95PersonTypeNode unknown action or data type', 'data': data, 'type': typeof data };
             }
 
             msg.payload = data
             node.send(msg);
         });
     }
-
-    RED.nodes.registerType("equipment", ISA95EquipmentTypeNode);
+    RED.nodes.registerType("person",ISA95PersonTypeNode);
 }

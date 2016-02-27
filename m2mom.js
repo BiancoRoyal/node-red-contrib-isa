@@ -35,7 +35,10 @@ module.exports = function(RED) {
             if ((typeof data === "object") && (!Buffer.isBuffer(data))) {
                 data = JSON.stringify(data);
             }
-            msg.payload = data
+
+            data = { 'm2mom': 'M2MOM Node action', 'data': data };
+
+            msg.payload = data;
             node.send(msg);
         });
     }

@@ -26,28 +26,37 @@ SOFTWARE.
 -->
 
 <script type="text/javascript">
-    RED.nodes.registerType('lower-case',{
+    RED.nodes.registerType('materiallot',{
         category: 'isa',
-        color: '#aeb4ce',
+        color: '#ffbe3c',
         defaults: {
+            action: {value:"default", required:true},
             name: {value:""}
         },
         inputs:1,
         outputs:1,
-        icon: "file.png",
+        icon: "isa95-icon.png",
         label: function() {
-            return this.name||"lower-case";
+            return this.name||"ISA-95 MaterialLotType";
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="lower-case">
+<script type="text/x-red" data-template-name="materiallot">
+     <div class="form-row">
+        <label for="node-input-action"><i class="fa fa-tasks"></i> Action</label>
+        <select type="text" id="node-input-action" style="width:72%;">
+            <option value="default">default</option>
+            <option value="extended">extended</option>
+        </select>
+    </div>
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="lower-case">
-    <p>A simple node that converts the message payloads into all lower-case characters</p>
+<script type="text/x-red" data-help-name="materiallot">
+    <p>ISA-95 MaterialLotType Model</p>
+    <p>Action is default or extended.</p>
 </script>

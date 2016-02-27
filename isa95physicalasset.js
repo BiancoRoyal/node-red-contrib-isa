@@ -27,17 +27,44 @@
  **/
 
 module.exports = function(RED) {
-    function ISA95PhysicalAssetNode(config) {
-        RED.nodes.createNode(this,config);
+    function ISA95PhysicalAssetTypeNode(config) {
+
+        RED.nodes.createNode(this, config);
+        this.action = config.action;
+
         var node = this;
-        this.on('input', function(msg) {
-        	var data = msg.payload;
-            if ((typeof data === "object") && (!Buffer.isBuffer(data))) {
-                data = JSON.stringify(data);
+        this.on('input', function (msg) {
+            console.log("ISA95PhysicalAssetTypeNode Action: " + node.action);
+
+            var data = msg.payload;
+            console.log("ISA95PhysicalAssetTypeNode Type:" + typeof data);
+
+            switch (node.action) {
+                case "default":
+                    if (typeof data === "string") {
+                        data = { 'version': 'PhysicalAssetType', 'data': data };
+                    }
+                    else
+                    {
+                        data = { 'info': 'ISA95PhysicalAssetTypeNode unknown data type for default action', 'data': data, 'type': typeof data }
+                    }
+                    break;
+                case "extended":
+                    if (typeof data === "string") {
+                        data = { 'version': 'PhysicalAssetTypeExtended', 'data': data };
+                    }
+                    else
+                    {
+                        data = { 'info': 'ISA95PhysicalAssetTypeNode unknown data type for extended action', 'data': data, 'type': typeof data }
+                    }
+                    break;
+                default:
+                    data = { 'info': 'ISA95PhysicalAssetTypeNode unknown action or data type', 'data': data, 'type': typeof data };
             }
+
             msg.payload = data
             node.send(msg);
         });
     }
-    RED.nodes.registerType("isa95physicalasset",ISA95PhysicalAssetNode);
+    RED.nodes.registerType("physicalasset",ISA95PhysicalAssetTypeNode);
 }

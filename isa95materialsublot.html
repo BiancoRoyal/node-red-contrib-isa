@@ -26,28 +26,37 @@ SOFTWARE.
 -->
 
 <script type="text/javascript">
-    RED.nodes.registerType('stringify',{
+    RED.nodes.registerType('materialsublot',{
         category: 'isa',
-        color: '#aeb4ce',
+        color: '#ffbe3c',
         defaults: {
+            action: {value:"default", required:true},
             name: {value:""}
         },
         inputs:1,
         outputs:1,
-        icon: "file.png",
+        icon: "isa95-icon.png",
         label: function() {
-            return this.name||"stringify";
+            return this.name||"ISA-95 MaterialSublotType";
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="stringify">
+<script type="text/x-red" data-template-name="materialsublot">
+     <div class="form-row">
+        <label for="node-input-action"><i class="fa fa-tasks"></i> Action</label>
+        <select type="text" id="node-input-action" style="width:72%;">
+            <option value="default">default</option>
+            <option value="extended">extended</option>
+        </select>
+    </div>
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="stringify">
-    <p>A simple node that converts the message payloads JSON into String</p>
+<script type="text/x-red" data-help-name="materialsublot">
+    <p>ISA-95 MaterialLotType Model</p>
+    <p>Action is default or extended.</p>
 </script>
