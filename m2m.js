@@ -46,4 +46,4 @@ module.exports = function(RED) {
         });
     }
     RED.nodes.registerType("m2m",M2MNode);
-}
+};

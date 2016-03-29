@@ -38,9 +38,9 @@ module.exports = function(RED) {
 
             data = { 'mom2m': 'MOM2M Node action', 'data': data };
 
-            msg.payload = data
+            msg.payload = data;
             node.send(msg);
         });
     }
     RED.nodes.registerType("mom2m",MOM2MNode);
-}
+};

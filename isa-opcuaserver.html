@@ -26,7 +26,7 @@ SOFTWARE.
 -->
 
 
-<script type="text/x-red" data-template-name="ISA95OpcUaServer">
+<script type="text/x-red" data-template-name="ISA95-OPCUA-Server">
     <div class="form-row">
         <label for="node-input-port"><i class="icon-tasks"></i> Port</label>
         <input type="text" id="node-input-port" placeholder="53880">
@@ -37,14 +37,14 @@ SOFTWARE.
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="ISA95OpcUaServer">
+<script type="text/x-red" data-help-name="ISA95-OPCUA-Server">
     <p>Creates ISA-95 according OPC UA server with own variables to endpoint: opc.tcp://host:port/UA/EndpointName.</p>
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('ISA95OpcUaServer',{
+    RED.nodes.registerType('ISA95-OPCUA-Server',{
         category: 'isa',
-        color:"#4591cf",
+        color:"#FF7030",
         defaults: {
             port: {value:"53880",required:true},
             name: {value:""}

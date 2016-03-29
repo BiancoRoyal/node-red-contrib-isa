@@ -62,9 +62,9 @@ module.exports = function(RED) {
                     data = { 'info': 'ISA95PersonTypeNode unknown action or data type', 'data': data, 'type': typeof data };
             }
 
-            msg.payload = data
+            msg.payload = data;
             node.send(msg);
         });
     }
     RED.nodes.registerType("person",ISA95PersonTypeNode);
-}
+};

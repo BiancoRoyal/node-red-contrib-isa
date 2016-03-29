@@ -27,6 +27,8 @@
  **/
 
 module.exports = function (RED) {
+    var parser = require('xml2json');
+
     function ISA95B2MMLHelperNode(config) {
 
         RED.nodes.createNode(this, config);
