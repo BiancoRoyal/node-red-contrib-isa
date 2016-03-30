@@ -54,6 +54,8 @@ module.exports = function (RED) {
         var initialized = false;
         var server = null;
         var dynamicNodes = [];
+        var serverAddressSpace;
+
 
         function verbose_warn(logMessage) {
             if (RED.settings.verbose) {
@@ -67,7 +69,7 @@ module.exports = function (RED) {
             }
         }
 
-        node.status({fill: "red", shape: "ring", text: "Not running"});
+        set_server_notrunning();
 
         var xmlFiles = [path.join(__dirname, 'public/vendor/opc-foundation/xml/Opc.Ua.NodeSet2.xml'),
             path.join(__dirname, 'public/vendor/opc-foundation/xml/Opc.ISA95.NodeSet2.xml')];
@@ -85,87 +87,150 @@ module.exports = function (RED) {
             server.initialize(post_initialize);
         }
 
-        function build_enterprise_structure(addressSpace, namespace, id) {
+        function build_enterprise_structure(namespace, id) {
 
-            var enterprise = addressSpace.addObject({
+            // ### Level 4 ###
+            var enterprise = serverAddressSpace.addObject({
                 organizedBy: enterprises,
                 nodeId: "ns=" + namespace + ";s=Enterprise" + id,
                 browseName: "Enterprise" + id
             });
 
-            var sites = addressSpace.addObject({
+            var sites = serverAddressSpace.addObject({
                 organizedBy: enterprise,
                 nodeId: "ns=" + namespace + ";s=Sites",
                 browseName: "Sites"
             });
 
-            var site = addressSpace.addObject({
+            var site = serverAddressSpace.addObject({
                 organizedBy: sites,
                 nodeId: "ns=" + namespace + ";s=Site" + id,
                 browseName: "Site" + id
             });
 
-            var areas = addressSpace.addObject({
+            var areas = serverAddressSpace.addObject({
                 organizedBy: site,
                 nodeId: "ns=" + namespace + ";s=Areas",
                 browseName: "Areas"
             });
 
-            var area = addressSpace.addObject({
+            // ### Level 3 ###
+            var area = serverAddressSpace.addObject({
                 organizedBy: areas,
                 nodeId: "ns=" + namespace + ";s=Area" + id,
                 browseName: "Area" + id
             });
 
-            var processcells = addressSpace.addObject({
+            var workcenters = serverAddressSpace.addObject({
                 organizedBy: area,
+                nodeId: "ns=" + namespace + ";s=WorkCenters",
+                browseName: "WorkCenters"
+            });
+
+            var workcenter = serverAddressSpace.addObject({
+                organizedBy: workcenters,
+                nodeId: "ns=" + namespace + ";s=WorkCenter" + id,
+                browseName: "WorkCenter" + id
+            });
+
+            // ### Storage ###
+            var storageZones = serverAddressSpace.addObject({
+                organizedBy: workcenter,
+                nodeId: "ns=" + namespace + ";s=StorageZones",
+                browseName: "StorageZones"
+            });
+
+            var storageZone = serverAddressSpace.addObject({
+                organizedBy: storageZones,
+                nodeId: "ns=" + namespace + ";s=StorageZone" + id,
+                browseName: "StorageZone" + id
+            });
+
+            var storageUnits = serverAddressSpace.addObject({
+                organizedBy: storageZone,
+                nodeId: "ns=" + namespace + ";s=StorageUnits",
+                browseName: "StorageUnits"
+            });
+
+            serverAddressSpace.addObject({
+                organizedBy: storageUnits,
+                nodeId: "ns=" + namespace + ";s=StorageUnit" + id,
+                browseName: "StorageUnit" + id
+            });
+
+            var workunits = serverAddressSpace.addObject({
+                organizedBy: workcenter,
+                nodeId: "ns=" + namespace + ";s=WorkUnits",
+                browseName: "WorkUnits"
+            });
+
+            var workunit = serverAddressSpace.addObject({
+                organizedBy: workunits,
+                nodeId: "ns=" + namespace + ";s=WorkUnit" + id,
+                browseName: "WorkUnit" + id
+            });
+
+            var processcells = serverAddressSpace.addObject({
+                organizedBy: workunit,
                 nodeId: "ns=" + namespace + ";s=ProcessCells",
                 browseName: "ProcessCells"
             });
 
-            var processcell = addressSpace.addObject({
+            var processcell = serverAddressSpace.addObject({
                 organizedBy: processcells,
                 nodeId: "ns=" + namespace + ";s=ProcessCell" + id,
                 browseName: "ProcessCell" + id
             });
 
-            addressSpace.addObject({
+            serverAddressSpace.addObject({
                 organizedBy: processcell,
                 nodeId: "ns=" + namespace + ";s=Storage",
                 browseName: "Storage"
             });
 
-            var units = addressSpace.addObject({
+            var units = serverAddressSpace.addObject({
                 organizedBy: processcell,
                 nodeId: "ns=" + namespace + ";s=Units",
                 browseName: "Units"
             });
 
-            var unit = addressSpace.addObject({
+            var unit = serverAddressSpace.addObject({
                 organizedBy: units,
                 nodeId: "ns=" + namespace + ";s=Unit" + id,
                 browseName: "Unit" + id
             });
 
-            var lines = addressSpace.addObject({
+            var lines = serverAddressSpace.addObject({
                 organizedBy: unit,
-                nodeId: "ns=" + namespace + ";s=Lines",
-                browseName: "Lines"
+                nodeId: "ns=" + namespace + ";s=ProductionLines",
+                browseName: "ProductionLines"
             });
 
-            var line = addressSpace.addObject({
+            var line = serverAddressSpace.addObject({
                 organizedBy: lines,
-                nodeId: "ns=" + namespace + ";s=Line" + id,
-                browseName: "Line" + id
+                nodeId: "ns=" + namespace + ";s=ProductionLine" + id,
+                browseName: "ProductionLine" + id
             });
 
-            var productionunits = addressSpace.addObject({
+            var workcells = serverAddressSpace.addObject({
                 organizedBy: line,
+                nodeId: "ns=" + namespace + ";s=WorkCells",
+                browseName: "WorkCells"
+            });
+
+            var workcell = serverAddressSpace.addObject({
+                organizedBy: workcells,
+                nodeId: "ns=" + namespace + ";s=WorkCell" + id,
+                browseName: "WorkCell" + id
+            });
+
+            var productionunits = serverAddressSpace.addObject({
+                organizedBy: workcell,
                 nodeId: "ns=" + namespace + ";s=ProductionUnits",
                 browseName: "ProductionUnits"
             });
 
-            addressSpace.addObject({
+            serverAddressSpace.addObject({
                 organizedBy: productionunits,
                 nodeId: "ns=" + namespace + ";s=ProductionUnit" + id,
                 browseName: "ProductionUnit" + id
@@ -173,55 +238,55 @@ module.exports = function (RED) {
 
 
             // business
-            addressSpace.addObject({
+            serverAddressSpace.addObject({
                 organizedBy: processcell,
                 nodeId: "ns=" + namespace + ";s=Orders",
                 browseName: "Orders"
             });
 
-            addressSpace.addObject({
+            serverAddressSpace.addObject({
                 organizedBy: enterprise,
-                nodeId: "ns=" + namespace + ";s=MasterRecipe",
+                nodeId: "ns=" + namespace + ";s=MasterRecipes",
                 browseName: "MasterRecipe"
             });
 
-            addressSpace.addObject({
+            serverAddressSpace.addObject({
                 organizedBy: enterprise,
-                nodeId: "ns=" + namespace + ";s=Recipe",
+                nodeId: "ns=" + namespace + ";s=Recipes",
                 browseName: "Recipe"
             });
 
-            addressSpace.addObject({
+            serverAddressSpace.addObject({
                 organizedBy: processcell,
-                nodeId: "ns=" + namespace + ";s=ControlRecipe",
+                nodeId: "ns=" + namespace + ";s=ControlRecipes",
                 browseName: "ControlRecipe"
             });
 
-            addressSpace.addObject({
+            serverAddressSpace.addObject({
                 organizedBy: enterprise,
                 nodeId: "ns=" + namespace + ";s=Materials",
                 browseName: "Materials"
             });
 
-            addressSpace.addObject({
+            serverAddressSpace.addObject({
                 organizedBy: enterprise,
-                nodeId: "ns=" + namespace + ";s=Materiallots",
+                nodeId: "ns=" + namespace + ";s=MaterialLots",
                 browseName: "Materiallots"
             });
 
-            addressSpace.addObject({
+            serverAddressSpace.addObject({
                 organizedBy: enterprise,
-                nodeId: "ns=" + namespace + ";s=Materialsublots",
+                nodeId: "ns=" + namespace + ";s=MaterialSublots",
                 browseName: "Materialsublots"
             });
         }
 
-        function construct_my_address_space(addressSpace) {
+        function construct_my_address_space() {
 
             verbose_warn('Server add structure ...');
 
-            var objectsOrganizer = addressSpace.findNode("ns=0;i=85");
-            var serverNode = addressSpace.findNode("ns=0;i=2253");
+            var objectsOrganizer = serverAddressSpace.findNode("ns=0;i=85");
+            var serverNode = serverAddressSpace.findNode("ns=0;i=2253");
             var references = objectsOrganizer.findReferences("Organizes", true);
 
             if (findReference(references, serverNode.nodeId)) {
@@ -232,28 +297,28 @@ module.exports = function (RED) {
                 return;
             }
 
-            examples = addressSpace.addObject({
-                organizedBy: addressSpace.rootFolder.objects,
+            examples = serverAddressSpace.addObject({
+                organizedBy: serverAddressSpace.rootFolder.objects,
                 nodeId: "ns=4;s=Examples",
                 browseName: "Examples"
                 // browseName: new qualifiedName.QualifiedName({name: "Examples", namespaceIndex: 4})
             });
 
-            enterprises = addressSpace.addObject({
-                organizedBy: addressSpace.rootFolder.objects,
+            enterprises = serverAddressSpace.addObject({
+                organizedBy: serverAddressSpace.rootFolder.objects,
                 nodeId: "ns=4;s=Enterprises",
                 browseName: "Enterprises"
             });
 
-            build_enterprise_structure(addressSpace, 5, 1);
-            build_enterprise_structure(addressSpace, 6, 2);
+            build_enterprise_structure(5, 1);
+            build_enterprise_structure(6, 2);
 
             // ######################################################################################################
             verbose_warn('Server add MyVariable2 ...');
 
             var variable2 = 10.0;
 
-            addressSpace.addVariable({
+            serverAddressSpace.addVariable({
                 componentOf: examples,
                 nodeId: "ns=4;s=MyVariable2",
                 browseName: "MyVariable2",
@@ -272,7 +337,7 @@ module.exports = function (RED) {
 
             verbose_warn('Server add FreeMemory ...');
 
-            addressSpace.addVariable({
+            serverAddressSpace.addVariable({
                 componentOf: examples,
                 nodeId: "ns=4;s=FreeMemory",
                 browseName: "FreeMemory",
@@ -287,7 +352,7 @@ module.exports = function (RED) {
 
             verbose_warn('Server add Counter ...');
 
-            addressSpace.addVariable({
+            serverAddressSpace.addVariable({
                 componentOf: examples,
                 nodeId: "ns=4;s=Counter",
                 browseName: "Counter",
@@ -300,7 +365,7 @@ module.exports = function (RED) {
                 }
             });
 
-            var method = addressSpace.addMethod(
+            var method = serverAddressSpace.addMethod(
                 examples, {
                     browseName: "Bark",
 
@@ -354,8 +419,14 @@ module.exports = function (RED) {
 
             if (server) {
 
-                var addressSpace = server.engine.addressSpace;
-                construct_my_address_space(addressSpace);
+                serverAddressSpace = server.engine.addressSpace;
+
+                if(!serverAddressSpace) {
+                    verbose_warn("post initialize - AddressSpace not ready to use");
+                    return;
+                }
+
+                construct_my_address_space();
 
                 verbose_warn("Next server start...");
 
@@ -368,14 +439,25 @@ module.exports = function (RED) {
                     var endpointUrl = server.endpoints[0].endpointDescriptions()[0].endpointUrl;
                     verbose_log(" the primary server endpoint url is " + endpointUrl);
                 });
-                node.status({fill: "green", shape: "dot", text: "running"});
+
+                set_server_running();
+
                 initialized = true;
+
                 verbose_warn("server initialized");
             }
             else {
-                node.status({fill: "gray", shape: "dot", text: "not running"});
+                set_server_stoped();
                 node.error("server is not initialized")
             }
+        }
+
+        function set_server_running() {
+            node.status({fill: "green", shape: "dot", text: "running"});
+        }
+
+        function set_server_stoped() {
+            node.status({fill: "gray", shape: "dot", text: "not running"});
         }
 
         function available_memory() {
@@ -384,22 +466,39 @@ module.exports = function (RED) {
 
         initNewServer();
 
-        //######################################################################################
-        node.on("input", function (msg) {
-
-            // verbose_log("input " + msg.payload);
+        function check_server_ready() {
 
             if (!server) {
                 verbose_warn("no Server");
-                return;
             }
 
             if (!initialized) {
                 verbose_warn("Server is not initialized");
+            }
+
+            if(!serverAddressSpace) {
+                verbose_warn("Server has no valid AddressSpace");
+            }
+
+            return (server && initialized);
+        }
+
+        //######################################################################################
+        node.on("input", function (msg) {
+
+            // verbose_log("input " + msg.payload);
+            var payload = msg.payload;
+
+            // verbose_log("check for opc ua command");
+            if (contains_opcua_command(payload)) {
+                verbose_log("has opc ua command");
+                execute_opcua_command(payload);
                 return;
             }
 
-            var payload = msg.payload;
+            if (!check_server_ready()) {
+                return;
+            }
 
             // verbose_log("check for mapping");
             if (contains_mappingType(payload)) {
@@ -413,11 +512,6 @@ module.exports = function (RED) {
                 read_message(payload);
             }
 
-            // verbose_log("check for opc ua command");
-            if (contains_opcua_command(payload)) {
-                verbose_log("has opc ua command");
-                execute_opcua_command(payload);
-            }
 
             node.send(msg);
         });
@@ -450,10 +544,7 @@ module.exports = function (RED) {
 
         function check_mapping(payload) {
 
-            var addressSpace = server.engine.addressSpace;
-
-            if (addressSpace === undefined) {
-                node.error("addressSpace undefinded");
+            if (!check_server_ready()) {
                 return;
             }
 
@@ -464,118 +555,51 @@ module.exports = function (RED) {
 
                     payload.mappings.forEach(function (mapping) {
 
-                        verbose_log("search Node Id " + mapping.structureParentNodeId);
+                            verbose_log("search Node Id " + mapping.structureParentNodeId);
 
-                        var rootFolder = addressSpace.findNode(mapping.structureParentNodeId);
+                            var rootFolder = serverAddressSpace.findNode(mapping.structureParentNodeId);
 
-                        if (!rootFolder) {
-                            verbose_warn("root folder not found structureParentNodeId: " + mapping.structureParentNodeId);
-                            return;
-                        }
+                            if (!rootFolder) {
+                                verbose_warn("root folder not found structureParentNodeId: " + mapping.structureParentNodeId);
+                                return;
+                            }
 
-                        var references = rootFolder.findReferences("Organizes", true);
+                            var references = rootFolder.findReferences("Organizes", true);
 
-                        if (!mapping.structureNodeId) {
-                            verbose_warn("mapping.structureNodeId not valid " + mapping.structureNodeId);
-                            return;
-                        }
+                            if (!mapping.structureNodeId) {
+                                verbose_warn("mapping.structureNodeId not valid " + mapping.structureNodeId);
+                                return;
+                            }
 
-                        if (findReference(references, mapping.structureNodeId)) {
-                            verbose_log(mapping.structureNodeId + " Mapping Reference found in " + mapping.structureParentNodeId);
+                            if (findReference(references, mapping.structureNodeId)) {
+                                verbose_log(mapping.structureNodeId + " Mapping Reference found in " + mapping.structureParentNodeId);
 
-                        }
-                        else {
-                            verbose_warn(mapping.structureNodeId + " Mapping Reference not found in " + mapping.structureParentNodeId);
-
-                            if (rootFolder) {
-
-                                var variableDatatype = opcua.DataType.String;
-                                var initValue = '';
-
-                                verbose_log("structrue Type: " + mapping.typeStructure);
-
-                                switch (mapping.typeStructure) {
-
-                                    case 'Bool':
-                                    case 'Boolean':
-                                        variableDatatype = opcua.DataType.Boolean;
-                                        initValue = false;
-                                        break;
-
-                                    case 'Float':
-                                        variableDatatype = opcua.DataType.Float;
-                                        initValue = 0.0;
-                                        break;
-
-                                    case 'Double':
-                                    case 'Real':
-                                        variableDatatype = opcua.DataType.Double;
-                                        initValue = 0.0;
-                                        break;
-
-                                    case 'UInt16':
-                                        variableDatatype = opcua.DataType.UInt16;
-                                        initValue = 0;
-                                        break;
-
-                                    case 'Int16':
-                                        variableDatatype = opcua.DataType.Int16;
-                                        initValue = 0;
-                                        break;
-
-                                    case 'Int':
-                                    case 'Int32':
-                                    case 'Integer':
-                                        variableDatatype = opcua.DataType.Int32;
-                                        initValue = 0;
-                                        break;
-
-                                    case 'UInt':
-                                    case 'UInt32':
-                                    case 'UInteger':
-                                        variableDatatype = opcua.DataType.UInt32;
-                                        initValue = 0;
-                                        break;
-
-                                    default:
-                                        break;
-
-                                }
-
-                                try {
-                                    verbose_log('datatype ' + variableDatatype + ' value ' + initValue);
-
-                                    verbose_log("mapping.structureNodeId type " + typeof mapping.structureNodeId);
-                                    verbose_log("add Variable to root " + rootFolder.nodeId + ' with NodeId: ' + mapping.structureNodeId + ' browseName: ' + mapping.structureName + ' with datatype ' + variableDatatype.toString() + ' value ' + initValue);
-
-                                    var item = read_mapped_value(mapping.structureNodeId, initValue);
-
-                                    addressSpace.addVariable({
-                                        organizedBy: rootFolder,
-                                        nodeId: mapping.structureNodeId,
-                                        browseName: mapping.structureName,
-                                        dataType: variableDatatype,
-
-                                        value: {
-                                            get: function () {
-                                                return new opcua.Variant({
-                                                    dataType: variableDatatype,
-                                                    value: item.value
-                                                });
-                                            }
-                                        }
-                                    });
-
-                                } catch (err) {
-                                    node.error(err);
-                                }
                             }
                             else {
-                                verbose_warn("Root folder not found to map new Node " + mapping.structureParentNodeId)
-                            }
-                        }
+                                verbose_warn(mapping.structureNodeId + " Mapping Reference not found in " + mapping.structureParentNodeId);
 
-                    });
+                                if (rootFolder) {
+
+                                    switch (mapping.structureType) {
+
+                                        case 'Variable':
+                                            add_opcua_variable(rootFolder, mapping);
+                                            break;
+
+                                        case 'Object':
+                                            add_opcua_object(rootFolder, mapping);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                                else {
+                                    verbose_warn("Root folder not found to map new Node " + mapping.structureParentNodeId)
+                                }
+                            }
+
+                        }
+                    );
                     break;
 
                 case 'write':
@@ -595,6 +619,115 @@ module.exports = function (RED) {
             }
         }
 
+        function add_opcua_variable(rootFolder, mapping) {
+
+            var variableDatatype = opcua.DataType.String;
+            var initValue = '';
+
+            verbose_log("structrue Type: " + mapping.typeStructure);
+
+            switch (mapping.typeStructure) {
+
+                case 'Bool':
+                case 'Boolean':
+                    variableDatatype = opcua.DataType.Boolean;
+                    initValue = false;
+                    break;
+
+                case 'Float':
+                    variableDatatype = opcua.DataType.Float;
+                    initValue = 0.0;
+                    break;
+
+                case 'Double':
+                case 'Real':
+                    variableDatatype = opcua.DataType.Double;
+                    initValue = 0.0;
+                    break;
+
+                case 'UInt16':
+                    variableDatatype = opcua.DataType.UInt16;
+                    initValue = 0;
+                    break;
+
+                case 'Int16':
+                    variableDatatype = opcua.DataType.Int16;
+                    initValue = 0;
+                    break;
+
+                case 'Int':
+                case 'Int32':
+                case 'Integer':
+                    variableDatatype = opcua.DataType.Int32;
+                    initValue = 0;
+                    break;
+
+                case 'UInt':
+                case 'UInt32':
+                case 'UInteger':
+                    variableDatatype = opcua.DataType.UInt32;
+                    initValue = 0;
+                    break;
+
+                default:
+                    break;
+
+            }
+
+            try {
+                verbose_log('datatype ' + variableDatatype + ' value ' + initValue);
+                verbose_log("add Variable to root " + rootFolder.nodeId + ' with NodeId: ' + mapping.structureNodeId + ' browseName: ' + mapping.structureName + ' with datatype ' + variableDatatype.toString() + ' value ' + initValue);
+
+                var item = read_mapped_value(mapping.structureNodeId, initValue);
+
+                serverAddressSpace.addVariable({
+                    organizedBy: rootFolder,
+                    nodeId: mapping.structureNodeId,
+                    browseName: mapping.structureName,
+                    // browseName: new qualifiedName.QualifiedName({name: "Examples", namespaceIndex: 4})
+                    dataType: variableDatatype,
+
+                    value: {
+                        get: function () {
+                            return new opcua.Variant({
+                                dataType: variableDatatype,
+                                value: item.value
+                            });
+                        }
+                    }
+                });
+
+            } catch (err) {
+                node.error(err);
+            }
+        }
+
+        function add_opcua_object(rootFolder, mapping) {
+
+            verbose_log("add dynamic object to OPC UA Server Type: " + mapping.typeStructure + ' NodeId:' + mapping.structureNodeId + ' Name: ' + mapping.structureName);
+            try {
+
+                if (mapping.typeStructure) {
+                    serverAddressSpace.addObject({
+                        organizedBy: rootFolder,
+                        typeDefinition: mapping.typeStructure,
+                        nodeId: mapping.structureNodeId,
+                        browseName: mapping.structureName
+                        // browseName: new qualifiedName.QualifiedName({name: "Examples", namespaceIndex: 4})
+                    });
+                } else {
+                    serverAddressSpace.addObject({
+                        organizedBy: rootFolder,
+                        nodeId: mapping.structureNodeId,
+                        browseName: mapping.structureName
+                        // browseName: new qualifiedName.QualifiedName({name: "Examples", namespaceIndex: 4})
+                    });
+                }
+            } catch (err) {
+                node.error(err + " you need a valid ObjectType from what's in your OPC UA Server defined");
+            }
+        }
+
         function read_mapped_value(nodeId, initValue) {
 
             var filteredNode = dynamicNodes.filter(function (entry) {
@@ -603,7 +736,7 @@ module.exports = function (RED) {
 
             if (filteredNode.length) {
                 var item = filteredNode[0];
-                verbose_log( 'filteredNode length ' + filteredNode.length + " read mapped item " + item);
+                verbose_log('filteredNode length ' + filteredNode.length + " read mapped item " + item);
             }
             else {
                 verbose_log("add mapped item by read " + nodeId);
@@ -622,7 +755,7 @@ module.exports = function (RED) {
 
             if (filteredNode.length) {
                 var item = filteredNode[0];
-                verbose_log( 'filteredNode length ' + filteredNode.length + " write mapped item " + item);
+                verbose_log('filteredNode length ' + filteredNode.length + " write mapped item " + item);
                 item.value = value;
             }
             else {
@@ -630,45 +763,6 @@ module.exports = function (RED) {
                 item = {'nodeId': nodeId, 'value': value};
                 dynamicNodes.add(item);
             }
-        }
-
-        function build_new_variant(mapping) {
-
-            var nValue = new opcua.Variant({dataType: opcua.DataType.Float, value: 0.0});
-
-            switch (mapping.datatype) {
-                case"Float":
-                    nValue = new opcua.Variant({dataType: opcua.DataType.Float, value: parseFloat(mapping.value)});
-                    break;
-                case"Double":
-                    nValue = new opcua.Variant({
-                        dataType: opcua.DataType.Double,
-                        value: parseFloat(mapping.value)
-                    });
-                    break;
-                case"UInt16":
-                    var uint16 = new Uint16Array([mapping.value]);
-                    nValue = new opcua.Variant({dataType: opcua.DataType.UInt16, value: uint16[0]});
-                    break;
-                case"Integer":
-                    nValue = new opcua.Variant({dataType: opcua.DataType.UInt16, value: parseInt(mapping.value)});
-                    break;
-                case"Boolean":
-                    if (mapping.value) {
-                        nValue = new opcua.Variant({dataType: opcua.DataType.Boolean, value: true})
-                    }
-                    else {
-                        nValue = new opcua.Variant({dataType: opcua.DataType.Boolean, value: false})
-                    }
-                    break;
-                case"String":
-                    nValue = new opcua.Variant({dataType: opcua.DataType.String, value: mapping.value});
-                    break;
-                default:
-                    break;
-            }
-
-            return nValue;
         }
 
         function contains_messageType(payload) {
@@ -702,7 +796,6 @@ module.exports = function (RED) {
 
         function execute_opcua_command(payload) {
 
-            var addressSpace = server.engine.addressSpace;
             var name;
 
             verbose_warn("execute OPC UA command ".concat(payload.opcuaCommand));
@@ -710,15 +803,26 @@ module.exports = function (RED) {
             switch (payload.opcuaCommand) {
 
                 case "restartOPCUAServer":
+                case "startOPCUAServer":
                     restart_server();
                     break;
 
+                case "stopOPCUAServer":
+                    stop_server();
+                    break;
+
                 case "addEquipment":
+
+                    if (!check_server_ready()) {
+                        verbose_warn("Server not active for adding ".concat(payload.nodeName));
+                        return;
+                    }
+
                     verbose_warn("adding Node".concat(payload.nodeName));
                     equipmentCounter++;
                     name = payload.nodeName.concat(equipmentCounter);
 
-                    addressSpace.addObject({
+                    serverAddressSpace.addObject({
                         organizedBy: examples,
                         nodeId: "ns=4;s=".concat(name),
                         browseName: name
@@ -726,17 +830,23 @@ module.exports = function (RED) {
                     break;
 
                 case "addPhysicalAsset":
+
+                    if (!check_server_ready()) {
+                        verbose_warn("Server not active for adding ".concat(payload.nodeName));
+                        return;
+                    }
+
                     verbose_warn("adding Node".concat(payload.nodeName));
                     physicalAssetCounter++;
                     name = payload.nodeName.concat(physicalAssetCounter);
 
-                    addressSpace.addObject({
+                    serverAddressSpace.addObject({
                         organizedBy: examples,
                         nodeId: "ns=4;s=".concat(name),
                         browseName: name
                     });
 
-                    addressSpace.addVariable({
+                    serverAddressSpace.addVariable({
                         organizedBy: examples,
                         nodeId: "ns=4;s=".concat(name) + "Variable",
                         browseName: name + "Variable",
@@ -755,16 +865,17 @@ module.exports = function (RED) {
                     break;
 
                 case "deleteNode":
-                    if (addressSpace === undefined) {
-                        node.error("addressSpace undefinded");
-                        return false;
+
+                    if (!check_server_ready()) {
+                        verbose_warn("Server not active for deleting ".concat(payload.nodeName));
+                        return;
                     }
 
-                    var searchedNode = addressSpace.findNode(payload.nodeId);
+                    var searchedNode = serverAddressSpace.findNode(payload.nodeId);
                     if (searchedNode === undefined) {
-                        verbose_warn("can not find Node in addressSpace")
+                        verbose_warn("can not find Node in serverAddressSpace")
                     } else {
-                        addressSpace.deleteNode(searchedNode);
+                        serverAddressSpace.deleteNode(searchedNode);
                     }
                     break;
 
@@ -781,50 +892,62 @@ module.exports = function (RED) {
 
             // manufacture
             enterprises = null;
+
+            // examples
+            examples = null;
+        }
+
+        function set_server_notrunning() {
+            node.status({fill: "red", shape: "ring", text: "Not running"});
+        }
+
+        function reset_internals() {
+            server = null;
+            reset_structure();
+        }
+
+        function stop_server() {
+            verbose_warn("Stop OPC UA Server");
+            if (server) {
+                server.shutdown(function () {
+                    reset_internals();
+                    set_server_stoped();
+                });
+
+            } else {
+                reset_internals();
+                set_server_stoped();
+            }
         }
 
         function restart_server() {
-            verbose_warn("Restart OPC UA Server");
+
             if (server) {
+                verbose_warn("Restart OPC UA Server");
                 server.shutdown(function () {
-                    server = null;
-                    examples = null;
+                    reset_internals();
                     initNewServer();
                 });
 
             } else {
-                server = null;
-                examples = null;
-                reset_structure();
+                verbose_warn("Start OPC UA Server");
+                reset_internals();
+                set_server_stoped();
                 initNewServer();
             }
 
             if (server) {
-                verbose_warn("Restart OPC UA Server done");
+                verbose_warn("OPC UA Server started");
             } else {
-                node.error("can not restart OPC UA Server");
+                node.error("can't start OPC UA Server");
             }
         }
 
         node.on("close", function () {
             verbose_warn("closing...");
-            close_server();
+            stop_server();
         });
 
-        function close_server() {
-            if (server) {
-                server.shutdown(function () {
-                    server = null;
-                    examples = null;
-                    reset_structure();
-                });
-
-            } else {
-                server = null;
-                examples = null;
-                reset_structure();
-            }
-        }
     }
 
     RED.nodes.registerType("ISA95-OPCUA-Server", ISA95OpcUaServerNode);

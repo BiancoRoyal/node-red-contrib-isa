@@ -28,6 +28,9 @@
 
 module.exports = function (RED) {
     var parser = require('xml2json');
+    var xsd2json = require('xsd2json2').xsd2json;
+    var fs = require('fs');
+    var path = require('path');
 
     function ISA95B2MMLHelperNode(config) {
 
@@ -35,12 +38,48 @@ module.exports = function (RED) {
         this.action = config.action;
 
         var node = this;
-        this.on('input', function (msg) {
-            console.log("ISA95B2MMLHelperNodeAction: " + node.action);
+
+        function verbose_warn(logMessage) {
+            if (RED.settings.verbose) {
+                node.warn((node.name) ? node.name + ': ' + logMessage : 'B2MML-Helper: ' + logMessage);
+            }
+        }
+
+        function verbose_log(logMessage) {
+            if (RED.settings.verbose) {
+                node.log(logMessage);
+            }
+        }
+
+        node.on('input', function (msg) {
+
+            verbose_log("ISA95B2MMLHelperNodeAction: " + node.action);
+
+            xsd2json(path.join(__dirname, 'public/vendor/mesa/Schema/B2MML-V0600-Material.xsd'), function(err, jsonSchema) {
+                work_with_equipment_schema(msg.payload, jsonSchema);
+            });
+
             var data = msg.payload;
-            console.log("ISA95B2MMLHelperNodeType:" + typeof data);
+
+            verbose_log("ISA95B2MMLHelperNodeType:" + typeof data);
+
             node.send(msg);
         });
+
+        node.on('close', function (msg) {
+            verbose_log("close");
+        });
+    }
+
+    function work_with_equipment_schema(data, jsonSchema) {
+
+        verbose_log("working with equipment schema");
+
+        var equipment = { 'ID': data };
+
+        xsd2json.addSchema(jsonSchema, 'Material');
+
+        verbose_warn("validate schema equipment " + xsd2json.validate(equipment, jsonSchema));
     }
 
     RED.nodes.registerType("B2MML-Helper", ISA95B2MMLHelperNode);

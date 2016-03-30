@@ -69,74 +69,130 @@ SOFTWARE.
         },
         oneditprepare: function () {
 
+            var structureTypes = [
+                {val: 'Variable', text: 'Variable'},
+                {val: 'Object', text: 'Object'}
+            ];
+
+            var typesMachine = [{val: 'Boolean', text: 'Boolean'},
+                {val: 'UInt16', text: 'UInt16'},
+                {val: 'Int16', text: 'Int16'},
+                {val: 'UInt32', text: 'UInt32'},
+                {val: 'Int32', text: 'Int32'},
+                {val: 'UInt64', text: 'UInt64'},
+                {val: 'Int64', text: 'Int64'},
+                {val: 'Real', text: 'Real'},
+                {val: 'LReal', text: 'LReal'}
+            ];
+
+            var typesStructure = [{val: 'Boolean', text: 'Boolean'},
+                {val: 'UInt16', text: 'UInt16'},
+                {val: 'Int16', text: 'Int16'},
+                {val: 'UInt32', text: 'UInt32'},
+                {val: 'Int32', text: 'Int32'},
+                {val: 'Float', text: 'Float'},
+                {val: 'Double', text: 'Double'},
+                {val: 'BigDecimal', text: 'BigDecimal'}
+            ];
+
             function resizeButton(mapping, width) {
                 var lastField = mapping.find(".node-input-mapping-typeStructure");
-                lastField.width(width - 610);
+                // lastField.width(width - 120);
             }
 
-            function generateButton(mapping) {
+            function generateButton(mapping, id) {
 
                 var container = $('<li/>', {style: "background: #fff; margin:0; padding:8px 0px; border-bottom: 1px solid #ccc;"});
 
-                var row = $('<div/>').appendTo(container);
+                var row = $('<div id="row'+id+'"/>').appendTo(container);
 
                 $('<i style="color: #eee; cursor: move;" class="node-input-mapping-handle fa fa-bars"></i>').appendTo(row);
 
-                var structureTypeField = $('<input/>', {
-                    class: "node-input-mapping-structureType",
+                var structureTypeField = $('<select/>', {
+                    id: "node-input-mapping-structureType",
                     type: "text",
-                    style: "margin-left: 5px; width: 100px;",
-                    placeholder: 'Variable'
+                    style: "margin-left:5px;width:100px;"
                 }).appendTo(row);
 
+                $(structureTypes).each(function () {
+                    structureTypeField.append($("<option>").attr('value', this.val).text(this.text));
+                });
+
                 var startField = $('<input/>', {
-                    class: "node-input-mapping-start",
+                    id: "node-input-mapping-start",
                     type: "text",
-                    style: "margin-left: 5px; width: 50px;",
-                    placeholder: '0-65535'
+                    style: "margin-left:5px;width:50px;",
+                    placeholder: 'start'
                 }).appendTo(row);
 
                 var quantityField = $('<input/>', {
-                    class: "node-input-mapping-quantity",
+                    id: "node-input-mapping-quantity",
                     type: "text",
-                    style: "margin-left: 5px; width: 50px;",
+                    style: "margin-left:5px;width:50px;",
                     placeholder: 'quantity'
                 }).appendTo(row);
 
                 var structureParentNodeIdField = $('<input/>', {
-                    class: "node-input-mapping-structureParentNodeId",
+                    id: "node-input-mapping-structureParentNodeId",
                     type: "text",
-                    style: "margin-left: 5px; width: 150px;",
+                    style: "margin-left:5px;width:180px;",
                     placeholder: 'ns=0;i=85'
                 }).appendTo(row);
 
                 var structureNodeIdField = $('<input/>', {
-                    class: "node-input-mapping-structureNodeId",
+                    id: "node-input-mapping-structureNodeId",
                     type: "text",
-                    style: "margin-left: 5px; width: 150px;",
+                    style: "margin-left:5px;width:180px;",
                     placeholder: 'ns=4;s=MyVariable1'
                 }).appendTo(row);
 
                 var structureNameField = $('<input/>', {
-                    class: "node-input-mapping-structureName",
+                    id: "node-input-mapping-structureName",
                     type: "text",
-                    style: "margin-left: 5px; width: 150px;",
+                    style: "margin-left:5px;width:150px;",
                     placeholder: 'MyVariable1'
                 }).appendTo(row);
 
-                var typeMachineField = $('<input/>', {
-                    class: "node-input-mapping-typeMachine",
-                    type: "text",
-                    style: "margin-left: 5px; width: 100px;",
-                    placeholder: 'UInt16'
-                }).appendTo(row);
+                if (mapping.structureType === 'Variable') {
 
-                var typeStructureField = $('<input/>', {
-                    class: "node-input-mapping-typeStructure",
-                    type: "text",
-                    style: "margin-left: 5px; width: 100px;",
-                    placeholder: 'Int32'
-                }).appendTo(row);
+                    var typeMachineField = $('<select/>', {
+                        id: 'node-input-mapping-typeMachine',
+                        type: 'text'
+                    }).appendTo(row);
+
+                    typeMachineField.css('margin-left', '5px');
+                    typeMachineField.css('width', '100px');
+
+                    $(typesMachine).each(function () {
+                        typeMachineField.append($("<option>").attr('value', this.val).text(this.text));
+                    });
+
+                    var typeStructureField = $('<select/>', {
+                        id: 'node-input-mapping-typeStructure',
+                        type: 'text'
+                    }).appendTo(row);
+
+                    typeStructureField.css('margin-left', '5px');
+                    typeStructureField.css('width', '100px');
+
+                    $(typesStructure).each(function () {
+                        typeStructureField.append($("<option>").attr('value', this.val).text(this.text));
+                    });
+                } else {
+                    var typeMachineField = $('<input/>', {
+                        id: "node-input-mapping-typeMachine",
+                        type: "text",
+                        style: "margin-left:5px;width:60px;",
+                        placeholder: 'not used'
+                    }).appendTo(row);
+
+                    var typeStructureField = $('<input/>', {
+                        id: "node-input-mapping-typeStructure",
+                        type: "text",
+                        style: "margin-left:5px;width:120px;",
+                        placeholder: 'BaseObjectType'
+                    }).appendTo(row);
+                }
 
                 structureTypeField.val(mapping.structureType);
                 startField.val(mapping.start);
@@ -146,6 +202,89 @@ SOFTWARE.
                 structureNameField.val(mapping.structureName);
                 typeMachineField.val(mapping.typeMachine);
                 typeStructureField.val(mapping.typeStructure);
+
+
+                structureTypeField.change(function() {
+
+                    if(!typeMachineField || !typeStructureField)
+                        return;
+
+                    console.log(structureTypeField.val());
+
+                    if (structureTypeField.val() == "Variable") {
+
+                        mapping.start = '0';
+                        mapping.quantity = '1';
+                        mapping.typeMachine = 'UInt16';
+                        mapping.typeStructure = 'UInt16';
+
+                        var newTypeMachineField = $('<select/>', {
+                            id: 'node-input-mapping-typeMachine',
+                            type: 'text'
+                        });
+
+                        typeMachineField.replaceWith(newTypeMachineField);
+
+                        typeMachineField = newTypeMachineField;
+
+                        newTypeMachineField.css('margin-left', '5px');
+                        newTypeMachineField.css('width', '100px');
+
+                        $(typesMachine).each(function () {
+                            newTypeMachineField.append($("<option>").attr('value', this.val).text(this.text));
+                        });
+
+                        var newTypeStructureField = $('<select/>', {
+                            id: 'node-input-mapping-typeStructure',
+                            type: 'text'
+                        });
+
+                        typeStructureField.replaceWith(newTypeStructureField);
+
+                        typeStructureField = newTypeStructureField;
+
+                        newTypeStructureField.css('margin-left', '5px');
+                        newTypeStructureField.css('width', '100px');
+
+                        $(typesStructure).each(function () {
+                            newTypeStructureField.append($("<option>").attr('value', this.val).text(this.text));
+                        });
+
+                    } else {
+
+                        mapping.start = '';
+                        mapping.quantity = '';
+                        mapping.typeMachine = '';
+                        mapping.typeStructure = '';
+
+                        var newTypeMachineField = $('<input/>', {
+                            id: "node-input-mapping-typeMachine",
+                            type: "text",
+                            style: "margin-left:5px;width:60px;",
+                            placeholder: 'not used'
+                        });
+
+                        typeMachineField.replaceWith(newTypeMachineField);
+
+                        typeMachineField = newTypeMachineField;
+
+                        var newTypeStructureField = $('<input/>', {
+                            id: "node-input-mapping-typeStructure",
+                            type: "text",
+                            style: "margin-left:5px;width:120px;",
+                            placeholder: 'BaseObjectType'
+                        });
+
+                        typeStructureField.replaceWith(newTypeStructureField);
+
+                        typeStructureField = newTypeStructureField;
+                    }
+
+                    startField.val(mapping.start);
+                    quantityField.val(mapping.quantity);
+                    typeMachineField.val(mapping.typeMachine);
+                    typeStructureField.val(mapping.typeStructure);
+                });
 
                 var finalspan = $('<span/>', {style: "float: right;margin-right: 10px;"}).appendTo(row);
 
@@ -186,7 +325,7 @@ SOFTWARE.
 
             for (var i = 0; i < this.mappings.length; i++) {
                 var rule = this.mappings[i];
-                generateButton(rule);
+                generateButton(rule, i);
             }
 
             function switchDialogResize() {
@@ -239,14 +378,14 @@ SOFTWARE.
 
                 var mappingEntry = $(this);
 
-                var structureTypeFieldValue = mappingEntry.find(".node-input-mapping-structureType").val();
-                var startFieldValue = mappingEntry.find(".node-input-mapping-start").val();
-                var quantityFieldValue = mappingEntry.find(".node-input-mapping-quantity").val();
-                var structureParentNodeIdFieldValue = mappingEntry.find(".node-input-mapping-structureParentNodeId").val();
-                var structureNodeIdFieldValue = mappingEntry.find(".node-input-mapping-structureNodeId").val();
-                var structureNameFieldValue = mappingEntry.find(".node-input-mapping-structureName").val();
-                var typeMachineFieldValue = mappingEntry.find(".node-input-mapping-typeMachine").val();
-                var typeStructureFieldValue = mappingEntry.find(".node-input-mapping-typeStructure").val();
+                var structureTypeFieldValue = mappingEntry.find("#node-input-mapping-structureType").val();
+                var startFieldValue = mappingEntry.find("#node-input-mapping-start").val();
+                var quantityFieldValue = mappingEntry.find("#node-input-mapping-quantity").val();
+                var structureParentNodeIdFieldValue = mappingEntry.find("#node-input-mapping-structureParentNodeId").val();
+                var structureNodeIdFieldValue = mappingEntry.find("#node-input-mapping-structureNodeId").val();
+                var structureNameFieldValue = mappingEntry.find("#node-input-mapping-structureName").val();
+                var typeMachineFieldValue = mappingEntry.find("#node-input-mapping-typeMachine").val();
+                var typeStructureFieldValue = mappingEntry.find("#node-input-mapping-typeStructure").val();
 
                 node.mappings.push({
                     structureType: structureTypeFieldValue,
@@ -273,6 +412,8 @@ SOFTWARE.
         <label for="node-config-input-interface"><i class="icon-cogs"></i> Type</label>
         <input type="text" id="node-config-input-interface" placeholder="ModbusTCP">
     </div>
+
+
 </script>
 
 <script type="text/x-red" data-template-name="ISA95-Machine-Mapper">
@@ -310,6 +451,8 @@ SOFTWARE.
     <div class="form-row">
         <a href="#" class="editor-button editor-button-small" id="node-input-add-button" style="margin-top: 4px;"><i class="fa fa-plus"></i> add</a>
     </div>
+
+
 </script>
 
 <script type="text/x-red" data-help-name="ISA95-Machine-Mapper">
@@ -318,4 +461,6 @@ SOFTWARE.
     <p><strong>Output 1</strong> RAW</p>
     <p><strong>Output 2</strong> ISA structured model</p>
     <p><strong>Output 3</strong> Mappings</p>
+
+
 </script>

@@ -52,6 +52,18 @@ module.exports = function (RED) {
 
         var machineConfig = RED.nodes.getNode(n.machineid);
 
+        function verbose_warn(logMessage) {
+            if (RED.settings.verbose) {
+                node.warn((node.name) ? node.name + ': ' + logMessage : 'B2MML-Helper: ' + logMessage);
+            }
+        }
+
+        function verbose_log(logMessage) {
+            if (RED.settings.verbose) {
+                node.log(logMessage);
+            }
+        }
+        
         this.on('input', function (msg) {
 
             var data = msg.payload;
