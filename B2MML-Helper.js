@@ -27,7 +27,6 @@
  **/
 
 module.exports = function (RED) {
-    var parser = require('xml2json');
     var xsd2json = require('xsd2json2').xsd2json;
     var fs = require('fs');
     var path = require('path');

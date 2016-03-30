@@ -94,7 +94,7 @@ module.exports = function (RED) {
                     var modbusValue = 0;
 
                     if (mapping.quantity > 1) {
-                        for (i = mapping.start; i < mapping.start + mapping.quantity; i++) {
+                        for (var i = mapping.start; i < mapping.start + mapping.quantity; i++) {
                             if (data.length > i) {
                                 modbusValue += data[i];
                             }

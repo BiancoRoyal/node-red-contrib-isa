@@ -1,112 +1,115 @@
 <?xml version="1.0"?>
-<xsd:schema xmlns="http://www.mesa.org/xml/B2MML-V0600" xmlns:Extended="http://www.mesa.org/xml/B2MML-V0600-AllExtensions" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.mesa.org/xml/B2MML-V0600" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xsd:schema xmlns="http://www.mesa.org/xml/B2MML-V0600"
+            xmlns:Extended="http://www.mesa.org/xml/B2MML-V0600-AllExtensions"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.mesa.org/xml/B2MML-V0600"
+            elementFormDefault="qualified" attributeFormDefault="unqualified">
     <!-- Include the Core Components schema in the default namespace  -->
     <xsd:include schemaLocation="B2MML-V0600-CoreComponents.xsd"/>
     <!-- Import the Common Extension Schema                 -->
-    <xsd:import namespace="http://www.mesa.org/xml/B2MML-V0600-AllExtensions" schemaLocation="B2MML-V0600-CommonExtensions.xsd"/>
+    <xsd:import namespace="http://www.mesa.org/xml/B2MML-V0600-AllExtensions"
+                schemaLocation="B2MML-V0600-CommonExtensions.xsd"/>
     <xsd:annotation>
-        <xsd:documentation> 
+        <xsd:documentation>
 
-        Copyright 2012 MESA International 
-        All Rights Reserved. http://www.mesa.org
+            Copyright 2012 MESA International
+            All Rights Reserved. http://www.mesa.org
 
-        This MESA International work (including specifications, documents, 
-        software, and related items) referred to as the Business To 
-        Manufacturing Markup Language (B2MML) is provided by the copyright 
-        holders under the following license. 
+            This MESA International work (including specifications, documents,
+            software, and related items) referred to as the Business To
+            Manufacturing Markup Language (B2MML) is provided by the copyright
+            holders under the following license.
 
-        Permission to use, copy, modify, or redistribute this Work and its 
-        documentation, with or without modification, for any purpose and 
-        without fee or royalty is hereby granted provided the World Batch 
-        Forum is acknowledged as the originator of this Work using the 
-        following statement:
+            Permission to use, copy, modify, or redistribute this Work and its
+            documentation, with or without modification, for any purpose and
+            without fee or royalty is hereby granted provided the World Batch
+            Forum is acknowledged as the originator of this Work using the
+            following statement:
 
-        "The Business To Manufacturing Markup Language (B2MML) is used 
-        courtesy of MESA International."
+            "The Business To Manufacturing Markup Language (B2MML) is used
+            courtesy of MESA International."
 
-        In no event shall MESA International, its members, or any 
-        third party be liable for any costs, expenses, losses, damages or 
-        injuries incurred by use of the Work or as a result of this 
-        agreement.
-          
-        Based upon the ANSI/ISA-95.00.02-2010 Enterprise-Control System 
-        Integration Part 2: Object Model Attributes Standard and the
-        ANSI/ISA-95.00.05-2006 Enterprise-Control System Integration 
-        Part 5: Business to Manufacturing Transactions. 
-   </xsd:documentation>
-        <xsd:documentation> 
+            In no event shall MESA International, its members, or any
+            third party be liable for any costs, expenses, losses, damages or
+            injuries incurred by use of the Work or as a result of this
+            agreement.
 
-                Revision History
+            Based upon the ANSI/ISA-95.00.02-2010 Enterprise-Control System
+            Integration Part 2: Object Model Attributes Standard and the
+            ANSI/ISA-95.00.05-2006 Enterprise-Control System Integration
+            Part 5: Business to Manufacturing Transactions.
+        </xsd:documentation>
+        <xsd:documentation>
 
-    Ver     Date             Person          Note
-    ---     ----             ------          ----
-    V01     7 Apr 2002       D. Emerson      - Initial release  
-    V02     23 Sept 2003     D. Emerson      - Updated filename for V02
-                                             - Changed complexTypes that contained 
-                                               simpleContent to be simpleTypes with
-                                               simpleContent by default (removed explicit)
-                                               simpleContent tags).  Types changed:
-                                                  CapabilityType1Type, DataType1Type,
-                                                  DependencyType
-                                             - Removed extra space in CapabilityType1Type
-                                             - Committed and Available enumerations
-                                             - Changed use of ##any to indirect reference 
-                                               through AnyType, to allow parsing using Microsoft 
-                                               XML toolset
-                                             - Added Common schema to B2MML namespace
-                                             - Add choice of ProductSegmentID or ProcessSegmentID 
-                                               to SegmentDependencyType per comment BillS01.
-                                             - Change maxOccurs from "1" to "unbounded" for 
-                                               Result in TestResultType.
-                                             - Remove UnitOfMeasure from TestResultType since it
-                                               is already in ResultType
-                                             - Added EnumerationID to DataTypeType to permit
-                                               identification an enumeration list when the datatype
-                                               is Enumeration.
-                                             - Added revision to namespace
-                                             - Added new element ValueString to ResultType to
-                                               contain the vaule of the result.  
-    V0201   04 Nov 2003      D. Emerson      - Added minOccurs = "0" maxOccurs = "unbounded" to
-                                             - Any element in ValueType
-    v0300   26 Aug 2005      D. Emerson      - Added substitution groups.    One group added just
-                                               before each Any element.
-                                             - Add dateTime and SVG to datatype enumeration list.
-                                             - Add new, optional, element, "Key" based on IDType              
-                                               to complexTypes QuantityType, ResultType, ValueType.  
-                                             - Added UnitOfMeasure to ResultType as a mandatory element.
-                                             - Made mandatory to be consistent with its use in quantity
-                                               and value - this will impact upgrades from earlier versions.
-                                             - Add enumerations to EquipmentElementLevel1Type
-                                               StorageZone, StorageUnit, WorkCenter, WorkUnit
-    v0301   29 Dec 2005      D. Brandl       - Changed verison number to v0301
-    v04     04 Jun 2007      D. Brandl       - Added transaction elements for ISA 95 Part 5 support.
-                                             - Added "cc:" namespace for UN/CEFACT core types.
-                                             - Added the UN/CEFACT core components with optional attributes
-                                               and made them the base types for the B2MML types. 
-                                             - Changed SegmentStateType to ResponseStateType for inclusion in all
-                                               levels of the ProductionPerformance element
-                                             - Enumerated types are now complexTypes declared as simpleContent
-                                             - Added warning before each use of the AnyType that the extension 
-                                               schema should be used instead of the Any element and that in a 
-                                               still to be determined future release of B2MML the AnyType and 
-                                             - Notice that "Any" element will be removed.
-     V0500  26 Mar 2011     D. Brandl        Revised version
-                                             Added nillable=true to elements in QuantityValueType, ResultType
-                                               and ValueType
-                                             Removed "Any" element type, replaced with extended types for user extensions
-                                             Changed "Location" element name to "HierarchyScope"
-                                             Added EquipmentAssetMapping element
-                                             Removed AnyType
-                                             Made UOM and Datatype optional in QuantityType, ValueType, ResultType
-     V0600  17 Mar 2013     D. Brandl        Changed copyright to MESA International and support for ISA 95 Part 4                                 
-                                             Corrected type group definition ProductProductionRuleIDGroup 
-                                             Added a maxOccurs=unbounded to the TimingFactor element in a SegmentDerpendancy 
-                                             Moved the OpXXXXXX elements into the common.xsd for support of Part 4 models
-                                             Updated the transaction schemas to match OAGiS 9.6, with addition of Receivers in header
+            Revision History
+
+            Ver Date Person Note
+            --- ---- ------ ----
+            V01 7 Apr 2002 D. Emerson - Initial release
+            V02 23 Sept 2003 D. Emerson - Updated filename for V02
+            - Changed complexTypes that contained
+            simpleContent to be simpleTypes with
+            simpleContent by default (removed explicit)
+            simpleContent tags). Types changed:
+            CapabilityType1Type, DataType1Type,
+            DependencyType
+            - Removed extra space in CapabilityType1Type
+            - Committed and Available enumerations
+            - Changed use of ##any to indirect reference
+            through AnyType, to allow parsing using Microsoft
+            XML toolset
+            - Added Common schema to B2MML namespace
+            - Add choice of ProductSegmentID or ProcessSegmentID
+            to SegmentDependencyType per comment BillS01.
+            - Change maxOccurs from "1" to "unbounded" for
+            Result in TestResultType.
+            - Remove UnitOfMeasure from TestResultType since it
+            is already in ResultType
+            - Added EnumerationID to DataTypeType to permit
+            identification an enumeration list when the datatype
+            is Enumeration.
+            - Added revision to namespace
+            - Added new element ValueString to ResultType to
+            contain the vaule of the result.
+            V0201 04 Nov 2003 D. Emerson - Added minOccurs = "0" maxOccurs = "unbounded" to
+            - Any element in ValueType
+            v0300 26 Aug 2005 D. Emerson - Added substitution groups. One group added just
+            before each Any element.
+            - Add dateTime and SVG to datatype enumeration list.
+            - Add new, optional, element, "Key" based on IDType
+            to complexTypes QuantityType, ResultType, ValueType.
+            - Added UnitOfMeasure to ResultType as a mandatory element.
+            - Made mandatory to be consistent with its use in quantity
+            and value - this will impact upgrades from earlier versions.
+            - Add enumerations to EquipmentElementLevel1Type
+            StorageZone, StorageUnit, WorkCenter, WorkUnit
+            v0301 29 Dec 2005 D. Brandl - Changed verison number to v0301
+            v04 04 Jun 2007 D. Brandl - Added transaction elements for ISA 95 Part 5 support.
+            - Added "cc:" namespace for UN/CEFACT core types.
+            - Added the UN/CEFACT core components with optional attributes
+            and made them the base types for the B2MML types.
+            - Changed SegmentStateType to ResponseStateType for inclusion in all
+            levels of the ProductionPerformance element
+            - Enumerated types are now complexTypes declared as simpleContent
+            - Added warning before each use of the AnyType that the extension
+            schema should be used instead of the Any element and that in a
+            still to be determined future release of B2MML the AnyType and
+            - Notice that "Any" element will be removed.
+            V0500 26 Mar 2011 D. Brandl Revised version
+            Added nillable=true to elements in QuantityValueType, ResultType
+            and ValueType
+            Removed "Any" element type, replaced with extended types for user extensions
+            Changed "Location" element name to "HierarchyScope"
+            Added EquipmentAssetMapping element
+            Removed AnyType
+            Made UOM and Datatype optional in QuantityType, ValueType, ResultType
+            V0600 17 Mar 2013 D. Brandl Changed copyright to MESA International and support for ISA 95 Part 4
+            Corrected type group definition ProductProductionRuleIDGroup
+            Added a maxOccurs=unbounded to the TimingFactor element in a SegmentDerpendancy
+            Moved the OpXXXXXX elements into the common.xsd for support of Part 4 models
+            Updated the transaction schemas to match OAGiS 9.6, with addition of Receivers in header
 
 
-
-   </xsd:documentation>
+        </xsd:documentation>
     </xsd:annotation>
     <!--  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   -->
     <!--  B2MML Common Component Elements - - - - - - - - - - - - -   -->
@@ -116,19 +119,19 @@
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ActualFinishTimeType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ActualStartTimeType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="AnyGenericValueType">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
@@ -165,7 +168,7 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="AssemblyRelationship1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -175,7 +178,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="AssemblyRelationshipType">
         <xsd:simpleContent>
             <xsd:extension base="AssemblyRelationship1Type">
@@ -183,7 +186,7 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="AssemblyType1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -193,7 +196,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="AssemblyTypeType">
         <xsd:simpleContent>
             <xsd:extension base="AssemblyType1Type">
@@ -201,25 +204,25 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="BillOfMaterialIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="BillOfMaterialsIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="BillOfResourcesIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="CapabilityType1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -233,7 +236,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="CapabilityTypeType">
         <xsd:simpleContent>
             <xsd:extension base="CapabilityType1Type">
@@ -241,31 +244,31 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="CauseType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="CertificateOfAnalysisReferenceType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ConfidenceFactorType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="CorrectionType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="DataType1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -339,7 +342,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="DataTypeType">
         <xsd:simpleContent>
             <xsd:extension base="DataType1Type">
@@ -347,7 +350,7 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="Dependency1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -365,7 +368,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="DependencyType">
         <xsd:simpleContent>
             <xsd:extension base="Dependency1Type">
@@ -373,13 +376,13 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="DescriptionType">
         <xsd:simpleContent>
             <xsd:restriction base="TextType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:simpleType name="DurationType">
         <xsd:restriction base="xsd:duration"/>
     </xsd:simpleType>
@@ -388,13 +391,13 @@
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="EndTimeType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="EquipmentAssetMappingType">
         <xsd:sequence>
             <xsd:element name="EquipmentID" type="EquipmentIDType"/>
@@ -404,19 +407,19 @@
             <xsd:group ref="Extended:EquipmentAssetMapping" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="EquipmentCapabilityTestSpecificationIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="EquipmentClassIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="EquipmentElementLevel1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -438,7 +441,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="EquipmentElementLevelType">
         <xsd:simpleContent>
             <xsd:extension base="EquipmentElementLevel1Type">
@@ -446,25 +449,25 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="EquipmentIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="EquipmentUseType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ExpirationTimeType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="HierarchyScopeType">
         <xsd:sequence>
             <xsd:element name="EquipmentID" type="EquipmentIDType"/>
@@ -473,7 +476,7 @@
             <xsd:group ref="Extended:HierarchyScope" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="JobOrderCommand1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -489,7 +492,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="JobOrderCommandType">
         <xsd:simpleContent>
             <xsd:extension base="JobOrderCommand1Type">
@@ -497,25 +500,25 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="JobOrderCommandRuleType">
         <xsd:simpleContent>
             <xsd:restriction base="TextType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="JobOrderDispatchStatusType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="LatestEndTimeType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <!--  LocationType kept in V05 for use with the Production element definitions. Not used in other elements.  -->
     <xsd:complexType name="LocationType">
         <xsd:sequence>
@@ -525,68 +528,68 @@
             <xsd:group ref="Extended:Location" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <!--  LocationType kept in V05 for use with the Production element definitions. Not used in other elements.  -->
     <xsd:complexType name="ManufacturingBillIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="MaterialActualIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="MaterialCapabilityIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="MaterialClassIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="MaterialDefinitionIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="MaterialLotIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="MaterialRequirementIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="MaterialSpecificationIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="MaterialSubLotIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="MaterialTestSpecificationIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="MaterialUse1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -603,7 +606,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="MaterialUseType">
         <xsd:simpleContent>
             <xsd:extension base="MaterialUse1Type">
@@ -611,7 +614,7 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpEquipmentRequirementType">
         <xsd:sequence>
             <xsd:element name="EquipmentClassID" type="EquipmentClassIDType" minOccurs="0" maxOccurs="unbounded"/>
@@ -621,12 +624,14 @@
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="HierarchyScope" type="HierarchyScopeType" minOccurs="0"/>
             <xsd:element name="EquipmentLevel" type="HierarchyScopeType" minOccurs="0"/>
-            <xsd:element name="EquipmentRequirementProperty" type="OpEquipmentRequirementPropertyType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="RequiredByRequestedSegmentResponse" type="RequiredByRequestedSegmentResponseType" minOccurs="0"/>
+            <xsd:element name="EquipmentRequirementProperty" type="OpEquipmentRequirementPropertyType" minOccurs="0"
+                         maxOccurs="unbounded"/>
+            <xsd:element name="RequiredByRequestedSegmentResponse" type="RequiredByRequestedSegmentResponseType"
+                         minOccurs="0"/>
             <xsd:group ref="Extended:OpEquipmentRequirement" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpEquipmentRequirementPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -636,7 +641,7 @@
             <xsd:group ref="Extended:OpEquipmentRequirementProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPersonnelRequirementType">
         <xsd:sequence>
             <xsd:element name="PersonnelClassID" type="PersonnelClassIDType" minOccurs="0" maxOccurs="unbounded"/>
@@ -645,12 +650,14 @@
             <xsd:element name="PersonnelUse" type="PersonnelUseType" minOccurs="0"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="HierarchyScope" type="HierarchyScopeType" minOccurs="0"/>
-            <xsd:element name="PersonnelRequirementProperty" type="OpPersonnelRequirementPropertyType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="RequiredByRequestedSegmentResponse" type="RequiredByRequestedSegmentResponseType" minOccurs="0"/>
+            <xsd:element name="PersonnelRequirementProperty" type="OpPersonnelRequirementPropertyType" minOccurs="0"
+                         maxOccurs="unbounded"/>
+            <xsd:element name="RequiredByRequestedSegmentResponse" type="RequiredByRequestedSegmentResponseType"
+                         minOccurs="0"/>
             <xsd:group ref="Extended:OpPersonnelRequirement" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPersonnelRequirementPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -660,22 +667,25 @@
             <xsd:group ref="Extended:OpPersonnelRequirementProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPhysicalAssetRequirementType">
         <xsd:sequence>
-            <xsd:element name="PhysicalAssetClassID" type="PhysicalAssetClassIDType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="PhysicalAssetClassID" type="PhysicalAssetClassIDType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:element name="PhysicalAssetID" type="PhysicalAssetIDType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="Description" type="DescriptionType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="PhysicalAssetUse" type="PhysicalAssetUseType" minOccurs="0"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="HierarchyScope" type="HierarchyScopeType" minOccurs="0"/>
             <xsd:element name="EquipmentLevel" type="HierarchyScopeType" minOccurs="0"/>
-            <xsd:element name="PhysicalAssetRequirementProperty" type="OpPhysicalAssetRequirementPropertyType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="RequiredByRequestedSegmentResponse" type="RequiredByRequestedSegmentResponseType" minOccurs="0"/>
+            <xsd:element name="PhysicalAssetRequirementProperty" type="OpPhysicalAssetRequirementPropertyType"
+                         minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="RequiredByRequestedSegmentResponse" type="RequiredByRequestedSegmentResponseType"
+                         minOccurs="0"/>
             <xsd:group ref="Extended:OpPhysicalAssetRequirement" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPhysicalAssetRequirementPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -685,38 +695,43 @@
             <xsd:group ref="Extended:OpPhysicalAssetRequirementProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpMaterialRequirementType">
         <xsd:sequence>
             <xsd:element name="MaterialClassID" type="MaterialClassIDType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="MaterialDefinitionID" type="MaterialDefinitionIDType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="MaterialDefinitionID" type="MaterialDefinitionIDType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:element name="MaterialLotID" type="MaterialLotIDType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="MaterialSubLotID" type="MaterialSubLotIDType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="Description" type="DescriptionType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="MaterialUse" type="MaterialUseType" minOccurs="0"/>
             <xsd:element name="StorageLocation" type="StorageLocationType" minOccurs="0"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="AssemblyRequirement" type="OpMaterialRequirementType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="AssemblyRequirement" type="OpMaterialRequirementType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:element name="AssemblyType" type="AssemblyTypeType" minOccurs="0"/>
             <xsd:element name="AssemblyRelationship" type="AssemblyRelationshipType" minOccurs="0"/>
             <xsd:element name="HierarchyScope" type="HierarchyScopeType" minOccurs="0"/>
-            <xsd:element name="MaterialRequirementProperty" type="OpMaterialRequirementPropertyType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="RequiredByRequestedSegmentResponse" type="RequiredByRequestedSegmentResponseType" minOccurs="0"/>
+            <xsd:element name="MaterialRequirementProperty" type="OpMaterialRequirementPropertyType" minOccurs="0"
+                         maxOccurs="unbounded"/>
+            <xsd:element name="RequiredByRequestedSegmentResponse" type="RequiredByRequestedSegmentResponseType"
+                         minOccurs="0"/>
             <xsd:group ref="Extended:OpMaterialRequirement" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpMaterialRequirementPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType" minOccurs="0"/>
             <xsd:element name="Description" type="DescriptionType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="Value" type="ValueType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="MaterialRequirementProperty" type="OpMaterialRequirementPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="MaterialRequirementProperty" type="OpMaterialRequirementPropertyType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:group ref="Extended:OpMaterialRequirementProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPersonnelSpecificationType">
         <xsd:sequence>
             <xsd:element name="PersonnelClassID" type="PersonnelClassIDType" minOccurs="0" maxOccurs="unbounded"/>
@@ -724,11 +739,12 @@
             <xsd:element name="Description" type="DescriptionType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="PersonnelUse" type="PersonnelUseType" minOccurs="0"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="PersonnelSpecificationProperty" type="OpPersonnelSpecificationPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="PersonnelSpecificationProperty" type="OpPersonnelSpecificationPropertyType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:group ref="Extended:OpPersonnelSpecification" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPersonnelSpecificationPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -738,7 +754,7 @@
             <xsd:group ref="Extended:OpPersonnelSpecificationProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpEquipmentSpecificationType">
         <xsd:sequence>
             <xsd:element name="EquipmentClassID" type="EquipmentClassIDType" minOccurs="0" maxOccurs="unbounded"/>
@@ -746,11 +762,12 @@
             <xsd:element name="Description" type="DescriptionType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="EquipmentUse" type="EquipmentUseType" minOccurs="0"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="EquipmentSpecificationProperty" type="OpEquipmentSpecificationPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="EquipmentSpecificationProperty" type="OpEquipmentSpecificationPropertyType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:group ref="Extended:OpEquipmentSpecification" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpEquipmentSpecificationPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -760,19 +777,21 @@
             <xsd:group ref="Extended:OpEquipmentSpecificationProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPhysicalAssetSpecificationType">
         <xsd:sequence>
-            <xsd:element name="PhysicalAssetClassID" type="PhysicalAssetClassIDType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="PhysicalAssetClassID" type="PhysicalAssetClassIDType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:element name="PhysicalAssetID" type="PhysicalAssetIDType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="Description" type="DescriptionType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="PhysicalAssetUse" type="PhysicalAssetUseType" minOccurs="0"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="PhysicalAssetSpecificationProperty" type="OpPhysicalAssetSpecificationPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="PhysicalAssetSpecificationProperty" type="OpPhysicalAssetSpecificationPropertyType"
+                         minOccurs="0" maxOccurs="unbounded"/>
             <xsd:group ref="Extended:OpPhysicalAssetSpecification" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPhysicalAssetSpecificationPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -782,23 +801,26 @@
             <xsd:group ref="Extended:OpPhysicalAssetSpecificationProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpMaterialSpecificationType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
             <xsd:element name="MaterialClassID" type="MaterialClassIDType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="MaterialDefinitionID" type="MaterialDefinitionIDType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="MaterialDefinitionID" type="MaterialDefinitionIDType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:element name="Description" type="DescriptionType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="MaterialUse" type="MaterialUseType" minOccurs="0"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="AssemblySpecification" type="OpMaterialSpecificationType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="AssemblySpecification" type="OpMaterialSpecificationType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:element name="AssemblyType" type="AssemblyTypeType" minOccurs="0"/>
             <xsd:element name="AssemblyRelationship" type="AssemblyRelationshipType" minOccurs="0"/>
-            <xsd:element name="MaterialSpecificationProperty" type="OpMaterialSpecificationPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="MaterialSpecificationProperty" type="OpMaterialSpecificationPropertyType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:group ref="Extended:OpMaterialSpecification" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpMaterialSpecificationPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -808,7 +830,7 @@
             <xsd:group ref="Extended:OpMaterialSpecificationProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPersonnelCapabilityType">
         <xsd:sequence>
             <xsd:element name="PersonnelClassID" type="PersonnelClassIDType" minOccurs="0" maxOccurs="unbounded"/>
@@ -822,11 +844,12 @@
             <xsd:element name="StartTime" type="StartTimeType" minOccurs="0"/>
             <xsd:element name="EndTime" type="EndTimeType" minOccurs="0"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="PersonnelCapabilityProperty" type="OpPersonnelCapabilityPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="PersonnelCapabilityProperty" type="OpPersonnelCapabilityPropertyType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:group ref="Extended:OpPersonnelCapability" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPersonnelCapabilityPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -836,7 +859,7 @@
             <xsd:group ref="Extended:OpPersonnelCapabilityProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpEquipmentCapabilityType">
         <xsd:sequence>
             <xsd:element name="EquipmentClassID" type="EquipmentClassIDType" minOccurs="0" maxOccurs="unbounded"/>
@@ -850,11 +873,12 @@
             <xsd:element name="StartTime" type="StartTimeType" minOccurs="0"/>
             <xsd:element name="EndTime" type="EndTimeType" minOccurs="0"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="EquipmentCapabilityProperty" type="OpEquipmentCapabilityPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="EquipmentCapabilityProperty" type="OpEquipmentCapabilityPropertyType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:group ref="Extended:OpEquipmentCapability" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpEquipmentCapabilityPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -864,10 +888,11 @@
             <xsd:group ref="Extended:OpEquipmentCapabilityProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPhysicalAssetCapabilityType">
         <xsd:sequence>
-            <xsd:element name="PhysicalAssetClassID" type="PhysicalAssetClassIDType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="PhysicalAssetClassID" type="PhysicalAssetClassIDType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:element name="PhysicalAssetID" type="PhysicalAssetIDType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="Description" type="DescriptionType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="CapabilityType" type="CapabilityTypeType" minOccurs="0"/>
@@ -878,11 +903,12 @@
             <xsd:element name="StartTime" type="StartTimeType" minOccurs="0"/>
             <xsd:element name="EndTime" type="EndTimeType" minOccurs="0"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="PhysicalAssetCapabilityProperty" type="OpPhysicalAssetCapabilityPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="PhysicalAssetCapabilityProperty" type="OpPhysicalAssetCapabilityPropertyType"
+                         minOccurs="0" maxOccurs="unbounded"/>
             <xsd:group ref="Extended:OpPhysicalAssetCapability" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpPhysicalAssetCapabilityPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -892,11 +918,12 @@
             <xsd:group ref="Extended:OpPhysicalAssetCapabilityProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpMaterialCapabilityType">
         <xsd:sequence>
             <xsd:element name="MaterialClassID" type="MaterialClassIDType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="MaterialDefinitionID" type="MaterialDefinitionIDType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="MaterialDefinitionID" type="MaterialDefinitionIDType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:element name="MaterialLotID" type="MaterialLotIDType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="MaterialSubLotID" type="MaterialSubLotIDType" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="Description" type="DescriptionType" minOccurs="0" maxOccurs="unbounded"/>
@@ -911,11 +938,12 @@
             <xsd:element name="AssemblyType" type="AssemblyTypeType" minOccurs="0"/>
             <xsd:element name="AssemblyRelationship" type="AssemblyRelationshipType" minOccurs="0"/>
             <xsd:element name="Quantity" type="QuantityValueType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="MaterialCapabilityProperty" type="OpMaterialCapabilityPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="MaterialCapabilityProperty" type="OpMaterialCapabilityPropertyType" minOccurs="0"
+                         maxOccurs="unbounded"/>
             <xsd:group ref="Extended:OpMaterialCapability" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OpMaterialCapabilityPropertyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -926,31 +954,31 @@
             <xsd:group ref="Extended:OpMaterialCapabilityProperty" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OperationsDefinitionIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OperationsRequestIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OperationsScheduleIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OperationsSegmentIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OperationsType1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -963,7 +991,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OperationsTypeType">
         <xsd:simpleContent>
             <xsd:extension base="OperationsType1Type">
@@ -971,19 +999,19 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="OtherDependencyType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ParameterIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ParameterType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -993,152 +1021,152 @@
             <xsd:group ref="Extended:Parameter" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PersonIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PersonNameType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PersonnelClassIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PersonnelUseType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PhysicalAssetActualIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PhysicalAssetCapabilityTestSpecificationIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PhysicalAssetClassIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PhysicalAssetIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PhysicalAssetUseType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PlannedFinishTimeType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PlannedStartTimeType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PriorityType">
         <xsd:simpleContent>
             <xsd:restriction base="NumericType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ProblemType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ProcessSegmentIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ProductionScheduleIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ProductProductionRuleIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ProductProductionRuleType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ProductionRequestIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:group name="ProductProductionRuleIDGroup">
         <xsd:sequence>
             <xsd:element name="ProductProductionRuleID" type="ProductProductionRuleIDType" minOccurs="0"/>
             <xsd:element name="Version" type="VersionType" minOccurs="0"/>
         </xsd:sequence>
     </xsd:group>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ProductSegmentIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PropertyIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="PublishedDateType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="QualificationTestSpecificationIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="QuantityStringType">
         <xsd:simpleContent>
             <xsd:restriction base="AnyGenericValueType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="QuantityValueType">
         <xsd:sequence>
             <xsd:element name="QuantityString" type="QuantityStringType" nillable="true"/>
@@ -1148,13 +1176,13 @@
             <xsd:group ref="Extended:Quantity" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ReasonType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="RelationshipForm1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -1164,7 +1192,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="RelationshipFormType">
         <xsd:simpleContent>
             <xsd:extension base="RelationshipForm1Type">
@@ -1172,7 +1200,7 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="RelationshipType1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -1182,7 +1210,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="RelationshipTypeType">
         <xsd:simpleContent>
             <xsd:extension base="RelationshipType1Type">
@@ -1190,19 +1218,19 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="RequestedCompletionDateType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="RequestedPriorityType">
         <xsd:simpleContent>
             <xsd:restriction base="NumericType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="RequestState1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -1212,7 +1240,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="RequestStateType">
         <xsd:simpleContent>
             <xsd:extension base="RequestState1Type">
@@ -1220,7 +1248,7 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="RequiredByRequestedSegmentResponse1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -1230,7 +1258,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="RequiredByRequestedSegmentResponseType">
         <xsd:simpleContent>
             <xsd:extension base="RequiredByRequestedSegmentResponse1Type">
@@ -1238,20 +1266,20 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ResourceNetworkConnectionIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ResourceIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
-    <!--     -->    
+    <!--     -->
+    <!--     -->
     <xsd:complexType name="ResourceReferenceType1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -1278,13 +1306,13 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ResourcesType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ResponseState1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -1298,7 +1326,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ResponseStateType">
         <xsd:simpleContent>
             <xsd:extension base="ResponseState1Type">
@@ -1306,7 +1334,7 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ResultType">
         <xsd:sequence>
             <xsd:element name="ValueString" type="ValueStringType" nillable="true"/>
@@ -1316,7 +1344,7 @@
             <xsd:group ref="Extended:Result" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="SegmentDependencyType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType"/>
@@ -1331,43 +1359,43 @@
             <xsd:group ref="Extended:SegmentDependency" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="StartTimeType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="StatusTimeType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="StatusType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="StorageLocationType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="StorageHierarchyScopeType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="TestDateTimeType">
         <xsd:simpleContent>
             <xsd:restriction base="DateTimeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="TestResultType">
         <xsd:sequence>
             <xsd:element name="ID" type="IdentifierType" minOccurs="0"/>
@@ -1378,19 +1406,19 @@
             <xsd:group ref="Extended:TestResult" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="UnitOfMeasureType">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ValueStringType">
         <xsd:simpleContent>
             <xsd:restriction base="AnyGenericValueType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="ValueType">
         <xsd:sequence>
             <xsd:element name="ValueString" type="ValueStringType" nillable="true"/>
@@ -1400,25 +1428,25 @@
             <xsd:group ref="Extended:Value" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="VersionType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="WorkRequestIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="WorkScheduleIDType">
         <xsd:simpleContent>
             <xsd:restriction base="IdentifierType"/>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="WorkType1Type">
         <xsd:simpleContent>
             <xsd:restriction base="CodeType">
@@ -1428,7 +1456,7 @@
             </xsd:restriction>
         </xsd:simpleContent>
     </xsd:complexType>
-    <!--     -->    
+    <!--     -->
     <xsd:complexType name="WorkTypeType">
         <xsd:simpleContent>
             <xsd:extension base="WorkType1Type">
@@ -1465,7 +1493,7 @@
     <xsd:complexType name="TransActionCriteriaType">
         <xsd:sequence>
             <xsd:element name="ActionExpression" type="TransExpressionType" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element name="ChangeStatus"     type="TransChangeStatusType" minOccurs="0"/>
+            <xsd:element name="ChangeStatus" type="TransChangeStatusType" minOccurs="0"/>
         </xsd:sequence>
     </xsd:complexType>
     <!--  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1525,7 +1553,7 @@
     <xsd:complexType name="TransExpression1Type">
         <xsd:simpleContent>
             <xsd:extension base="xsd:token">
-                        </xsd:extension>
+            </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
     <xsd:complexType name="TransExpressionType">
