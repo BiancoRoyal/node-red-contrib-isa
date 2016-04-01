@@ -79,206 +79,85 @@ module.exports = function (RED) {
 
             initialized = false;
             verbose_warn("create Server from XML ...");
-            server = new opcua.OPCUAServer({port: node.port, nodeset_filename: xmlFiles});
+
+            server = new opcua.OPCUAServer({
+                port: node.port,
+                nodeset_filename: xmlFiles,
+                resourcePath: "UA/NodeRED/ISA95Server"});
+
             server.buildInfo.productName = node.name.concat("OPC UA server");
             server.buildInfo.buildNumber = "911";
-            server.buildInfo.buildDate = new Date(2016, 3, 24);
+            server.buildInfo.buildDate = new Date(2016, 4, 1);
             verbose_warn("init next...");
             server.initialize(post_initialize);
+        }
+
+        function addOrganizeObject(organizeNodeObject, nodeBrowseName, namespace) {
+
+            return serverAddressSpace.addObject({
+                organizedBy: organizeNodeObject,
+                nodeId: "ns=" + namespace + ";s=" + nodeBrowseName,
+                browseName: new qualifiedName.QualifiedName({name: nodeBrowseName, namespaceIndex: namespace}),
+                displayName: nodeBrowseName,
+                symbolicName: nodeBrowseName
+            });
+        }
+
+
+        function addOrganizeFolder(organizeNodeObject, nodeBrowseName, namespace) {
+
+            return serverAddressSpace.addObject({
+                organizedBy: organizeNodeObject,
+                typeDefinition: "FolderType",
+                nodeId: "ns=" + namespace + ";s=" + nodeBrowseName,
+                browseName: new qualifiedName.QualifiedName({name: nodeBrowseName, namespaceIndex: namespace}),
+                displayName: nodeBrowseName,
+                symbolicName: nodeBrowseName
+            });
         }
 
         function build_enterprise_structure(namespace, id) {
 
             // ### Level 4 ###
-            var enterprise = serverAddressSpace.addObject({
-                organizedBy: enterprises,
-                nodeId: "ns=" + namespace + ";s=Enterprise" + id,
-                browseName: "Enterprise" + id
-            });
-
-            var sites = serverAddressSpace.addObject({
-                organizedBy: enterprise,
-                nodeId: "ns=" + namespace + ";s=Sites",
-                browseName: "Sites"
-            });
-
-            var site = serverAddressSpace.addObject({
-                organizedBy: sites,
-                nodeId: "ns=" + namespace + ";s=Site" + id,
-                browseName: "Site" + id
-            });
-
-            var areas = serverAddressSpace.addObject({
-                organizedBy: site,
-                nodeId: "ns=" + namespace + ";s=Areas",
-                browseName: "Areas"
-            });
+            var enterprise = addOrganizeObject(enterprises, "Enterprise" + id, namespace);
+            var sites = addOrganizeFolder(enterprise, "Sites", namespace);
+            var site = addOrganizeObject(sites, "Site" + id, namespace);
+            var areas = addOrganizeFolder(site, "Areas", namespace);
 
             // ### Level 3 ###
-            var area = serverAddressSpace.addObject({
-                organizedBy: areas,
-                nodeId: "ns=" + namespace + ";s=Area" + id,
-                browseName: "Area" + id
-            });
-
-            var workcenters = serverAddressSpace.addObject({
-                organizedBy: area,
-                nodeId: "ns=" + namespace + ";s=WorkCenters",
-                browseName: "WorkCenters"
-            });
-
-            var workcenter = serverAddressSpace.addObject({
-                organizedBy: workcenters,
-                nodeId: "ns=" + namespace + ";s=WorkCenter" + id,
-                browseName: "WorkCenter" + id
-            });
+            var area = addOrganizeObject(areas, "Area" + id, namespace);
+            var workcenters = addOrganizeFolder(area, "WorkCenters", namespace);
+            var workcenter = addOrganizeObject(workcenters, "WorkCenter" + id, namespace);
 
             // ### Storage ###
-            var storageZones = serverAddressSpace.addObject({
-                organizedBy: workcenter,
-                nodeId: "ns=" + namespace + ";s=StorageZones",
-                browseName: "StorageZones"
-            });
+            var storageZones = addOrganizeFolder(workcenter, "StorageZones", namespace);
+            var storageZone = addOrganizeObject(storageZones, "StorageZone" + id, namespace);
+            var storageUnits = addOrganizeFolder(storageZone, "StorageUnits", namespace);
+            addOrganizeObject(storageUnits, "StorageUnit" + id, namespace);
 
-            var storageZone = serverAddressSpace.addObject({
-                organizedBy: storageZones,
-                nodeId: "ns=" + namespace + ";s=StorageZone" + id,
-                browseName: "StorageZone" + id
-            });
+            // ### Work Units ###
+            var workunits = addOrganizeFolder(workcenter, "WorkUnits", namespace);
+            var workunit = addOrganizeObject(workunits, "WorkUnit" + id, namespace);
+            var processcells = addOrganizeFolder(workunit, "ProcessCells", namespace);
+            var processcell = addOrganizeObject(processcells, "ProcessCell" + id, namespace);
+            var units = addOrganizeFolder(processcell, "Units", namespace);
+            var unit = addOrganizeObject(units, "Unit" + id, namespace);
+            var lines = addOrganizeFolder(unit, "ProductionLines", namespace);
+            var line = addOrganizeObject(lines, "ProductionLine" + id, namespace);
+            var workcells = addOrganizeFolder(line, "WorkCells", namespace);
+            var workcell = addOrganizeObject(workcells, "WorkCell" + id, namespace);
+            var productionunits = addOrganizeFolder(workcell, "ProductionUnits", namespace);
+            addOrganizeObject(productionunits, "ProductionUnit" + id, namespace);
 
-            var storageUnits = serverAddressSpace.addObject({
-                organizedBy: storageZone,
-                nodeId: "ns=" + namespace + ";s=StorageUnits",
-                browseName: "StorageUnits"
-            });
+            // ### Business structrue ###
+            addOrganizeFolder(enterprise, "MasterRecipes", namespace);
+            addOrganizeFolder(enterprise, "Recipes", namespace);
+            addOrganizeFolder(enterprise, "Materials", namespace);
+            addOrganizeFolder(enterprise, "MaterialLots", namespace);
+            addOrganizeFolder(enterprise, "MaterialSublots", namespace);
 
-            serverAddressSpace.addObject({
-                organizedBy: storageUnits,
-                nodeId: "ns=" + namespace + ";s=StorageUnit" + id,
-                browseName: "StorageUnit" + id
-            });
-
-            var workunits = serverAddressSpace.addObject({
-                organizedBy: workcenter,
-                nodeId: "ns=" + namespace + ";s=WorkUnits",
-                browseName: "WorkUnits"
-            });
-
-            var workunit = serverAddressSpace.addObject({
-                organizedBy: workunits,
-                nodeId: "ns=" + namespace + ";s=WorkUnit" + id,
-                browseName: "WorkUnit" + id
-            });
-
-            var processcells = serverAddressSpace.addObject({
-                organizedBy: workunit,
-                nodeId: "ns=" + namespace + ";s=ProcessCells",
-                browseName: "ProcessCells"
-            });
-
-            var processcell = serverAddressSpace.addObject({
-                organizedBy: processcells,
-                nodeId: "ns=" + namespace + ";s=ProcessCell" + id,
-                browseName: "ProcessCell" + id
-            });
-
-            serverAddressSpace.addObject({
-                organizedBy: processcell,
-                nodeId: "ns=" + namespace + ";s=Storage",
-                browseName: "Storage"
-            });
-
-            var units = serverAddressSpace.addObject({
-                organizedBy: processcell,
-                nodeId: "ns=" + namespace + ";s=Units",
-                browseName: "Units"
-            });
-
-            var unit = serverAddressSpace.addObject({
-                organizedBy: units,
-                nodeId: "ns=" + namespace + ";s=Unit" + id,
-                browseName: "Unit" + id
-            });
-
-            var lines = serverAddressSpace.addObject({
-                organizedBy: unit,
-                nodeId: "ns=" + namespace + ";s=ProductionLines",
-                browseName: "ProductionLines"
-            });
-
-            var line = serverAddressSpace.addObject({
-                organizedBy: lines,
-                nodeId: "ns=" + namespace + ";s=ProductionLine" + id,
-                browseName: "ProductionLine" + id
-            });
-
-            var workcells = serverAddressSpace.addObject({
-                organizedBy: line,
-                nodeId: "ns=" + namespace + ";s=WorkCells",
-                browseName: "WorkCells"
-            });
-
-            var workcell = serverAddressSpace.addObject({
-                organizedBy: workcells,
-                nodeId: "ns=" + namespace + ";s=WorkCell" + id,
-                browseName: "WorkCell" + id
-            });
-
-            var productionunits = serverAddressSpace.addObject({
-                organizedBy: workcell,
-                nodeId: "ns=" + namespace + ";s=ProductionUnits",
-                browseName: "ProductionUnits"
-            });
-
-            serverAddressSpace.addObject({
-                organizedBy: productionunits,
-                nodeId: "ns=" + namespace + ";s=ProductionUnit" + id,
-                browseName: "ProductionUnit" + id
-            });
-
-
-            // business
-            serverAddressSpace.addObject({
-                organizedBy: processcell,
-                nodeId: "ns=" + namespace + ";s=Orders",
-                browseName: "Orders"
-            });
-
-            serverAddressSpace.addObject({
-                organizedBy: enterprise,
-                nodeId: "ns=" + namespace + ";s=MasterRecipes",
-                browseName: "MasterRecipe"
-            });
-
-            serverAddressSpace.addObject({
-                organizedBy: enterprise,
-                nodeId: "ns=" + namespace + ";s=Recipes",
-                browseName: "Recipe"
-            });
-
-            serverAddressSpace.addObject({
-                organizedBy: processcell,
-                nodeId: "ns=" + namespace + ";s=ControlRecipes",
-                browseName: "ControlRecipe"
-            });
-
-            serverAddressSpace.addObject({
-                organizedBy: enterprise,
-                nodeId: "ns=" + namespace + ";s=Materials",
-                browseName: "Materials"
-            });
-
-            serverAddressSpace.addObject({
-                organizedBy: enterprise,
-                nodeId: "ns=" + namespace + ";s=MaterialLots",
-                browseName: "Materiallots"
-            });
-
-            serverAddressSpace.addObject({
-                organizedBy: enterprise,
-                nodeId: "ns=" + namespace + ";s=MaterialSublots",
-                browseName: "Materialsublots"
-            });
+            addOrganizeFolder(processcell, "Orders", namespace);
+            addOrganizeFolder(processcell, "ControlRecipes", namespace);
         }
 
         function construct_my_address_space() {
@@ -300,14 +179,17 @@ module.exports = function (RED) {
             examples = serverAddressSpace.addObject({
                 organizedBy: serverAddressSpace.rootFolder.objects,
                 nodeId: "ns=4;s=Examples",
-                browseName: "Examples"
-                // browseName: new qualifiedName.QualifiedName({name: "Examples", namespaceIndex: 4})
+                browseName: new qualifiedName.QualifiedName({name: "Examples", namespaceIndex: 4}),
+                displayName: "Examples",
+                symbolicName: "Examples"
             });
 
             enterprises = serverAddressSpace.addObject({
                 organizedBy: serverAddressSpace.rootFolder.objects,
                 nodeId: "ns=4;s=Enterprises",
-                browseName: "Enterprises"
+                browseName: new qualifiedName.QualifiedName({name: "Enterprises", namespaceIndex: 4}),
+                displayName: "Enterprises",
+                symbolicName: "Enterprises"
             });
 
             build_enterprise_structure(5, 1);
@@ -320,8 +202,10 @@ module.exports = function (RED) {
 
             serverAddressSpace.addVariable({
                 componentOf: examples,
-                nodeId: "ns=4;s=MyVariable2",
-                browseName: "MyVariable2",
+                nodeId: "ns=4;s=MyVariable",
+                browseName: new qualifiedName.QualifiedName({name: "MyVariable", namespaceIndex: 4}),
+                displayName: "MyVariable",
+                symbolicName: "MyVariable",
                 dataType: opcua.DataType.Double,
 
                 value: {
@@ -340,8 +224,10 @@ module.exports = function (RED) {
             serverAddressSpace.addVariable({
                 componentOf: examples,
                 nodeId: "ns=4;s=FreeMemory",
-                browseName: "FreeMemory",
                 dataType: opcua.DataType.Double,
+                browseName: new qualifiedName.QualifiedName({name: "FreeMemory", namespaceIndex: 4}),
+                displayName: "FreeMemory",
+                symbolicName: "FreeMemory",
 
                 value: {
                     get: function () {
@@ -355,8 +241,10 @@ module.exports = function (RED) {
             serverAddressSpace.addVariable({
                 componentOf: examples,
                 nodeId: "ns=4;s=Counter",
-                browseName: "Counter",
                 dataType: opcua.DataType.UInt16,
+                browseName: new qualifiedName.QualifiedName({name: "Counter", namespaceIndex: 4}),
+                displayName: "Counter",
+                symbolicName: "Counter",
 
                 value: {
                     get: function () {
@@ -367,7 +255,9 @@ module.exports = function (RED) {
 
             var method = serverAddressSpace.addMethod(
                 examples, {
-                    browseName: "Bark",
+                    browseName: new qualifiedName.QualifiedName({name: "Bark", namespaceIndex: 4}),
+                    displayName: "Bark",
+                    symbolicName: "Bark",
 
                     inputArguments: [
                         {
@@ -421,7 +311,7 @@ module.exports = function (RED) {
 
                 serverAddressSpace = server.engine.addressSpace;
 
-                if(!serverAddressSpace) {
+                if (!serverAddressSpace) {
                     verbose_warn("post initialize - AddressSpace not ready to use");
                     return;
                 }
@@ -476,7 +366,7 @@ module.exports = function (RED) {
                 verbose_warn("Server is not initialized");
             }
 
-            if(!serverAddressSpace) {
+            if (!serverAddressSpace) {
                 verbose_warn("Server has no valid AddressSpace");
             }
 
@@ -564,16 +454,26 @@ module.exports = function (RED) {
                                 return;
                             }
 
-                            var references = rootFolder.findReferences("Organizes", true);
 
                             if (!mapping.structureNodeId) {
                                 verbose_warn("mapping.structureNodeId not valid " + mapping.structureNodeId);
                                 return;
                             }
 
+                            var references;
+
+                            switch (mapping.structureType) {
+
+                                case 'Variable':
+                                    references = rootFolder.findReferences("HasComponent", true);
+                                    break;
+
+                                default:
+                                    references = rootFolder.findReferences("Organizes", true);
+                            }
+
                             if (findReference(references, mapping.structureNodeId)) {
                                 verbose_log(mapping.structureNodeId + " Mapping Reference found in " + mapping.structureParentNodeId);
-
                             }
                             else {
                                 verbose_warn(mapping.structureNodeId + " Mapping Reference not found in " + mapping.structureParentNodeId);
@@ -681,7 +581,7 @@ module.exports = function (RED) {
                 var item = read_mapped_value(mapping.structureNodeId, initValue);
 
                 serverAddressSpace.addVariable({
-                    organizedBy: rootFolder,
+                    componentOf: rootFolder,
                     nodeId: mapping.structureNodeId,
                     browseName: mapping.structureName,
                     // browseName: new qualifiedName.QualifiedName({name: "Examples", namespaceIndex: 4})

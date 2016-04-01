@@ -54,8 +54,11 @@ module.exports = function (RED) {
 
             verbose_log("ISA95B2MMLHelperNodeAction: " + node.action);
 
-            xsd2json(path.join(__dirname, 'public/vendor/mesa/Schema/B2MML-V0600-Material.xsd'), function(err, jsonSchema) {
-                work_with_equipment_schema(msg.payload, jsonSchema);
+            xsd2json(path.join(__dirname, 'public/vendor/mesa/Schema/B2MML-V0600-Material.xsd'))
+                .pipe(process.stdout);
+
+            xsd2json(filename, function(err, schemaObject) {
+                node.log(JSON.stringify(schemaObject, null, 2));
             });
 
             var data = msg.payload;
