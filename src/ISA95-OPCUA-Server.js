@@ -103,7 +103,6 @@ module.exports = function (RED) {
             });
         }
 
-
         function addOrganizeFolder(organizeNodeObject, nodeBrowseName, namespace) {
 
             return serverAddressSpace.addObject({
@@ -119,35 +118,35 @@ module.exports = function (RED) {
         function build_enterprise_structure(namespace, id) {
 
             // ### Level 4 ###
-            var enterprise = addOrganizeObject(enterprises, "Enterprise" + id, namespace);
+            var enterprise = addOrganizeFolder(enterprises, "Enterprise" + id, namespace);
             var sites = addOrganizeFolder(enterprise, "Sites", namespace);
-            var site = addOrganizeObject(sites, "Site" + id, namespace);
+            var site = addOrganizeFolder(sites, "Site" + id, namespace);
             var areas = addOrganizeFolder(site, "Areas", namespace);
 
             // ### Level 3 ###
-            var area = addOrganizeObject(areas, "Area" + id, namespace);
+            var area = addOrganizeFolder(areas, "Area" + id, namespace);
             var workcenters = addOrganizeFolder(area, "WorkCenters", namespace);
-            var workcenter = addOrganizeObject(workcenters, "WorkCenter" + id, namespace);
+            var workcenter = addOrganizeFolder(workcenters, "WorkCenter" + id, namespace);
 
             // ### Storage ###
             var storageZones = addOrganizeFolder(workcenter, "StorageZones", namespace);
-            var storageZone = addOrganizeObject(storageZones, "StorageZone" + id, namespace);
+            var storageZone = addOrganizeFolder(storageZones, "StorageZone" + id, namespace);
             var storageUnits = addOrganizeFolder(storageZone, "StorageUnits", namespace);
-            addOrganizeObject(storageUnits, "StorageUnit" + id, namespace);
+            addOrganizeFolder(storageUnits, "StorageUnit" + id, namespace);
 
             // ### Work Units ###
             var workunits = addOrganizeFolder(workcenter, "WorkUnits", namespace);
-            var workunit = addOrganizeObject(workunits, "WorkUnit" + id, namespace);
+            var workunit = addOrganizeFolder(workunits, "WorkUnit" + id, namespace);
             var processcells = addOrganizeFolder(workunit, "ProcessCells", namespace);
-            var processcell = addOrganizeObject(processcells, "ProcessCell" + id, namespace);
+            var processcell = addOrganizeFolder(processcells, "ProcessCell" + id, namespace);
             var units = addOrganizeFolder(processcell, "Units", namespace);
-            var unit = addOrganizeObject(units, "Unit" + id, namespace);
+            var unit = addOrganizeFolder(units, "Unit" + id, namespace);
             var lines = addOrganizeFolder(unit, "ProductionLines", namespace);
-            var line = addOrganizeObject(lines, "ProductionLine" + id, namespace);
+            var line = addOrganizeFolder(lines, "ProductionLine" + id, namespace);
             var workcells = addOrganizeFolder(line, "WorkCells", namespace);
-            var workcell = addOrganizeObject(workcells, "WorkCell" + id, namespace);
+            var workcell = addOrganizeFolder(workcells, "WorkCell" + id, namespace);
             var productionunits = addOrganizeFolder(workcell, "ProductionUnits", namespace);
-            addOrganizeObject(productionunits, "ProductionUnit" + id, namespace);
+            addOrganizeFolder(productionunits, "ProductionUnit" + id, namespace);
 
             // ### Business structrue ###
             addOrganizeFolder(enterprise, "MasterRecipes", namespace);
@@ -176,22 +175,8 @@ module.exports = function (RED) {
                 return;
             }
 
-            examples = serverAddressSpace.addObject({
-                organizedBy: serverAddressSpace.rootFolder.objects,
-                nodeId: "ns=4;s=Examples",
-                browseName: new qualifiedName.QualifiedName({name: "Examples", namespaceIndex: 4}),
-                displayName: "Examples",
-                symbolicName: "Examples"
-            });
-
-            enterprises = serverAddressSpace.addObject({
-                organizedBy: serverAddressSpace.rootFolder.objects,
-                nodeId: "ns=4;s=Enterprises",
-                browseName: new qualifiedName.QualifiedName({name: "Enterprises", namespaceIndex: 4}),
-                displayName: "Enterprises",
-                symbolicName: "Enterprises"
-            });
-
+            enterprises = addOrganizeFolder(serverAddressSpace.rootFolder.objects, "Enterprises", 4);
+            examples = addOrganizeFolder(serverAddressSpace.rootFolder.objects, "Examples", 4);
             build_enterprise_structure(5, 1);
             build_enterprise_structure(6, 2);
 
