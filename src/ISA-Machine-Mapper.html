@@ -25,25 +25,14 @@ SOFTWARE.
 @author <a href="mailto:klaus.landsdorf@bianco-royal.de">Klaus Landsdorf</a> (Bianco Royal)
 -->
 
-<script type="text/javascript">
-    RED.nodes.registerType('ISA-Machine-Id', {
-        category: 'config',
-        defaults: {
-            machine: {value: '', required: true},
-            interface: {value: '', required: true}
-        },
-        label: function () {
-            return this.machine + ' (' + this.interface + ')';
-        }
-    });
-</script>
+
 
 <script type="text/javascript">
     RED.nodes.registerType('ISA-Machine-Mapper', {
         category: 'isa',
         color: '#FF7030',
         defaults: {
-            machineid: {type: 'ISA-Machine-Id', required: true},
+            machineid: {type: 'ISA-MachineId', required: true},
             name: {value: ''},
             topic: {value: ''},
             group: {value: ''},
@@ -403,20 +392,7 @@ SOFTWARE.
 </script>
 
 
-<script type="text/x-red" data-template-name="ISA-Machine-Id">
-    <div class="form-row">
-        <label for="node-config-input-machine"><i class="icon-tag"></i> Machine</label>
-        <input type="text" id="node-config-input-machine">
-    </div>
-    <div class="form-row">
-        <label for="node-config-input-interface"><i class="icon-cogs"></i> Type</label>
-        <input type="text" id="node-config-input-interface" placeholder="ModbusTCP or MQTT or ...">
-    </div>
-
-
-</script>
-
-<script type="text/x-red" data-template-name="ISA95-Machine-Mapper">
+<script type="text/x-red" data-template-name="ISA-Machine-Mapper">
     <div class="form-row" style="min-width:640px">
         <label for="node-input-machineid"><i class="fa fa-table"></i> Machine</label>
         <input type="text" id="node-input-machineid">
@@ -451,8 +427,6 @@ SOFTWARE.
     <div class="form-row">
         <a href="#" class="editor-button editor-button-small" id="node-input-add-button" style="margin-top: 4px;"><i class="fa fa-plus"></i> add</a>
     </div>
-
-
 </script>
 
 <script type="text/x-red" data-help-name="ISA-Machine-Mapper">
@@ -461,6 +435,4 @@ SOFTWARE.
     <p><strong>Output 1</strong> RAW</p>
     <p><strong>Output 2</strong> ISA structured model</p>
     <p><strong>Output 3</strong> Mappings</p>
-
-
 </script>

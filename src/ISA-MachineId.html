@@ -26,37 +26,27 @@ SOFTWARE.
 -->
 
 <script type="text/javascript">
-    RED.nodes.registerType('ISA95-Material-Sublot',{
-        category: 'isa',
-        color: '#ffbe3c',
+    RED.nodes.registerType('ISA-MachineId', {
+        category: 'config',
         defaults: {
-            action: {value:"default", required:true},
-            name: {value:""}
+            machine: {value: '', required: true},
+            interface: {value: '', required: true}
         },
-        inputs:1,
-        outputs:1,
-        icon: "isa95-icon.png",
-        label: function() {
-            return this.name||"ISA-95 Material Sublot";
+        label: function () {
+            return this.machine + ' (' + this.interface + ')';
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="ISA95-Material-Sublot">
-     <div class="form-row">
-        <label for="node-input-action"><i class="fa fa-tasks"></i> Action</label>
-        <select type="text" id="node-input-action" style="width:72%;">
-            <option value="default">default</option>
-            <option value="extended">extended</option>
-        </select>
+
+
+<script type="text/x-red" data-template-name="ISA-MachineId">
+    <div class="form-row">
+        <label for="node-config-input-machine"><i class="icon-tag"></i> Machine</label>
+        <input type="text" id="node-config-input-machine">
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label for="node-config-input-interface"><i class="icon-cogs"></i> Type</label>
+        <input type="text" id="node-config-input-interface" placeholder="ModbusTCP or MQTT or ...">
     </div>
-</script>
-
-<script type="text/x-red" data-help-name="ISA95-Material-Sublot">
-    <p>ISA-95 Material-Sublot Model</p>
-    <p>Action is default or extended.</p>
 </script>

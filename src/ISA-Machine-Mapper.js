@@ -28,16 +28,6 @@
 
 module.exports = function (RED) {
 
-    function ISAMachineIdNode(n) {
-
-        RED.nodes.createNode(this, n);
-
-        this.machine = n.machine;
-        this.interface = n.interface;
-    }
-
-    RED.nodes.registerType("ISA-Machine-Id", ISAMachineIdNode);
-
     function ISAMachineMapperNode(n) {
 
         RED.nodes.createNode(this, n);
@@ -54,7 +44,7 @@ module.exports = function (RED) {
 
         function verbose_warn(logMessage) {
             if (RED.settings.verbose) {
-                node.warn((node.name) ? node.name + ': ' + logMessage : 'B2MML-Helper: ' + logMessage);
+                node.warn((node.name) ? node.name + ': ' + logMessage : 'Machine-Mapper: ' + logMessage);
             }
         }
 

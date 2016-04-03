@@ -38,7 +38,8 @@
       "ISA95OpcUaServerNode": "src/ISA95-OPCUA-Server.js",
       "ISA95PersonNode": "src/ISA95-Person.js",
       "ISA95PhysicalAssetNode": "src/ISA95-PhysicalAsset.js",
-      "ISAMachineMapperNode": "src/ISA-Machine-Mapper.js"
+      "ISAMachineMapperNode": "src/ISA-Machine-Mapper.js",
+      "ISAMachineIdNode": "src/ISA-MachineId.js"
     }
   },
   "dependencies": {
