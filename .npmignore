@@ -1,0 +1,7 @@
+test
+node_modules
+support
+.git
+.gitignore
+*.iml
+*.conf.js
