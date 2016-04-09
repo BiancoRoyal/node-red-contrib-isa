@@ -27,25 +27,28 @@
   },
   "node-red": {
     "nodes": {
-      "ISA95B2MMLHelperNode": "src/B2MML-Helper.js",
-      "ISA95BatchMLHelperNode": "src/BatchML-Helper.js",
-      "ISA95EquipmentNode": "src/ISA95-Equipment.js",
-      "ISA95M2MNode": "src/ISA95-M2M.js",
-      "ISA95M2MOMNode": "src/ISA95-M2MOM.js",
-      "ISA95MaterialLotNode": "src/ISA95-Material-Lot.js",
-      "ISA95MaterialSublotNode": "src/ISA95-Material-Sublot.js",
-      "ISA95MOM2MNode": "src/ISA95-MOM2M.js",
-      "ISA95OpcUaServerNode": "src/ISA95-OPCUA-Server.js",
-      "ISA95PersonNode": "src/ISA95-Person.js",
-      "ISA95PhysicalAssetNode": "src/ISA95-PhysicalAsset.js",
-      "ISAMachineMapperNode": "src/ISA-Machine-Mapper.js",
-      "ISAMachineIdNode": "src/ISA-MachineId.js"
+      "ISA95B2MMLHelperNode": "isa/B2MML-Helper.js",
+      "ISA95BatchMLHelperNode": "isa/BatchML-Helper.js",
+      "ISA95EquipmentNode": "isa/ISA95-Equipment.js",
+      "ISA95M2MNode": "isa/ISA95-M2M.js",
+      "ISA95M2MOMNode": "isa/ISA95-M2MOM.js",
+      "ISA95MaterialLotNode": "isa/ISA95-Material-Lot.js",
+      "ISA95MaterialSublotNode": "isa/ISA95-Material-Sublot.js",
+      "ISA95MOM2MNode": "isa/ISA95-MOM2M.js",
+      "ISA95OpcUaServerNode": "isa/ISA95-OPCUA-Server.js",
+      "ISA95PersonNode": "isa/ISA95-Person.js",
+      "ISA95PhysicalAssetNode": "isa/ISA95-PhysicalAsset.js",
+      "ISAMachineMapperNode": "isa/ISA-Machine-Mapper.js",
+      "ISAMachineIdNode": "isa/ISA-MachineId.js"
     }
   },
   "dependencies": {
-    "async": "1.5.*",
-    "node-opcua": "0.0.52",
-    "treeify": "1.0.*",
-    "prettyjson": "1.1.*"
+    "async": "^1.5.*",
+    "node-opcua": "^0.0.52",
+    "treeify": "^1.0.*",
+    "prettyjson": "^1.1.*"
+  },
+  "scripts": {
+    "test": "karma start isa.conf.js --log-level debug --single-run"
   }
 }
