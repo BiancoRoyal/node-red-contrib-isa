@@ -26,7 +26,6 @@ SOFTWARE.
 -->
 
 
-
 <script type="text/javascript">
     RED.nodes.registerType('ISA-Machine-Mapper', {
         category: 'isa',
@@ -35,6 +34,7 @@ SOFTWARE.
             machineid: {type: 'ISA-MachineId', required: true},
             name: {value: ''},
             topic: {value: ''},
+            register: {value: 1, validate: RED.validators.number()},
             group: {value: ''},
             order: {value: 1, validate: RED.validators.number()},
             mappings: {
@@ -93,7 +93,7 @@ SOFTWARE.
 
                 var container = $('<li/>', {style: "background: #fff; margin:0; padding:8px 0px; border-bottom: 1px solid #ccc;"});
 
-                var row = $('<div id="row'+id+'"/>').appendTo(container);
+                var row = $('<div id="row' + id + '"/>').appendTo(container);
 
                 $('<i style="color: #eee; cursor: move;" class="node-input-mapping-handle fa fa-bars"></i>').appendTo(row);
 
@@ -193,9 +193,9 @@ SOFTWARE.
                 typeStructureField.val(mapping.typeStructure);
 
 
-                structureTypeField.change(function() {
+                structureTypeField.change(function () {
 
-                    if(!typeMachineField || !typeStructureField)
+                    if (!typeMachineField || !typeStructureField)
                         return;
 
                     console.log(structureTypeField.val());
@@ -406,6 +406,10 @@ SOFTWARE.
         <input type="text" id="node-input-topic">
     </div>
     <div class="form-row">
+        <label for="node-input-register"><i class="fa fa-th"></i> Register</label>
+        <input type="text" id="node-input-register" placeholder="size to check input data array">
+    </div>
+    <div class="form-row">
         <label for="node-input-group"><i class="fa fa-object-group"></i> Group</label>
         <select type="text" id="node-input-group" style="width: calc(70% - 132px)">
             <option value="EquipmentType">EquipmentType</option>
@@ -431,7 +435,7 @@ SOFTWARE.
 
 <script type="text/x-red" data-help-name="ISA-Machine-Mapper">
     <p>A simple node that works as wrapper of flat machine data to structure</p>
-
+    <p>The amount of register is configurable. If it doesn't match the input amount the node will stop mapping.</p>
     <p><strong>Output 1</strong> RAW</p>
     <p><strong>Output 2</strong> ISA structured model</p>
     <p><strong>Output 3</strong> Mappings</p>

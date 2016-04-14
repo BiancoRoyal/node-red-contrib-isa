@@ -34,6 +34,7 @@ module.exports = function (RED) {
 
         this.name = n.name;
         this.topic = n.topic;
+        this.register = n.register;
         this.group = n.group;
         this.order = n.order;
         this.mappings = n.mappings;
@@ -53,10 +54,16 @@ module.exports = function (RED) {
                 node.log(logMessage);
             }
         }
-        
+
         this.on('input', function (msg) {
 
             var data = msg.payload;
+
+            if (node.register != msg.payload.length) {
+                node.error("configured size doesn't match input length of register (array)");
+                node.send(msg);
+                return;
+            }
 
             var sendMapping = {
                 'mappingType': 'new',
