@@ -27,6 +27,9 @@
  **/
 
 module.exports = function (RED) {
+    'use strict';
+    var isaBasics = require('./isabasics');
+    var isaOpcUa = require('./isaopcua');
 
     function ISAMachineMapperNode(n) {
 
@@ -65,18 +68,6 @@ module.exports = function (RED) {
                 return;
             }
 
-            var sendMapping = {
-                'mappingType': 'new',
-                'machine': machineConfig.machine,
-                'interface': machineConfig.interface,
-                'name': node.name,
-                'topic': node.topic,
-                'group': node.group,
-                'order': node.order,
-                'mappings': node.mappings
-            };
-
-
             var structuredValues = [];
 
             if (node.mappings.length > 0 && data.length > 0) {
@@ -88,49 +79,34 @@ module.exports = function (RED) {
                         return;
                     }
 
-                    var modbusValue = 0;
+                    var bitValue = 0;
+                    var machineValue = 0;
 
                     if (mapping.quantity > 1) {
-                        for (var i = mapping.start; i < mapping.start + mapping.quantity; i++) {
-                            if (data.length > i) {
-                                modbusValue += data[i];
-                            }
-                            else {
-                                node.error("check start and quantity of structureNodeId mapping " + mapping.structureNodeId);
-                            }
+
+                        bitValue = isaBasics.get_bits_from_quantity(mapping.quantity);
+                        if (bitValue) {
+                            machineValue = isaBasics.reconnect_values(bitValue, mapping.start, data);
                         }
                     }
                     else {
+
                         if (data.length >= mapping.quantity) {
-                            modbusValue += data[mapping.start];
+                            machineValue += data[mapping.start];
+                            bitValue = 16;
                         }
                         else {
                             node.error("check start and quantity of structureNodeId mapping " + mapping.structureNodeId);
+                            return;
                         }
                     }
 
-                    var mappedValue = {
-                        'nodeId': mapping.structureNodeId,
-                        'value': modbusValue,
-                        'datatype': mapping.typeStructure,
-                        'mapping': mapping,
-                        'payload': mapping.structureNodeId + ' write value ' + modbusValue
-                    };
-                    structuredValues.add(mappedValue);
+                    structuredValues.add(isaOpcUa.mapOpcUaMachineValue(mapping, machineValue, bitValue));
                 });
             }
 
-            var sendWriteValue = {
-                'mappingType': 'write',
-                'machine': machineConfig.machine,
-                'interface': machineConfig.interface,
-                'name': node.name,
-                'topic': node.topic,
-                'group': node.group,
-                'order': node.order,
-                'mappings': structuredValues,
-                'payload': structuredValues.length + ' values to write'
-            };
+            var sendMapping = isaOpcUa.newOpcUaMachineMapping(machineConfig, node);
+            var sendWriteValue = isaOpcUa.writeOpcUaMachineMapping(machineConfig, node, structuredValues);
 
             msg = [{payload: data}, {payload: sendWriteValue}, {payload: sendMapping}];
 

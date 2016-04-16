@@ -46,7 +46,7 @@ SOFTWARE.
                     structureNodeId: 'ns=4;s=MyVariable1',
                     structureName: 'MyVariable1',
                     typeMachine: 'UInt16',
-                    typeStructure: 'UInt32'
+                    typeStructure: 'UInt16'
                 }]
             }
         },
@@ -79,6 +79,8 @@ SOFTWARE.
                 {val: 'Int16', text: 'Int16'},
                 {val: 'UInt32', text: 'UInt32'},
                 {val: 'Int32', text: 'Int32'},
+                {val: 'UInt64', text: 'UInt64'},
+                {val: 'Int64', text: 'Int64'},
                 {val: 'Float', text: 'Float'},
                 {val: 'Double', text: 'Double'},
                 {val: 'BigDecimal', text: 'BigDecimal'}
@@ -399,11 +401,11 @@ SOFTWARE.
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name">
+        <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
-        <input type="text" id="node-input-topic">
+        <input type="text" id="node-input-topic" placeholder="Topic">
     </div>
     <div class="form-row">
         <label for="node-input-register"><i class="fa fa-th"></i> Register</label>
