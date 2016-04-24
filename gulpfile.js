@@ -43,7 +43,7 @@ gulp.task('default', function () {
 
 gulp.task('build', ['minify', 'compress']);
 
-gulp.task('publish', ['minify', 'compress', 'icons', 'vendor']);
+gulp.task('publish', ['build', 'icons', 'vendor']);
 
 gulp.task('icons', function() {
     return gulp.src('src/icons/**/*').pipe(gulp.dest('isa/icons'));

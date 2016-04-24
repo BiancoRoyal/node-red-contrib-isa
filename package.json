@@ -12,6 +12,7 @@
     "ISA-88",
     "ISA",
     "B2MML",
+    "BatchML",
     "OPC UA",
     "opcua",
     "modbus",
@@ -51,7 +52,7 @@
   "main": "none",
   "scripts": {
     "test": "karma start isa.conf.js --log-level debug --single-run",
-    "build": "gulp build",
+    "build": "gulp publish",
     "prepublish": "npm run build"
   },
   "files": ["isa"],
