@@ -506,6 +506,8 @@ module.exports = function (RED) {
 
         function add_opcua_variable(rootFolder, mapping) {
 
+            verbose_log("add_opcua_variable");
+
             var variableDatatype = opcua.DataType.String;
             var initValue = '';
 

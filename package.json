@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "async": "^1.5.*",
-    "node-opcua": "^0.0.52",
+    "node-opcua": "^0.0.54",
     "treeify": "^1.0.*",
     "prettyjson": "^1.1.*"
   },
