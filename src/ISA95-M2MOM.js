@@ -27,8 +27,52 @@
  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- Author:
-    Klaus Landsdorf - http://bianco-royal.de/ - klaus.landsdorf@bianco-royal.de - since 2016
+ @author <a href="mailto:klaus.landsdorf@bianco-royal.de">Klaus Landsdorf</a> (Bianco Royal)
 
- Co-Author:
-    ...
+ **/
+
+module.exports = function (RED) {
+    'use strict';
+    var isaBasics = require('./isabasics');
+
+    function ISA95M2MOMNode(config) {
+
+        RED.nodes.createNode(this, config);
+
+        this.name = config.name;
+        this.register = config.register;
+        this.mappings = config.mappings;
+
+        var node = this;
+
+        var machineConfig = RED.nodes.getNode(config.machineid);
+
+        this.on('input', function (msg) {
+
+            var data = msg.payload;
+
+            if (msg.payload.length != node.register) {
+                node.send(msg);
+                return;
+            }
+
+            var bitValue = 0;
+            var namedValues = [];
+
+            node.mappings.forEach(function (mapping) {
+                bitValue = isaBasics.get_bits_from_quantity(mapping.quantity);
+                var machineValue = isaBasics.reconnect_values(bitValue, mapping.start, msg.payload);
+                namedValues.add(isaBasics.mapMachineValue(mapping, machineValue, bitValue));
+            });
+
+            var sendMapping = isaBasics.newMachineMapping(machineConfig, node);
+            var sendWriteValue = isaBasics.writeMachineMapping(machineConfig, node, namedValues);
+
+            msg = [{payload: data}, {payload: sendWriteValue}, {payload: sendMapping}];
+
+            node.send(msg);
+        });
+    }
+
+    RED.nodes.registerType("ISA95-M2MOM", ISA95M2MOMNode);
+};

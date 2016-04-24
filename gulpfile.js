@@ -27,8 +27,45 @@
  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- Author:
-    Klaus Landsdorf - http://bianco-royal.de/ - klaus.landsdorf@bianco-royal.de - since 2016
+ @author <a href="mailto:klaus.landsdorf@bianco-royal.de">Klaus Landsdorf</a> (Bianco Royal)
 
- Co-Author:
-    ...
+ **/
+
+'use strict';
+
+var gulp = require('gulp');
+var uglify = require('gulp-uglify');
+var htmlmin = require('gulp-htmlmin');
+
+gulp.task('default', function () {
+    // place code for your default task here
+});
+
+gulp.task('build', ['minify', 'compress']);
+
+gulp.task('publish', ['minify', 'compress', 'icons', 'vendor']);
+
+gulp.task('icons', function() {
+    return gulp.src('src/icons/**/*').pipe(gulp.dest('isa/icons'));
+});
+
+gulp.task('vendor', function() {
+    return gulp.src('src/public/**/*').pipe(gulp.dest('isa/public'));
+});
+
+gulp.task('minify', function () {
+    return gulp.src('src/*.html')
+        .pipe(htmlmin({
+            minifyJS: true, minifyCSS: true, minifyURLs: true,
+            maxLineLength: 120, preserveLineBreaks: false,
+            collapseWhitespace: true, collapseInlineTagWhitespace: true, conservativeCollapse: true,
+            processScripts:["text/x-red"], quoteCharacter: "'"
+        }))
+        .pipe(gulp.dest('isa'))
+});
+
+gulp.task('compress', function () {
+    return gulp.src('src/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('isa'));
+});

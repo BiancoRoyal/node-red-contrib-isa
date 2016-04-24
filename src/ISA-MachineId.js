@@ -27,8 +27,19 @@
  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- Author:
-    Klaus Landsdorf - http://bianco-royal.de/ - klaus.landsdorf@bianco-royal.de - since 2016
+ @author <a href="mailto:klaus.landsdorf@bianco-royal.de">Klaus Landsdorf</a> (Bianco Royal)
 
- Co-Author:
-    ...
+ **/
+
+module.exports = function (RED) {
+
+    function ISAMachineIdNode(n) {
+
+        RED.nodes.createNode(this, n);
+
+        this.machine = n.machine;
+        this.interface = n.interface;
+    }
+
+    RED.nodes.registerType("ISA-MachineId", ISAMachineIdNode);
+};

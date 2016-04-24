@@ -27,8 +27,49 @@
  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- Author:
-    Klaus Landsdorf - http://bianco-royal.de/ - klaus.landsdorf@bianco-royal.de - since 2016
+ @author <a href="mailto:klaus.landsdorf@bianco-royal.de">Klaus Landsdorf</a> (Bianco Royal)
 
- Co-Author:
-    ...
+ **/
+
+
+'use strict';
+module.exports = {
+
+    newOpcUaMachineMapping: function (machineConfig, node) {
+        return {
+            'mappingType': 'new',
+            'machine': machineConfig.machine,
+            'interface': machineConfig.interface,
+            'name': node.name,
+            'topic': node.topic,
+            'group': node.group,
+            'order': node.order,
+            'mappings': node.mappings
+        }
+    },
+
+    writeOpcUaMachineMapping: function (machineConfig, node, structuredValues) {
+        return {
+            'mappingType': 'write',
+            'machine': machineConfig.machine,
+            'interface': machineConfig.interface,
+            'name': node.name,
+            'topic': node.topic,
+            'group': node.group,
+            'order': node.order,
+            'mappings': structuredValues,
+            'payload': structuredValues.length + ' values to write'
+        };
+    },
+    
+    mapOpcUaMachineValue: function (mapping, machineValue, bits) {
+        return {
+            'nodeId': mapping.structureNodeId,
+            'value': machineValue,
+            'bits': bits,
+            'datatype': mapping.typeStructure,
+            'mapping': mapping,
+            'payload': mapping.structureNodeId + ' write value ' + machineValue
+        }
+    }
+};

@@ -1,4 +1,4 @@
-/**
+<!--
 
  The BSD 3-Clause License
 
@@ -27,8 +27,43 @@
  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- Author:
-    Klaus Landsdorf - http://bianco-royal.de/ - klaus.landsdorf@bianco-royal.de - since 2016
+ @author <a href="mailto:klaus.landsdorf@bianco-royal.de">Klaus Landsdorf</a> (Bianco Royal)
+-->
+<script type="text/javascript">
+    RED.nodes.registerType('ISA95-OPCUA-Server', {
+        category: 'isa',
+        color:"#FF7030",
+        defaults: {
+            port: {value:"53880",required:true},
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:0,
+        align: "right",
+        icon: "isa95icon.png",
+        label: function() {
+            return this.name||"ISA-95 OPC UA server";
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        }
+    });
+</script>
 
- Co-Author:
-    ...
+
+<script type="text/x-red" data-template-name="ISA95-OPCUA-Server">
+    <div class="form-row">
+        <label for="node-input-port"><i class="icon-tasks"></i> Port</label>
+        <input type="text" id="node-input-port" placeholder="53880">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tasks"></i>Name</label>
+        <input type="text" id="node-input-name" placeholder="ISA95OPCUAServer">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="ISA95-OPCUA-Server">
+    <p>Creates ISA-95 according OPC UA server with own variables to endpoint: opc.tcp://host:port/UA/EndpointName.</p>
+</script>
+
+

@@ -27,8 +27,43 @@
  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- Author:
-    Klaus Landsdorf - http://bianco-royal.de/ - klaus.landsdorf@bianco-royal.de - since 2016
+ @author <a href="mailto:klaus.landsdorf@bianco-royal.de">Klaus Landsdorf</a> (Bianco Royal)
 
- Co-Author:
-    ...
+ **/
+
+
+module.exports = function (RED) {
+
+    function ISA95BatchMLHelperNode(config) {
+
+        RED.nodes.createNode(this, config);
+        this.action = config.action;
+
+        var node = this;
+
+        function verbose_warn(logMessage) {
+            if (RED.settings.verbose) {
+                node.warn((node.name) ? node.name + ': ' + logMessage : 'BatchML-Helper: ' + logMessage);
+            }
+        }
+
+        function verbose_log(logMessage) {
+            if (RED.settings.verbose) {
+                node.log(logMessage);
+            }
+        }
+
+        node.on('input', function (msg) {
+
+            verbose_log("ISA95BatchMLHelperNodeAction: " + node.action);
+
+            node.send(msg);
+        });
+
+        node.on('close', function (msg) {
+            verbose_log("close");
+        });
+    }
+
+    RED.nodes.registerType("BatchML-Helper", ISA95BatchMLHelperNode);
+};
