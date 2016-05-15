@@ -4,6 +4,7 @@
 
  Copyright (c) 2016, Klaus Landsdorf (http://bianco-royal.de/)
  All rights reserved.
+ node-red-contrib-isa
 
  Redistribution and use in source and binary forms, with or without modification,
  are permitted provided that the following conditions are met:

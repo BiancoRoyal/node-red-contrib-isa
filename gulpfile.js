@@ -4,6 +4,7 @@
 
  Copyright (c) 2016, Klaus Landsdorf (http://bianco-royal.de/)
  All rights reserved.
+ node-red-contrib-isa
 
  Redistribution and use in source and binary forms, with or without modification,
  are permitted provided that the following conditions are met:
@@ -41,7 +42,7 @@ gulp.task('default', function () {
     // place code for your default task here
 });
 
-gulp.task('build', ['minify', 'compress']);
+gulp.task('build', ['minify', 'compress', 'uglify']);
 
 gulp.task('publish', ['build', 'icons', 'vendor']);
 
@@ -62,6 +63,12 @@ gulp.task('minify', function () {
             processScripts:["text/x-red"], quoteCharacter: "'"
         }))
         .pipe(gulp.dest('isa'))
+});
+
+gulp.task('uglify', function () {
+    return gulp.src('src/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('isa'));
 });
 
 gulp.task('compress', function () {

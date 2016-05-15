@@ -1,5 +1,8 @@
 test
+.idea
 node_modules
+extras
+examples
 support
 .git
 .gitignore

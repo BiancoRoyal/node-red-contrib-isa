@@ -1,27 +1,29 @@
+[![OPC UA](http://b.repl.ca/v1/OPC-UA-blue.png)](http://opcfoundation.org/)
+
 node-red-contrib-isa
 ========================
 
-A <a href="http://nodered.org" target="_new">Node-RED</a> nodes
-for connectivity M2M, M2MOM and MOM2M
-according to [ISA-95](http://isa-95.com/)
-and [ISA-88](http://isa-88.com/).
+[Node-Red][1] Modbus node package.
+
+Based on [node-opcua][4]
+
+# Install
+
+Run the following command in the root directory of your Node-RED install
+
+    npm install node-red-contrib-isa
+
+Run the following command for global install
+
+    npm install -g node-red-contrib-isa
+
+# How to use
+
+# Author
+[Klaus Landsdorf][3]
 
 
-Install
--------
-
-Pre-reqs
-
-	npm install jsmodbus
-
-	npm install node-opcua
-
-Run command on Node-RED installation directory
-
-	npm install node-red-contrib-isa
-
-
-Usage
------
-
-	...
+[1]:http://nodered.org
+[2]:https://www.npmjs.com/package/jsmodbus
+[3]:https://github.com/biancode
+[4]:http://node-opcua.github.io/

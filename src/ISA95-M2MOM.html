@@ -38,11 +38,11 @@
             machineid: {type: 'ISA-MachineId', required: true},
             name: {value: ''},
             topic: {value: ''},
-            register: {value: 1, validate: RED.validators.number()},
+            register: {value: '1', validate: RED.validators.number()},
             mappings: {
                 value: [{
-                    start: {value: 0, validate: RED.validators.number()},
-                    quantity: {value: 1, validate: RED.validators.number()},
+                    start: {value: '', validate: RED.validators.number()},
+                    quantity: {value: '', validate: RED.validators.number()},
                     valueName: '',
                     valueType: 'UInt16',
                     typeChange: 'UInt32'
