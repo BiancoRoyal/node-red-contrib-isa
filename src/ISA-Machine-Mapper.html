@@ -47,7 +47,7 @@
                     structureType: 'Variable',
                     start: '0',
                     quantity: '1',
-                    structureParentNodeId: 'ns=0;i=85',
+                    structureParentNodeId: 'ns=4;s=Examples',
                     structureNodeId: 'ns=4;s=MyVariable1',
                     structureName: 'MyVariable1',
                     typeMachine: 'UInt16',
@@ -149,9 +149,12 @@
                     placeholder: 'MyVariable1'
                 }).appendTo(row);
 
+                var typeMachineField,
+                        typeStructureField;
+
                 if (mapping.structureType === 'Variable') {
 
-                    var typeMachineField = $('<select/>', {
+                    typeMachineField = $('<select/>', {
                         id: 'node-input-mapping-typeMachine',
                         type: 'text'
                     }).appendTo(row);
@@ -163,7 +166,7 @@
                         typeMachineField.append($("<option>").attr('value', this.val).text(this.text));
                     });
 
-                    var typeStructureField = $('<select/>', {
+                    typeStructureField = $('<select/>', {
                         id: 'node-input-mapping-typeStructure',
                         type: 'text'
                     }).appendTo(row);
@@ -175,14 +178,14 @@
                         typeStructureField.append($("<option>").attr('value', this.val).text(this.text));
                     });
                 } else {
-                    var typeMachineField = $('<input/>', {
+                    typeMachineField = $('<input/>', {
                         id: "node-input-mapping-typeMachine",
                         type: "text",
                         style: "margin-left:5px;width:60px;",
                         placeholder: 'not used'
                     }).appendTo(row);
 
-                    var typeStructureField = $('<input/>', {
+                    typeStructureField = $('<input/>', {
                         id: "node-input-mapping-typeStructure",
                         type: "text",
                         style: "margin-left:5px;width:120px;",
@@ -207,6 +210,9 @@
 
                     console.log(structureTypeField.val());
 
+                    var newTypeMachineField,
+                            newTypeStructureField;
+
                     if (structureTypeField.val() == "Variable") {
 
                         mapping.start = '0';
@@ -214,7 +220,7 @@
                         mapping.typeMachine = 'UInt16';
                         mapping.typeStructure = 'UInt16';
 
-                        var newTypeMachineField = $('<select/>', {
+                        newTypeMachineField = $('<select/>', {
                             id: 'node-input-mapping-typeMachine',
                             type: 'text'
                         });
@@ -230,7 +236,7 @@
                             newTypeMachineField.append($("<option>").attr('value', this.val).text(this.text));
                         });
 
-                        var newTypeStructureField = $('<select/>', {
+                        newTypeStructureField = $('<select/>', {
                             id: 'node-input-mapping-typeStructure',
                             type: 'text'
                         });
@@ -253,7 +259,7 @@
                         mapping.typeMachine = '';
                         mapping.typeStructure = '';
 
-                        var newTypeMachineField = $('<input/>', {
+                        newTypeMachineField = $('<input/>', {
                             id: "node-input-mapping-typeMachine",
                             type: "text",
                             style: "margin-left:5px;width:60px;",
@@ -264,7 +270,7 @@
 
                         typeMachineField = newTypeMachineField;
 
-                        var newTypeStructureField = $('<input/>', {
+                        newTypeStructureField = $('<input/>', {
                             id: "node-input-mapping-typeStructure",
                             type: "text",
                             style: "margin-left:5px;width:120px;",
@@ -370,7 +376,7 @@
 
             node.mappings = [];
 
-            mappings.each(function (i) {
+            mappings.each(function (mappingItem) {
 
                 var mappingEntry = $(this);
 
