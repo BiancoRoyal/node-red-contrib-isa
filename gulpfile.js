@@ -42,7 +42,8 @@ gulp.task('default', function () {
     // place code for your default task here
 });
 
-gulp.task('build', ['minify', 'compress', 'uglify']);
+gulp.task('build', ['minify', 'uglify']);
+// gulp.task('build', ['minify', 'nodejs']);
 
 gulp.task('publish', ['build', 'icons', 'vendor']);
 
@@ -71,8 +72,7 @@ gulp.task('uglify', function () {
         .pipe(gulp.dest('isa'));
 });
 
-gulp.task('compress', function () {
+gulp.task('nodejs', function () {
     return gulp.src('src/*.js')
-        .pipe(uglify())
         .pipe(gulp.dest('isa'));
 });

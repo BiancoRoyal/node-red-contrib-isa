@@ -1,6 +1,6 @@
 {
   "name": "@biancoroyal/node-red-contrib-isa",
-  "version": "0.1.54",
+  "version": "0.1.56",
   "description": "A Node-RED node to build ISA-95 and ISA-88 based connectivity.",
   "repository": {
     "type": "git",
@@ -28,17 +28,10 @@
   },
   "node-red": {
     "nodes": {
-      "ISA95B2MMLHelperNode": "isa/B2MML-Helper.js",
-      "ISA95BatchMLHelperNode": "isa/BatchML-Helper.js",
-      "ISA95EquipmentNode": "isa/ISA95-Equipment.js",
       "ISA95M2MNode": "isa/ISA95-M2M.js",
       "ISA95M2MOMNode": "isa/ISA95-M2MOM.js",
-      "ISA95MaterialLotNode": "isa/ISA95-Material-Lot.js",
-      "ISA95MaterialSublotNode": "isa/ISA95-Material-Sublot.js",
       "ISA95MOM2MNode": "isa/ISA95-MOM2M.js",
       "ISA95OpcUaServerNode": "isa/ISA95-OPCUA-Server.js",
-      "ISA95PersonNode": "isa/ISA95-Person.js",
-      "ISA95PhysicalAssetNode": "isa/ISA95-PhysicalAsset.js",
       "ISAMachineMapperNode": "isa/ISA-Machine-Mapper.js",
       "ISAMachineIdNode": "isa/ISA-MachineId.js"
     }
