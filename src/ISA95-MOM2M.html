@@ -34,24 +34,260 @@
         category: 'isa',
         color: '#FF7030',
         defaults: {
-            name: {value:""}
+            machineid: {type: 'ISA-MachineId', required: true},
+            name: {value: ''},
+            topic: {value: ''},
+            register: {value: '1', validate: RED.validators.number()},
+            mappings: {
+                value: [{
+                    valueName: 'ns=4;s=MyVariable',
+                    valueType: 'UInt32',
+                    typeChange: 'UInt16',
+                    start: {value: 0, validate: RED.validators.number()},
+                    quantity: {value: 2, validate: RED.validators.number()}
+                }]
+            }
         },
-        inputs:1,
-        outputs:1,
+        inputs: 1,
+        outputs: 3,
         icon: "isa95-icon.png",
-        label: function() {
-            return this.name||"ISA-95 MOM2M";
+        label: function () {
+            return this.name || "ISA-95 MOM2M";
+        },
+        oneditprepare: function () {
+
+            var valueTypes = [{val: 'Boolean', text: 'Boolean'},
+                {val: 'UInt16', text: 'UInt16'},
+                {val: 'Int16', text: 'Int16'},
+                {val: 'UInt32', text: 'UInt32'},
+                {val: 'Int32', text: 'Int32'},
+                {val: 'UInt64', text: 'UInt64'},
+                {val: 'Int64', text: 'Int64'},
+                {val: 'Real', text: 'Real'},
+                {val: 'LReal', text: 'LReal'}
+            ];
+
+            var typeChanges = [{val: 'Boolean', text: 'Boolean'},
+                {val: 'UInt16', text: 'UInt16'},
+                {val: 'Int16', text: 'Int16'},
+                {val: 'UInt32', text: 'UInt32'},
+                {val: 'Int32', text: 'Int32'},
+                {val: 'UInt64', text: 'UInt64'},
+                {val: 'Int64', text: 'Int64'},
+                {val: 'Float', text: 'Float'},
+                {val: 'Double', text: 'Double'},
+                {val: 'BigDecimal', text: 'BigDecimal'}
+            ];
+
+            function resizeButton(mapping, width) {
+                var lastField = mapping.find(".node-input-mapping-typeChange");
+                // lastField.width(width - 120);
+            }
+
+            function generateButton(mapping, id) {
+
+                var container = $('<li/>', {style: "background: #fff; margin:0; padding:8px 0px; border-bottom: 1px solid #ccc;"});
+
+                var row = $('<div id="row' + id + '"/>').appendTo(container);
+
+                $('<i style="color: #eee; cursor: move;" class="node-input-mapping-handle fa fa-bars"></i>').appendTo(row);
+
+                var valueNameField = $('<input/>', {
+                    id: "node-input-mapping-valueName",
+                    type: "text",
+                    style: "margin-left:5px;width:150px;",
+                    placeholder: 'MyVariable1'
+                }).appendTo(row);
+
+                var valueTypeField = $('<select/>', {
+                    id: 'node-input-mapping-valueType',
+                    type: 'text'
+                }).appendTo(row);
+
+                valueTypeField.css('margin-left', '5px');
+                valueTypeField.css('width', '100px');
+
+                $(valueTypes).each(function () {
+                    valueTypeField.append($("<option>").attr('value', this.val).text(this.text));
+                });
+
+                var typeChangeField = $('<select/>', {
+                    id: 'node-input-mapping-typeChange',
+                    type: 'text'
+                }).appendTo(row);
+
+                typeChangeField.css('margin-left', '5px');
+                typeChangeField.css('width', '100px');
+
+                $(typeChanges).each(function () {
+                    typeChangeField.append($("<option>").attr('value', this.val).text(this.text));
+                });
+
+                var startField = $('<input/>', {
+                    id: "node-input-mapping-start",
+                    type: "text",
+                    style: "margin-left:5px;width:50px;",
+                    placeholder: 'start'
+                }).appendTo(row);
+
+                var quantityField = $('<input/>', {
+                    id: "node-input-mapping-quantity",
+                    type: "text",
+                    style: "margin-left:5px;width:50px;",
+                    placeholder: 'quantity'
+                }).appendTo(row);
+
+                valueNameField.val(mapping.valueName);
+                valueTypeField.val(mapping.valueType);
+                typeChangeField.val(mapping.typeChange);
+                startField.val(mapping.start);
+                quantityField.val(mapping.quantity);
+
+                mapping.valueName = '';
+                mapping.valueType = '';
+                mapping.typeChange = '';
+                mapping.start = '';
+                mapping.quantity = '';
+
+                var finalspan = $('<span/>', {style: "float: right;margin-right: 10px;"}).appendTo(row);
+
+                var deleteMapping = $('<a/>', {
+                    href: "#",
+                    class: "editor-button editor-button-small",
+                    style: "margin-top: 7px; margin-left: 5px;"
+                }).appendTo(finalspan);
+
+                $('<i/>', {class: "fa fa-remove"}).appendTo(deleteMapping);
+
+                deleteMapping.click(function () {
+                    container.css({"background": "#fee"});
+                    container.fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                });
+
+                $("#node-input-mappings-container").append(container);
+
+                var width = $("#node-input-mappings-container").width();
+
+                resizeButton(container, width);
+            }
+
+            $("#node-input-add-button").click(function () {
+                generateButton({
+                    valueName: '',
+                    valueType: '',
+                    typeChange: '',
+                    start: '',
+                    quantity: ''
+                });
+                $("#node-input-mappings-container-div").scrollTop($("#node-input-mappings-container-div").get(0).scrollHeight);
+            });
+
+            for (var i = 0; i < this.mappings.length; i++) {
+                var rule = this.mappings[i];
+                generateButton(rule, i);
+            }
+
+            function switchDialogResize() {
+                var rows = $("#dialog-form>div:not(.node-input-mappings-container-row)");
+                var height = $("#dialog-form").height();
+                for (var i = 0; i < rows.size(); i++) {
+                    height -= $(rows[i]).outerHeight(true);
+                }
+                var editorRow = $("#dialog-form>div.node-input-mappings-container-row");
+                height -= (parseInt(editorRow.css("marginTop")) + parseInt(editorRow.css("marginBottom")));
+                $("#node-input-mappings-container-div").css("height", height + "px");
+
+                var mappings = $("#node-input-mappings-container").children();
+                var newWidth = $("#node-input-mappings-container").width();
+                mappings.each(function (i) {
+                    resizeButton($(this), newWidth);
+                });
+            }
+
+            $("#node-input-mappings-container").sortable({
+                axis: "y",
+                handle: ".node-input-mapping-handle",
+                cursor: "move"
+            });
+
+            $("#node-input-mappings-container .node-input-mapping-handle").disableSelection();
+
+            $("#dialog").on("dialogresize", switchDialogResize);
+            $("#dialog").one("dialogopen", function (ev) {
+                var size = $("#dialog").dialog('option', 'sizeCache-switch');
+                if (size) {
+                    $("#dialog").dialog('option', 'width', size.width);
+                    $("#dialog").dialog('option', 'height', size.height);
+                    switchDialogResize();
+                } else {
+                    setTimeout(switchDialogResize, 10);
+                }
+            });
+            $("#dialog").one("dialogclose", function (ev, ui) {
+                $("#dialog").off("dialogresize", switchDialogResize);
+            });
+        },
+        oneditsave: function () {
+            var mappings = $("#node-input-mappings-container").children();
+            var node = this;
+
+            node.mappings = [];
+
+            mappings.each(function (i) {
+
+                var mappingEntry = $(this);
+
+                var valueNameFieldValue = mappingEntry.find("#node-input-mapping-valueName").val();
+                var valueTypeFieldValue = mappingEntry.find("#node-input-mapping-valueType").val();
+                var typeChangeFieldValue = mappingEntry.find("#node-input-mapping-typeChange").val();
+                var startFieldValue = mappingEntry.find("#node-input-mapping-start").val();
+                var quantityFieldValue = mappingEntry.find("#node-input-mapping-quantity").val();
+
+                node.mappings.push({
+                    valueName: valueNameFieldValue,
+                    valueType: valueTypeFieldValue,
+                    typeChange: typeChangeFieldValue,
+                    start: startFieldValue,
+                    quantity: quantityFieldValue
+                });
+            });
         }
     });
 </script>
 
 <script type="text/x-red" data-template-name="ISA95-MOM2M">
+    <div class="form-row" style="min-width:640px">
+        <label for="node-input-machineid"><i class="fa fa-table"></i> Machine</label>
+        <input type="text" id="node-input-machineid">
+    </div>
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-register"><i class="fa fa-th"></i> Register</label>
+        <input type="text" id="node-input-register" placeholder="size to check input data array">
+    </div>
+    <div class="form-row node-input-mappings-container-row" style="margin-bottom: 0px;">
+        <div id="node-input-mappings-container-div" style="box-sizing: border-box; border-radius: 5px; height: 210px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;">
+            <ol id="node-input-mappings-container" style=" list-style-type:none; margin: 0;"></ol>
+        </div>
+    </div>
+    <div class="form-row">
+        <a href="#" class="editor-button editor-button-small" id="node-input-add-button" style="margin-top: 4px;"><i class="fa fa-plus"></i> add</a>
+    </div>
 </script>
 
 <script type="text/x-red" data-help-name="ISA95-MOM2M">
-    <p>A simple node that work as wrapper for MOM2M</p>
+    <p>A simple node that work as wrapper for MOM2M to name variables in register</p>
+
+    <p><strong>Output 1</strong> RAW</p>
+    <p><strong>Output 2</strong> JSON of named data</p>
+    <p><strong>Output 3</strong> Mappings</p>
 </script>
