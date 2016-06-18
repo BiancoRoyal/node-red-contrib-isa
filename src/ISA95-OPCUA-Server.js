@@ -35,6 +35,7 @@
 module.exports = function (RED) {
     "use strict";
     var opcua = require('node-opcua');
+    var isaOpcUa = require('./isaopcua');
     var qualifiedName = require("node-opcua/lib/datamodel/qualified_name");
     var path = require('path');
     var os = require("os");
@@ -89,7 +90,8 @@ module.exports = function (RED) {
             server = new opcua.OPCUAServer({
                 port: node.port,
                 nodeset_filename: xmlFiles,
-                resourcePath: "UA/NodeRED/ISA95Server"});
+                resourcePath: "UA/NodeRED/ISA95Server"
+            });
 
             server.buildInfo.productName = node.name.concat("OPC UA server");
             server.buildInfo.buildNumber = "911";
@@ -497,7 +499,7 @@ module.exports = function (RED) {
                     payload.mappings.forEach(function (mapping) {
                         try {
                             verbose_log("mapping write for " + mapping.nodeId);
-                            write_mapped_value(mapping.nodeId, mapping.value);
+                            write_mapped_value(mapping.nodeId, mapping.value, mapping.typeStructure);
                             verbose_log("value written for " + mapping.nodeId);
                         } catch (err) {
                             node.error(err);
@@ -514,78 +516,69 @@ module.exports = function (RED) {
 
             verbose_log("add_opcua_variable");
 
-            var variableDatatype = opcua.DataType.String;
-            var initValue = '';
-
             verbose_log("structrue Type: " + mapping.typeStructure);
 
-            switch (mapping.typeStructure) {
-
-                case 'Bool':
-                case 'Boolean':
-                    variableDatatype = opcua.DataType.Boolean;
-                    initValue = false;
-                    break;
-
-                case 'Float':
-                    variableDatatype = opcua.DataType.Float;
-                    initValue = 0.0;
-                    break;
-
-                case 'Double':
-                case 'Real':
-                    variableDatatype = opcua.DataType.Double;
-                    initValue = 0.0;
-                    break;
-
-                case 'UInt16':
-                    variableDatatype = opcua.DataType.UInt16;
-                    initValue = 0;
-                    break;
-
-                case 'Int16':
-                    variableDatatype = opcua.DataType.Int16;
-                    initValue = 0;
-                    break;
-
-                case 'Int':
-                case 'Int32':
-                case 'Integer':
-                    variableDatatype = opcua.DataType.Int32;
-                    initValue = 0;
-                    break;
-
-                case 'UInt':
-                case 'UInt32':
-                case 'UInteger':
-                    variableDatatype = opcua.DataType.UInt32;
-                    initValue = 0;
-                    break;
-
-                default:
-                    break;
-
-            }
+            var itemDefaultSettings = isaOpcUa.mapOpcUaDatatypeAndInitValue(mapping);
 
             try {
-                verbose_log('datatype ' + variableDatatype + ' value ' + initValue);
-                verbose_log("add Variable to root " + rootFolder.nodeId + ' with NodeId: ' + mapping.structureNodeId + ' browseName: ' + mapping.structureName + ' with datatype ' + variableDatatype.toString() + ' value ' + initValue);
 
-                var item = read_mapped_value(mapping.structureNodeId, initValue);
+                verbose_log('raw datatype ' + itemDefaultSettings.variableDatatype
+                    + ' raw value ' + itemDefaultSettings.initValue);
+
+                verbose_log("add Variable to root " + rootFolder.nodeId + ' with NodeId: ' + mapping.structureNodeId
+                    + ' browseName: ' + mapping.structureName
+                    + ' with datatype string ' + itemDefaultSettings.variableDatatype.toString()
+                    + ' value string ' + itemDefaultSettings.initValue.toString());
+
+                var item = read_mapped_value(mapping.structureNodeId, itemDefaultSettings.initValue, itemDefaultSettings.variableDatatype);
 
                 serverAddressSpace.addVariable({
                     componentOf: rootFolder,
                     nodeId: mapping.structureNodeId,
                     browseName: mapping.structureName,
-                    // browseName: new qualifiedName.QualifiedName({name: "Examples", namespaceIndex: 4})
-                    dataType: variableDatatype,
+                    // identifier: new qualifiedName.QualifiedName({name: "Examples", namespaceIndex: 4}),
+                    dataType: itemDefaultSettings.variableDatatype,
 
                     value: {
                         get: function () {
+                            verbose_log("calling get method" + mapping.structureNodeId
+                                + ' dataType:' + itemDefaultSettings.variableDatatype.toString()
+                                + ' item:' + item + ' raw value ' + item.value
+                                + ' value string:' + item.value.toString());
+
+                            if (item.writtenValue !== null
+                                && item.writtenValue !== undefined
+                                && item.writtenValue !== item.value) {
+                                item.value = item.writtenValue;
+                            }
+
                             return new opcua.Variant({
-                                dataType: variableDatatype,
+                                dataType: itemDefaultSettings.variableDatatype,
                                 value: item.value
                             });
+                        },
+                        set: function (variant) {
+
+                            verbose_log("calling set method " + mapping.structureNodeId
+                                + ' variant:' + isaOpcUa.parseValueByDatatype(variant.value, variant.dataType)
+                                + ' raw value ' + variant.value + ' dataType ' + variant.dataType);
+
+                            if (variant !== null || variant !== undefined) {
+
+                                if (variant.value === null || variant.value === undefined) {
+                                    item.writtenValue = isaOpcUa.getInitValueByDatatype(variant.dataType);
+                                } else {
+                                    item.writtenValue = isaOpcUa.parseValueByDatatype(variant.value, variant.dataType);
+                                }
+                            } else {
+                                item.writtenValue = isaOpcUa.getInitValueByDatatype(itemDefaultSettings.variableDatatype);
+                            }
+
+                            verbose_log("item.value = " + item.value
+                                + " writtenValue = " + item.writtenValue
+                                + " item.value string " + item.value.toString());
+
+                            return opcua.StatusCodes.Good;
                         }
                     }
                 });
@@ -621,7 +614,7 @@ module.exports = function (RED) {
             }
         }
 
-        function read_mapped_value(nodeId, initValue) {
+        function read_mapped_value(nodeId, initValue, variableDatatype) {
 
             var filteredNode = dynamicNodes.filter(function (entry) {
                 return entry.nodeId.toString() === nodeId.toString();
@@ -633,14 +626,24 @@ module.exports = function (RED) {
             }
             else {
                 verbose_log("add mapped item by read " + nodeId);
-                item = {'nodeId': nodeId, 'value': initValue};
+
+                if (initValue === null || initValue === undefined) {
+                    initValue = isaOpcUa.getInitValueByDatatype(variableDatatype);
+                }
+
+                item = {
+                    'nodeId': nodeId,
+                    'value': initValue,
+                    'writtenValue': initValue,
+                    'variableDatatype': variableDatatype
+                };
                 dynamicNodes.add(item);
             }
 
             return item;
         }
 
-        function write_mapped_value(nodeId, value) {
+        function write_mapped_value(nodeId, value, typeStructure) {
 
             var filteredNode = dynamicNodes.filter(function (entry) {
                 return entry.nodeId.toString() === nodeId.toString();
@@ -649,11 +652,29 @@ module.exports = function (RED) {
             if (filteredNode.length) {
                 var item = filteredNode[0];
                 verbose_log('filteredNode length ' + filteredNode.length + " write mapped item " + item);
-                item.value = value;
+
+                if (item.variableDatatype === "Boolean") {
+                    if (value) {
+                        item.value = true;
+                    }
+                    else {
+                        item.value = false;
+                    }
+
+                } else {
+                    item.value = value;
+                }
             }
             else {
                 verbose_log("add mapped item by write " + nodeId);
-                item = {'nodeId': nodeId, 'value': value};
+                var itemDefaultSettings = isaOpcUa.mapOpcUaDatatypeAndInitValue(mapping);
+                verbose_log("item default settings by write " + itemDefaultSettings);
+                item = {
+                    'nodeId': nodeId,
+                    'value': value,
+                    'writtenValue': value,
+                    'variableDatatype': itemDefaultSettings.variableDatatype
+                };
                 dynamicNodes.add(item);
             }
         }

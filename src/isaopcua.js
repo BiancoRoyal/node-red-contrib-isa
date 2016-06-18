@@ -71,5 +71,152 @@ module.exports = {
             'mapping': mapping,
             'payload': mapping.structureNodeId + ' write value ' + machineValue
         }
+    },
+
+    mapOpcUaDatatypeAndInitValue: function (mapping) {
+
+        var mappingDatatype = {variableDatatype: 0, initValue: 0};
+
+        switch (mapping.typeStructure) {
+
+            case 'Bool':
+            case 'Boolean':
+                mappingDatatype.variableDatatype = "Boolean";
+                mappingDatatype.initValue = false;
+                break;
+
+            case 'Float':
+                mappingDatatype.variableDatatype = "Float";
+                mappingDatatype.initValue = 0.0;
+                break;
+
+            case 'Double':
+            case 'Real':
+                mappingDatatype.variableDatatype = "Double";
+                mappingDatatype.initValue = 0.0;
+                break;
+
+            case 'UInt16':
+                mappingDatatype.variableDatatype = "UInt16";
+                mappingDatatype.initValue = 0;
+                break;
+
+            case 'Int16':
+                mappingDatatype.variableDatatype = "Int16";
+                mappingDatatype.initValue = 0;
+                break;
+
+            case 'Int':
+            case 'Int32':
+            case 'Integer':
+                mappingDatatype.variableDatatype = "Int32";
+                mappingDatatype.initValue = 0;
+                break;
+
+            case 'UInt':
+            case 'UInt32':
+            case 'UInteger':
+                mappingDatatype.variableDatatype = "UInt32";
+                mappingDatatype.initValue = 0;
+                break;
+
+            default:
+                break;
+
+        }
+
+        return mappingDatatype;
+    },
+
+
+    getInitValueByDatatype: function (variableDatatype) {
+
+        var opcua = require('node-opcua');
+
+        var initValue = '';
+
+        switch (variableDatatype) {
+
+            case "Boolean":
+                initValue = false;
+                break;
+
+            case "Float":
+                initValue = 0.0;
+                break;
+
+            case "Double":
+                initValue = 0.0;
+                break;
+
+            case "UInt16":
+                initValue = 0;
+                break;
+
+            case "Int16":
+                initValue = 0;
+                break;
+
+            case "Int32":
+                initValue = 0;
+                break;
+
+            case "UInt32":
+                initValue = 0;
+                break;
+
+            default:
+                break;
+
+        }
+
+        return initValue;
+    },
+
+    parseValueByDatatype: function (variantValue, variantDatatype) {
+
+        var opcua = require('node-opcua');
+
+        var parsedValue = variantValue;
+
+        switch (variantDatatype) {
+
+            case opcua.DataType.Boolean:
+            case "Boolean":
+                if (variantValue == true
+                    || variantValue === 'true') {
+
+                    parsedValue = true;
+                }
+                else {
+
+                    parsedValue = false;
+                }
+                break;
+
+            case opcua.DataType.Float:
+            case "Float":
+            case opcua.DataType.Double:
+            case "Double":
+                parsedValue = parseFloat(variantValue);
+                break;
+
+            case opcua.DataType.UInt16:
+            case "UInt16":
+            case opcua.DataType.Int16:
+            case "Int16":
+            case opcua.DataType.Int32:
+            case "Int32":
+            case opcua.DataType.UInt32:
+            case "UInt32":
+                parsedValue = parseInt(variantValue);
+                break;
+
+            default:
+                break;
+
+        }
+
+        return parsedValue;
     }
 };

@@ -42,8 +42,8 @@ gulp.task('default', function () {
     // place code for your default task here
 });
 
-gulp.task('build', ['minify', 'uglify']);
-// gulp.task('build', ['minify', 'nodejs']);
+// gulp.task('build', ['minify', 'uglify']);
+gulp.task('build', ['minify', 'nodejs']);
 
 gulp.task('publish', ['build', 'icons', 'vendor']);
 
