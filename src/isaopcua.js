@@ -73,35 +73,42 @@ module.exports = {
         }
     },
 
-    mapOpcUaDatatypeAndInitValue: function (mapping) {
+    mapOpcUaDatatypeAndInitValue: function (typeStructure) {
 
-        var mappingDatatype = {variableDatatype: 0, initValue: 0};
+        var opcua = require('node-opcua');
 
-        switch (mapping.typeStructure) {
+        var mappingDatatype = {variableDatatype: 'String', initValue: ''};
+
+        switch (typeStructure) {
 
             case 'Bool':
             case 'Boolean':
+            case opcua.DataType.Boolean:
                 mappingDatatype.variableDatatype = "Boolean";
                 mappingDatatype.initValue = false;
                 break;
 
             case 'Float':
+            case opcua.DataType.Float:
                 mappingDatatype.variableDatatype = "Float";
                 mappingDatatype.initValue = 0.0;
                 break;
 
             case 'Double':
             case 'Real':
+            case opcua.DataType.Double:
                 mappingDatatype.variableDatatype = "Double";
                 mappingDatatype.initValue = 0.0;
                 break;
 
             case 'UInt16':
+            case opcua.DataType.UInt16:
                 mappingDatatype.variableDatatype = "UInt16";
                 mappingDatatype.initValue = 0;
                 break;
 
             case 'Int16':
+            case opcua.DataType.Int16:
                 mappingDatatype.variableDatatype = "Int16";
                 mappingDatatype.initValue = 0;
                 break;
@@ -109,6 +116,8 @@ module.exports = {
             case 'Int':
             case 'Int32':
             case 'Integer':
+            case opcua.DataType.Int32:
+            case opcua.DataType.Integer:
                 mappingDatatype.variableDatatype = "Int32";
                 mappingDatatype.initValue = 0;
                 break;
@@ -116,7 +125,21 @@ module.exports = {
             case 'UInt':
             case 'UInt32':
             case 'UInteger':
+            case opcua.DataType.UInt32:
+            case opcua.DataType.UInteger:
                 mappingDatatype.variableDatatype = "UInt32";
+                mappingDatatype.initValue = 0;
+                break;
+
+            case "Int64":
+            case opcua.DataType.Int64:
+                mappingDatatype.variableDatatype = "Int64";
+                mappingDatatype.initValue = 0;
+                break;
+
+            case "UInt64":
+            case opcua.DataType.UInt64:
+                mappingDatatype.variableDatatype = "UInt64";
                 mappingDatatype.initValue = 0;
                 break;
 
@@ -138,30 +161,47 @@ module.exports = {
         switch (variableDatatype) {
 
             case "Boolean":
+            case opcua.DataType.Boolean:
                 initValue = false;
                 break;
 
             case "Float":
+            case opcua.DataType.Float:
                 initValue = 0.0;
                 break;
 
             case "Double":
+            case opcua.DataType.Double:
                 initValue = 0.0;
                 break;
 
             case "UInt16":
+            case opcua.DataType.UInt16:
                 initValue = 0;
                 break;
 
             case "Int16":
+            case opcua.DataType.Int16:
                 initValue = 0;
                 break;
 
             case "Int32":
+            case opcua.DataType.Int32:
                 initValue = 0;
                 break;
 
             case "UInt32":
+            case opcua.DataType.UInt32:
+                initValue = 0;
+                break;
+
+            case "Int64":
+            case opcua.DataType.Int64:
+                initValue = 0;
+                break;
+
+            case "UInt64":
+            case opcua.DataType.UInt64:
                 initValue = 0;
                 break;
 
@@ -209,6 +249,10 @@ module.exports = {
             case "Int32":
             case opcua.DataType.UInt32:
             case "UInt32":
+            case opcua.DataType.Int64:
+            case "Int64":
+            case opcua.DataType.UInt64:
+            case "UInt64":
                 parsedValue = parseInt(variantValue);
                 break;
 

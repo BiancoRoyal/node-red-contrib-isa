@@ -518,7 +518,7 @@ module.exports = function (RED) {
 
             verbose_log("structrue Type: " + mapping.typeStructure);
 
-            var itemDefaultSettings = isaOpcUa.mapOpcUaDatatypeAndInitValue(mapping);
+            var itemDefaultSettings = isaOpcUa.mapOpcUaDatatypeAndInitValue(mapping.typeStructure);
 
             try {
 
@@ -538,19 +538,23 @@ module.exports = function (RED) {
                     browseName: mapping.structureName,
                     // identifier: new qualifiedName.QualifiedName({name: "Examples", namespaceIndex: 4}),
                     dataType: itemDefaultSettings.variableDatatype,
-
+                    
                     value: {
                         get: function () {
+                            /*
                             verbose_log("calling get method" + mapping.structureNodeId
                                 + ' dataType:' + itemDefaultSettings.variableDatatype.toString()
                                 + ' item:' + item + ' raw value ' + item.value
                                 + ' value string:' + item.value.toString());
+                             */
 
                             if (item.writtenValue !== null
                                 && item.writtenValue !== undefined
                                 && item.writtenValue !== item.value) {
                                 item.value = item.writtenValue;
                             }
+
+                            item.value = isaOpcUa.parseValueByDatatype(item.value, itemDefaultSettings.variableDatatype);
 
                             return new opcua.Variant({
                                 dataType: itemDefaultSettings.variableDatatype,
@@ -627,10 +631,6 @@ module.exports = function (RED) {
             else {
                 verbose_log("add mapped item by read " + nodeId);
 
-                if (initValue === null || initValue === undefined) {
-                    initValue = isaOpcUa.getInitValueByDatatype(variableDatatype);
-                }
-
                 item = {
                     'nodeId': nodeId,
                     'value': initValue,
@@ -667,7 +667,7 @@ module.exports = function (RED) {
             }
             else {
                 verbose_log("add mapped item by write " + nodeId);
-                var itemDefaultSettings = isaOpcUa.mapOpcUaDatatypeAndInitValue(mapping);
+                var itemDefaultSettings = isaOpcUa.mapOpcUaDatatypeAndInitValue(typeStructure);
                 verbose_log("item default settings by write " + itemDefaultSettings);
                 item = {
                     'nodeId': nodeId,
