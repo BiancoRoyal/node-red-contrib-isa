@@ -42,9 +42,7 @@ gulp.task('default', function () {
     // place code for your default task here
 });
 
-// gulp.task('build', ['minify', 'uglify']);
-gulp.task('build', ['minify', 'nodejs']);
-
+gulp.task('build', ['websites', 'nodejs']);
 gulp.task('publish', ['build', 'icons', 'vendor']);
 
 gulp.task('icons', function() {
@@ -55,8 +53,8 @@ gulp.task('vendor', function() {
     return gulp.src('src/public/**/*').pipe(gulp.dest('isa/public'));
 });
 
-gulp.task('minify', function () {
-    return gulp.src('src/*.html')
+gulp.task('websites', function () {
+    return gulp.src(['src/*Mapper.html', 'src/*Server.html', 'src/isabasic*.html', 'src/*Id.html'])
         .pipe(htmlmin({
             minifyJS: true, minifyCSS: true, minifyURLs: true,
             maxLineLength: 120, preserveLineBreaks: false,
@@ -66,13 +64,8 @@ gulp.task('minify', function () {
         .pipe(gulp.dest('isa'))
 });
 
-gulp.task('uglify', function () {
-    return gulp.src('src/*.js')
-        .pipe(uglify())
-        .pipe(gulp.dest('isa'));
-});
-
 gulp.task('nodejs', function () {
-    return gulp.src('src/*.js')
+    return gulp.src(['src/*Mapper.js', 'src/*Server.js', 'src/isabasic*.js', 'src/isaopc*.js', 'src/*Id.js'])
+        .pipe(uglify())
         .pipe(gulp.dest('isa'));
 });
