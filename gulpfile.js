@@ -66,6 +66,6 @@ gulp.task('websites', function () {
 
 gulp.task('nodejs', function () {
     return gulp.src(['src/*Mapper.js', 'src/*Server.js', 'src/isabasic*.js', 'src/isaopc*.js', 'src/*Id.js'])
-        .pipe(uglify())
+    //        .pipe(uglify())
         .pipe(gulp.dest('isa'));
 });
