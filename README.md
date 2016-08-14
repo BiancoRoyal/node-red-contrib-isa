@@ -33,6 +33,12 @@ Run the following command for global install
 Copyright 2016 - [Klaus Landsdorf][3]
 BSD 3-Clause License
 
+# Important
+
+This is **not** an official product of ISA.
+It is just to provide ISA88 and ISA95 to Node-RED.
+This is not production ready.
+
 # Contribution node-opcua
 I'd like to give special thanks to [Etienne Rossignon][5] for the node-opcua-isa95 package! 
 
