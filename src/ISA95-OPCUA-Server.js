@@ -34,7 +34,10 @@
 
 module.exports = function (RED) {
     "use strict";
-    var opcua = require('node-opcua');
+    var opcua = require("node-opcua");
+    // add server ISA95 extension to node-opcua
+    require("node-opcua-isa95")(opcua);
+
     var isaOpcUa = require('./isaopcua');
     var qualifiedName = require("node-opcua/lib/datamodel/qualified_name");
     var path = require('path');
@@ -78,8 +81,11 @@ module.exports = function (RED) {
 
         set_server_notrunning();
 
-        var xmlFiles = [path.join(__dirname, 'public/vendor/opc-foundation/xml/Opc.Ua.NodeSet2.xml'),
-            path.join(__dirname, 'public/vendor/opc-foundation/xml/Opc.ISA95.NodeSet2.xml')];
+        var xmlFiles = [
+            opcua.standard_nodeset_file,
+            opcua.ISA95.nodeset_file
+        ];
+
         verbose_warn("node set:" + xmlFiles.toString());
 
         function initNewServer() {
@@ -124,6 +130,93 @@ module.exports = function (RED) {
         }
 
         function build_enterprise_structure(namespace, id) {
+
+            // var weldingRobotClassType = serverAddressSpace.addEquipmentClassType({
+            //     browseName: "WeldingRobotClassType",
+            //     equipmentLevel: opcua.ISA95.EquipmentLevel.EquipmentModule
+            // });
+            //
+            // var assemblingRobotClassType = serverAddressSpace.addEquipmentClassType({
+            //     browseName: "AssemblingRobotClassType",
+            //     equipmentLevel: opcua.ISA95.EquipmentLevel.EquipmentModule
+            // });
+            //
+            // var multiPurposeRobotType = serverAddressSpace.addEquipmentClassType({
+            //     browseName: "MultiPurposeRobotType",
+            //     definedByEquipmentClass: [
+            //         weldingRobotClassType,
+            //         assemblingRobotClassType
+            //     ]
+            // });
+
+            var weldingRobot = serverAddressSpace.addEquipment({
+                browseName: "WeldingRobot"
+            });
+
+            var robotController = serverAddressSpace.addEquipment({
+                browseName: "RobotController",
+                containedByEquipment: weldingRobot
+            });
+
+            var robotArm = serverAddressSpace.addEquipment({
+                browseName: "RobotArm",
+                containedByEquipment: weldingRobot
+            });
+
+            var fanuc_robotArcMate = serverAddressSpace.addPhysicalAssetType({
+                browseName: "ArcMate 100iB/6S i",
+                modelNumber: "ArcMate 100iB/6S i",
+                manufacturer: {
+                    dataType: "String",
+                    value: { dataType: opcua.DataType.String, value: "Fanuc Inc"}
+                }
+            });
+            //
+            // serverAddressSpace.addISA95Attribute({
+            //     ISA95AttributeOf: fanuc_robotArcMate,
+            //     browseName: "Weight",
+            //     description: "Robot mass in kg",
+            //     dataType:"Double",
+            //     value: { dataType: opcua.DataType.Double, value: 135 },
+            //     modellingRule: "Mandatory"
+            // });
+            //
+            // serverAddressSpace.addISA95Attribute({
+            //     ISA95AttributeOf: fanuc_robotArcMate,
+            //     browseName: "Payload",
+            //     description: "Payload in kg",
+            //     dataType:"Double",
+            //     value: { dataType: opcua.DataType.Double, value: 6 },
+            //     modellingRule: "Mandatory"
+            // });
+            // serverAddressSpace.addISA95Attribute({
+            //     ISA95AttributeOf: fanuc_robotArcMate,
+            //     browseName: "Repeatability",
+            //     description: "+/-",
+            //     dataType:"Double",
+            //     value: { dataType: opcua.DataType.Double, value: 0.08 },
+            //     modellingRule: "Mandatory"
+            // });
+            //
+            // // create the physical asset set storage  folder
+            // // where all our main assets will be listed
+            // var physicalAssetSet = serverAddressSpace.addObject({
+            //     browseName: "PhysicalAssetSet2",
+            //     typeDefinition: "FolderType",
+            //     organizedBy: serverAddressSpace.rootFolder.objects
+            // });
+            //
+            // var robot_instance = serverAddressSpace.addPhysicalAsset({
+            //     organizedBy:     physicalAssetSet,
+            //     typeDefinition:  fanuc_robotArcMate,
+            //     definedByPhysicalAssetClass: "PhysicalAssetClassType",
+            //     browseName: "FANUC Arc Mate 100iB/6S i - 001",
+            //     implementationOf: robotArm,
+            //     vendorId: {
+            //         dataType: "String",
+            //         value: { dataType: opcua.DataType.String, value: "RobotWox" }
+            //     }
+            // });
 
             // ### Level 4 ###
             var enterprise = addOrganizeFolder(enterprises, "Enterprise" + id, namespace);

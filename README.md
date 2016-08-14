@@ -28,10 +28,14 @@ Run the following command for global install
 ![Logo](images/node-red-contrib-isa.png)
 
 # Author
-[Klaus Landsdorf][3]
+Copyright 2016 - [Klaus Landsdorf][3]
+BSD 3-Clause License
 
+# Contribution node-opcua
+I'd like to give special thanks to [Etienne Rossignon][5] for the node-opcua-isa95 package! 
 
 [1]:http://nodered.org/
 [2]:http://node-opcua.github.io/
 [3]:https://github.com/biancode
 [4]:https://github.com/node-opcua/node-opcua-isa95
+[5]:https://github.com/erossignon
