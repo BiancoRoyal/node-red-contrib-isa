@@ -314,7 +314,7 @@ module.exports = function (RED) {
             if (server) {
 
                 var instantiateSampleISA95Model = require("./isa95_demo_address_space").instantiateSampleISA95Model;
-                var serverAddressSpace = server.engine.addressSpace;
+                serverAddressSpace = server.engine.addressSpace;
                 instantiateSampleISA95Model(serverAddressSpace);
 
                 if (!serverAddressSpace) {
