@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-isa",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A Node-RED node to build ISA-95 and ISA-88 based connectivity.",
   "repository": {
     "type": "git",
@@ -8,15 +8,19 @@
   },
   "keywords": [
     "node-red",
-    "ISA-95",
-    "ISA-88",
+    "ISA95",
+    "ISA88",
     "ISA",
     "B2MML",
     "BatchML",
+    "PackML",
     "OPC UA",
     "opcua",
     "modbus",
-    "ModbusTCP"
+    "ModbusTCP",
+    "Manufacturing Execution System",
+    "MES",
+    "PLC"
   ],
   "author": {
     "name": "Klaus Landsdorf",
@@ -36,8 +40,8 @@
   "dependencies": {
     "async": "^2.0.0-rc.3",
     "collections": "^3.0.0",
-    "node-opcua": "0.0.56",
-    "node-opcua-isa95": "0.0.1",
+    "node-opcua": "0.0.57",
+    "node-opcua-isa95": "0.0.2",
     "prettyjson": "^1.1.3",
     "treeify": "^1.0.1"
   },
