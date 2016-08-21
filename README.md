@@ -27,7 +27,7 @@ Run the following command for global install
 
 # How to use
 
-![Logo](images/node-red-contrib-isa.png)
+![Logo](examples/ScreenshotV022.png)
 
 # Author
 Copyright 2016 - [Klaus Landsdorf][3]

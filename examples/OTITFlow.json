@@ -1,0 +1,159 @@
+[
+  {
+    "id": "4b01fa4f.d6fd24",
+    "type": "ISA-Machine-Mapper",
+    "z": "5dcb7dec.f36a24",
+    "machineid": "f85d9e8.d20046",
+    "name": "",
+    "topic": "",
+    "register": "10",
+    "group": "MixedType",
+    "order": "1",
+    "mappings": [
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=4;s=Examples",
+        "structureNodeId": "ns=4;s=MyVariable1",
+        "structureName": "MyVariable1",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      }
+    ],
+    "x": 390,
+    "y": 180,
+    "wires": [
+      [
+        "f8422f15.6d231"
+      ],
+      [
+        "67f68eb6.f3d85"
+      ],
+      [
+        "67f68eb6.f3d85"
+      ]
+    ]
+  },
+  {
+    "id": "67f68eb6.f3d85",
+    "type": "ISA95-OPCUA-Server",
+    "z": "5dcb7dec.f36a24",
+    "port": "53880",
+    "name": "",
+    "x": 700,
+    "y": 180,
+    "wires": []
+  },
+  {
+    "id": "bfef3d43.fc853",
+    "type": "modbus-server",
+    "z": "5dcb7dec.f36a24",
+    "name": "",
+    "logEnabled": false,
+    "serverPort": 10502,
+    "responseDelay": 100,
+    "delayUnit": "ms",
+    "coilsBufferSize": 1024,
+    "holdingBufferSize": 1024,
+    "inputBufferSize": 1024,
+    "x": 160,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "8376c1bf.b0476",
+    "type": "modbus-read",
+    "z": "5dcb7dec.f36a24",
+    "name": "",
+    "dataType": "HoldingRegister",
+    "adr": "0",
+    "quantity": "10",
+    "rate": "10",
+    "rateUnit": "s",
+    "server": "c07da007.b1416",
+    "x": 140,
+    "y": 180,
+    "wires": [
+      [
+        "4b01fa4f.d6fd24"
+      ],
+      [
+        "fd57898a.927d08"
+      ]
+    ]
+  },
+  {
+    "id": "fd57898a.927d08",
+    "type": "modbus-response",
+    "z": "5dcb7dec.f36a24",
+    "name": "",
+    "registerShowMax": 20,
+    "x": 350,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "f8422f15.6d231",
+    "type": "debug",
+    "z": "5dcb7dec.f36a24",
+    "name": "",
+    "active": true,
+    "console": "false",
+    "complete": "false",
+    "x": 670,
+    "y": 140,
+    "wires": []
+  },
+  {
+    "id": "747b2abd.ec2db4",
+    "type": "comment",
+    "z": "5dcb7dec.f36a24",
+    "name": "OT",
+    "info": "",
+    "x": 110,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "2dddcc2d.9d7464",
+    "type": "comment",
+    "z": "5dcb7dec.f36a24",
+    "name": "IT",
+    "info": "",
+    "x": 750,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "e4618a6e.e079d8",
+    "type": "comment",
+    "z": "5dcb7dec.f36a24",
+    "name": "Mapping with ISA95",
+    "info": "",
+    "x": 430,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "f85d9e8.d20046",
+    "type": "ISA-MachineId",
+    "z": "5dcb7dec.f36a24",
+    "machine": "VirtualServer",
+    "interface": "ModbusTCP"
+  },
+  {
+    "id": "c07da007.b1416",
+    "type": "modbus-client",
+    "z": "5dcb7dec.f36a24",
+    "name": "",
+    "clienttype": "tcp",
+    "tcpHost": "127.0.0.1",
+    "tcpPort": "10502",
+    "serialPort": "/dev/ttyS0",
+    "serialBaudrate": "9600",
+    "unit_id": "1",
+    "clientTimeout": "5000",
+    "reconnectTimeout": "5000"
+  }
+]
