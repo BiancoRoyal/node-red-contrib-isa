@@ -7,7 +7,7 @@
 node-red-contrib-isa
 ========================
 
-![Logo](images/logoISA88.png) ![Logo](images/logoISA95.png)
+![Logo](images/logoISA88blue.png) ![Logo](images/logoISA95blue.png)
 
 [Node-RED][1] ISA-95 Common Object Model mapping node package.
 
