@@ -31,6 +31,11 @@
 
  **/
 
+/**
+ * Material Lot node.
+ * @module ISA95MaterialLotNode
+ */
+
 module.exports = function(RED) {
     function ISA95MaterialLotNode(config) {
 

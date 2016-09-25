@@ -37,35 +37,58 @@
 var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var htmlmin = require('gulp-htmlmin');
+var jsdoc = require('gulp-jsdoc3');
 
 gulp.task('default', function () {
     // place code for your default task here
 });
 
+gulp.task('docs', ['doc', 'docIcons', 'docExamples', 'docImages']);
 gulp.task('build', ['websites', 'nodejs']);
-gulp.task('publish', ['build', 'icons', 'vendor']);
+gulp.task('publish', ['build', 'icons', 'vendor', 'helpers', 'docs']);
 
-gulp.task('icons', function() {
+gulp.task('icons', function () {
     return gulp.src('src/icons/**/*').pipe(gulp.dest('isa/icons'));
 });
 
-gulp.task('vendor', function() {
+gulp.task('docIcons', function () {
+    return gulp.src('src/icons/**/*').pipe(gulp.dest('docs/gen/icons'));
+});
+
+gulp.task('docExamples', function () {
+    return gulp.src('examples/**/*').pipe(gulp.dest('docs/gen/examples'));
+});
+
+gulp.task('docImages', function () {
+    return gulp.src('images/**/*').pipe(gulp.dest('docs/gen/images'));
+});
+
+gulp.task('vendor', function () {
     return gulp.src('src/public/**/*').pipe(gulp.dest('isa/public'));
 });
 
+gulp.task('helpers', function () {
+    return gulp.src('src/helpers/**/*').pipe(gulp.dest('isa/helpers'));
+});
+
 gulp.task('websites', function () {
-    return gulp.src(['src/*Mapper.html', 'src/*Server.html', 'src/isabasic*.html', 'src/*Id.html'])
+    return gulp.src(['src/*Mapper.html', 'src/*Server.html', 'src/isa*.html', 'src/*Id.html'])
         .pipe(htmlmin({
             minifyJS: true, minifyCSS: true, minifyURLs: true,
             maxLineLength: 120, preserveLineBreaks: false,
             collapseWhitespace: true, collapseInlineTagWhitespace: true, conservativeCollapse: true,
-            processScripts:["text/x-red"], quoteCharacter: "'"
+            processScripts: ["text/x-red"], quoteCharacter: "'"
         }))
         .pipe(gulp.dest('isa'))
 });
 
 gulp.task('nodejs', function () {
-    return gulp.src(['src/*Mapper.js', 'src/*Server.js', 'src/isabasic*.js', 'src/isaopc*.js', 'src/*Id.js', 'src/helpers/*.js'])
-    //        .pipe(uglify())
+    return gulp.src(['src/*Mapper.js', 'src/*Server.js', 'src/isa*', 'src/*Id.js'])
         .pipe(gulp.dest('isa'));
+});
+
+gulp.task('doc', function (cb) {
+    gulp.src(['README.md', 'src/*Mapper.js', 'src/*Server.js',
+        'src/isa*.js', 'src/*Id.js'], {read: false})
+        .pipe(jsdoc(cb));
 });

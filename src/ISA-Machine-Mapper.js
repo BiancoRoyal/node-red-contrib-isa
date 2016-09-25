@@ -34,8 +34,12 @@
 
 module.exports = function (RED) {
     'use strict';
+
+    var opcua = require("node-opcua");
     var isaBasics = require('./isabasics');
     var isaOpcUa = require('./isaopcua');
+
+    isaOpcUa.opcua = opcua;
 
     function ISAMachineMapperNode(n) {
 
@@ -78,6 +82,8 @@ module.exports = function (RED) {
 
             if (node.mappings.length > 0 && data.length > 0) {
 
+                console.time("mapping");
+
                 node.mappings.forEach(function (mapping) {
 
                     if (!mapping.structureNodeId) {
@@ -109,6 +115,8 @@ module.exports = function (RED) {
 
                     structuredValues.add(isaOpcUa.mapOpcUaMachineValue(mapping, machineValue, bitValue));
                 });
+
+                console.timeEnd("mapping");
             }
 
             var sendMapping = isaOpcUa.newOpcUaMachineMapping(machineConfig, node);

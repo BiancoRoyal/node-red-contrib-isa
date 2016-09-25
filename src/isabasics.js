@@ -33,8 +33,19 @@
 
 
 'use strict';
+
+/**
+ * Basic functions to build ISA mappings.
+ * @module ISABasics
+ */
 module.exports = {
 
+    /**
+     * Gives the bits from quantity of reading modbus 16Bit chunks.
+     * @function
+     * @param {Number} quantity - amount (1, 2, 4) of reading 16Bit chunks
+     * @returns {Number} bitValue - how many Bits are to use (16, 32, 64)
+     */
     get_bits_from_quantity: function (quantity) {
 
         var bitValue = 0;
@@ -56,7 +67,14 @@ module.exports = {
 
         return bitValue;
     },
-
+    /**
+     * Reconnect the bits of reading modbus 16Bit chunks.
+     * @function
+     * @param {Number} bits - how many Bits to read - @see {@link get_bits_from_quantity}
+     * @param {Number} start - where to start reading from register
+     * @param {Array} register - array with minimum one value
+     * @returns {Number} value - value of reading bits (16, 32, 64) from start of register
+     */
     reconnect_values: function (bits, start, register) {
 
         var value = 0;

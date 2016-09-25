@@ -33,8 +33,28 @@
 
 
 'use strict';
+
+var opcua;
+var serverAddressSpace;
+var QualifiedName = require("node-opcua/lib/datamodel/qualified_name").QualifiedName;
+/**
+ * Basic functions to build OPC UA mappings.
+ * @module ISAOPCUA
+ */
+
 module.exports = {
 
+    opcua: opcua,
+    serverAddressSpace: serverAddressSpace,
+    QualifiedName: QualifiedName,
+
+    /**
+     * Gives a new OPC UA machine mapping structure.
+     * @function
+     * @param {object} machineConfig - machine config node object
+     * @param {object} node - mapping node object
+     * @returns {object} mapping object without payload to describe mapping to build address space
+     */
     newOpcUaMachineMapping: function (machineConfig, node) {
         return {
             'mappingType': 'new',
@@ -47,7 +67,14 @@ module.exports = {
             'mappings': node.mappings
         }
     },
-
+    /**
+     * Gives a OPC UA write mapping structure.
+     * @function
+     * @param {object} machineConfig - machine config node object
+     * @param {object} node - mapping node object
+     * @param {array} structuredValues - list of values to write to address space
+     * @returns {object} mapping object with payload to write data in address space
+     */
     writeOpcUaMachineMapping: function (machineConfig, node, structuredValues) {
         return {
             'mappingType': 'write',
@@ -61,7 +88,14 @@ module.exports = {
             'payload': structuredValues.length + ' values to write'
         };
     },
-    
+    /**
+     * Gives a OPC UA machine mapping for value.
+     * @function
+     * @param {object} mapping - mapping object
+     * @param {object} machineValue - machine value
+     * @param {Number} bits - how many Bits in value (2^n)
+     * @returns {object} mapping object with payload to describe mapping of one machine value
+     */
     mapOpcUaMachineValue: function (mapping, machineValue, bits) {
         return {
             'nodeId': mapping.structureNodeId,
@@ -72,10 +106,13 @@ module.exports = {
             'payload': mapping.structureNodeId + ' write value ' + machineValue
         }
     },
-
+    /**
+     * Gives a mapping object for OPC UA from datatype with init value.
+     * @function
+     * @param {String|opcua.DataType} typeStructure - type in structure
+     * @returns {Number} mappingDatatype - mapping Datatype to add OPC UA variable
+     */
     mapOpcUaDatatypeAndInitValue: function (typeStructure) {
-
-        var opcua = require('node-opcua');
 
         var mappingDatatype = {variableDatatype: 'String', initValue: ''};
 
@@ -83,32 +120,32 @@ module.exports = {
 
             case 'Bool':
             case 'Boolean':
-            case opcua.DataType.Boolean:
+            case module.exports.opcua.DataType.Boolean:
                 mappingDatatype.variableDatatype = "Boolean";
                 mappingDatatype.initValue = false;
                 break;
 
             case 'Float':
-            case opcua.DataType.Float:
+            case module.exports.opcua.DataType.Float:
                 mappingDatatype.variableDatatype = "Float";
                 mappingDatatype.initValue = 0.0;
                 break;
 
             case 'Double':
             case 'Real':
-            case opcua.DataType.Double:
+            case module.exports.opcua.DataType.Double:
                 mappingDatatype.variableDatatype = "Double";
                 mappingDatatype.initValue = 0.0;
                 break;
 
             case 'UInt16':
-            case opcua.DataType.UInt16:
+            case module.exports.opcua.DataType.UInt16:
                 mappingDatatype.variableDatatype = "UInt16";
                 mappingDatatype.initValue = 0;
                 break;
 
             case 'Int16':
-            case opcua.DataType.Int16:
+            case module.exports.opcua.DataType.Int16:
                 mappingDatatype.variableDatatype = "Int16";
                 mappingDatatype.initValue = 0;
                 break;
@@ -116,8 +153,8 @@ module.exports = {
             case 'Int':
             case 'Int32':
             case 'Integer':
-            case opcua.DataType.Int32:
-            case opcua.DataType.Integer:
+            case module.exports.opcua.DataType.Int32:
+            case module.exports.opcua.DataType.Integer:
                 mappingDatatype.variableDatatype = "Int32";
                 mappingDatatype.initValue = 0;
                 break;
@@ -125,20 +162,20 @@ module.exports = {
             case 'UInt':
             case 'UInt32':
             case 'UInteger':
-            case opcua.DataType.UInt32:
-            case opcua.DataType.UInteger:
+            case module.exports.opcua.DataType.UInt32:
+            case module.exports.opcua.DataType.UInteger:
                 mappingDatatype.variableDatatype = "UInt32";
                 mappingDatatype.initValue = 0;
                 break;
 
             case "Int64":
-            case opcua.DataType.Int64:
+            case module.exports.opcua.DataType.Int64:
                 mappingDatatype.variableDatatype = "Int64";
                 mappingDatatype.initValue = 0;
                 break;
 
             case "UInt64":
-            case opcua.DataType.UInt64:
+            case module.exports.opcua.DataType.UInt64:
                 mappingDatatype.variableDatatype = "UInt64";
                 mappingDatatype.initValue = 0;
                 break;
@@ -150,58 +187,60 @@ module.exports = {
 
         return mappingDatatype;
     },
-
-
+    /**
+     * Gives an init value for given OPC UA datatype.
+     * @function
+     * @param {String|opcua.DataType} variableDatatype - OPC UA datatype of variable
+     * @returns initValue - init value for datatype
+     */
     getInitValueByDatatype: function (variableDatatype) {
-
-        var opcua = require('node-opcua');
 
         var initValue = '';
 
         switch (variableDatatype) {
 
             case "Boolean":
-            case opcua.DataType.Boolean:
+            case module.exports.opcua.DataType.Boolean:
                 initValue = false;
                 break;
 
             case "Float":
-            case opcua.DataType.Float:
+            case module.exports.opcua.DataType.Float:
                 initValue = 0.0;
                 break;
 
             case "Double":
-            case opcua.DataType.Double:
+            case module.exports.opcua.DataType.Double:
                 initValue = 0.0;
                 break;
 
             case "UInt16":
-            case opcua.DataType.UInt16:
+            case module.exports.opcua.DataType.UInt16:
                 initValue = 0;
                 break;
 
             case "Int16":
-            case opcua.DataType.Int16:
+            case module.exports.opcua.DataType.Int16:
                 initValue = 0;
                 break;
 
             case "Int32":
-            case opcua.DataType.Int32:
+            case module.exports.opcua.DataType.Int32:
                 initValue = 0;
                 break;
 
             case "UInt32":
-            case opcua.DataType.UInt32:
+            case module.exports.opcua.DataType.UInt32:
                 initValue = 0;
                 break;
 
             case "Int64":
-            case opcua.DataType.Int64:
+            case module.exports.opcua.DataType.Int64:
                 initValue = 0;
                 break;
 
             case "UInt64":
-            case opcua.DataType.UInt64:
+            case module.exports.opcua.DataType.UInt64:
                 initValue = 0;
                 break;
 
@@ -212,16 +251,20 @@ module.exports = {
 
         return initValue;
     },
-
+    /**
+     * Gives a parsed value of variant datatype.
+     * @function
+     * @param {String|opcua.DataType} variantValue - OPC UA value of variant
+     * @param {String|opcua.DataType} variantDatatype - OPC UA datatype of variant
+     * @returns parsedValue - value for the parsed datatype
+     */
     parseValueByDatatype: function (variantValue, variantDatatype) {
-
-        var opcua = require('node-opcua');
 
         var parsedValue = variantValue;
 
         switch (variantDatatype) {
 
-            case opcua.DataType.Boolean:
+            case module.exports.opcua.DataType.Boolean:
             case "Boolean":
                 if (variantValue == true
                     || variantValue === 'true') {
@@ -234,24 +277,24 @@ module.exports = {
                 }
                 break;
 
-            case opcua.DataType.Float:
+            case module.exports.opcua.DataType.Float:
             case "Float":
-            case opcua.DataType.Double:
+            case module.exports.opcua.DataType.Double:
             case "Double":
                 parsedValue = parseFloat(variantValue);
                 break;
 
-            case opcua.DataType.UInt16:
+            case module.exports.opcua.DataType.UInt16:
             case "UInt16":
-            case opcua.DataType.Int16:
+            case module.exports.opcua.DataType.Int16:
             case "Int16":
-            case opcua.DataType.Int32:
+            case module.exports.opcua.DataType.Int32:
             case "Int32":
-            case opcua.DataType.UInt32:
+            case module.exports.opcua.DataType.UInt32:
             case "UInt32":
-            case opcua.DataType.Int64:
+            case module.exports.opcua.DataType.Int64:
             case "Int64":
-            case opcua.DataType.UInt64:
+            case module.exports.opcua.DataType.UInt64:
             case "UInt64":
                 parsedValue = parseInt(variantValue);
                 break;
@@ -262,5 +305,43 @@ module.exports = {
         }
 
         return parsedValue;
+    },
+    /**
+     * Add organized object to OPC UA address space.
+     * @function
+     * @param {String} organizeNodeObject - organizedBy reference
+     * @param {String} nodeBrowseName - browseName to build QualifiedName
+     * @param {String} namespace - namespace in information model to build nodeId reference
+     * @returns created server address space object
+     */
+    addOrganizeObject: function (organizeNodeObject, nodeBrowseName, namespace) {
+
+        return module.exports.serverAddressSpace.addObject({
+            organizedBy: organizeNodeObject,
+            nodeId: "ns=" + namespace + ";s=" + nodeBrowseName,
+            browseName: new module.exports.QualifiedName({name: nodeBrowseName, namespaceIndex: namespace}),
+            displayName: nodeBrowseName,
+            symbolicName: nodeBrowseName
+        });
+    },
+    /**
+     * Add organized object to OPC UA address space with typeDefinition "FolderType".
+     * @function
+     * @param {String} organizeNodeObject - organizedBy reference
+     * @param {String} nodeBrowseName - browseName to build QualifiedName
+     * @param {String} namespace - namespace in information model to build nodeId reference
+     * @returns created server address space object
+     */
+    addOrganizeFolder: function (organizeNodeObject, nodeBrowseName, namespace) {
+
+        return module.exports.serverAddressSpace.addObject({
+            organizedBy: organizeNodeObject,
+            typeDefinition: "FolderType",
+            nodeId: "ns=" + namespace + ";s=" + nodeBrowseName,
+            browseName: new module.exports.QualifiedName({name: nodeBrowseName, namespaceIndex: namespace}),
+            displayName: nodeBrowseName,
+            symbolicName: nodeBrowseName
+        });
     }
-};
+}
+;

@@ -1,0 +1,1238 @@
+[
+  {
+    "id": "b12aa717.bc1c08",
+    "type": "modbusio-read",
+    "z": "a5e26f54.00ebc",
+    "name": "Device1 (ModbusTCP I/O)",
+    "dataType": "HoldingRegister",
+    "adr": "0",
+    "quantity": "10",
+    "rate": "2",
+    "rateUnit": "s",
+    "server": "43fe8c0b.49f204",
+    "configfile": "67fcec1e.19adb4",
+    "x": 350,
+    "y": 100,
+    "wires": [
+      [
+        "fde4ef23.3b427"
+      ],
+      [],
+      []
+    ]
+  },
+  {
+    "id": "622d0100.d052",
+    "type": "udp in",
+    "z": "a5e26f54.00ebc",
+    "name": "Device3 (UDP)",
+    "iface": "",
+    "port": "10000",
+    "ipv": "udp4",
+    "multicast": "false",
+    "group": "",
+    "datatype": "buffer",
+    "x": 377.77769470214844,
+    "y": 217.61904680728912,
+    "wires": [
+      [
+        "fde4ef23.3b427"
+      ]
+    ]
+  },
+  {
+    "id": "5bd67c3e.5cf634",
+    "type": "tcp in",
+    "z": "a5e26f54.00ebc",
+    "name": "Device4 (TCP)",
+    "server": "server",
+    "host": "",
+    "port": "11000",
+    "datamode": "stream",
+    "datatype": "buffer",
+    "newline": "",
+    "topic": "",
+    "base64": false,
+    "x": 390,
+    "y": 280,
+    "wires": [
+      [
+        "fde4ef23.3b427"
+      ]
+    ]
+  },
+  {
+    "id": "e156d5d5.831c48",
+    "type": "modbus-read",
+    "z": "a5e26f54.00ebc",
+    "name": "Device2 (ModbusRTU)",
+    "dataType": "HoldingRegister",
+    "adr": "0",
+    "quantity": "10",
+    "rate": "1",
+    "rateUnit": "s",
+    "server": "2a0c760c.a982ca",
+    "x": 360,
+    "y": 160,
+    "wires": [
+      [
+        "fde4ef23.3b427"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "19857260.db92ce",
+    "type": "serial in",
+    "z": "a5e26f54.00ebc",
+    "name": "Device5 (Serial)",
+    "serial": "e1f18642.202f68",
+    "x": 380,
+    "y": 340,
+    "wires": [
+      [
+        "fde4ef23.3b427"
+      ]
+    ]
+  },
+  {
+    "id": "6e4b0e5e.e397a",
+    "type": "mqtt in",
+    "z": "a5e26f54.00ebc",
+    "name": "Device6 (MQTT)",
+    "topic": "/biancoroyal",
+    "qos": "2",
+    "broker": "57734543.9521bc",
+    "x": 380,
+    "y": 400,
+    "wires": [
+      [
+        "fde4ef23.3b427"
+      ]
+    ]
+  },
+  {
+    "id": "3cadf1d4.d1a46e",
+    "type": "comment",
+    "z": "a5e26f54.00ebc",
+    "name": "Mapping (ISA95: DIN EN 62264)",
+    "info": "",
+    "x": 650,
+    "y": 180,
+    "wires": []
+  },
+  {
+    "id": "667a2f3b.1b1d2",
+    "type": "ISA95-OPCUA-Server",
+    "z": "a5e26f54.00ebc",
+    "port": "53898",
+    "name": "OPC UA server",
+    "x": 860,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "fde4ef23.3b427",
+    "type": "ISA-Machine-Mapper",
+    "z": "a5e26f54.00ebc",
+    "machineid": "d06e225d.3e4c7",
+    "name": "ISA95 structure Mapper",
+    "topic": "MachineMapper",
+    "register": "10",
+    "group": "MixedType",
+    "order": "1",
+    "mappings": [
+      {
+        "structureType": "Object",
+        "start": "",
+        "quantity": "",
+        "structureParentNodeId": "ns=0;i=85",
+        "structureNodeId": "ns=6;s=Machine2",
+        "structureName": "Machine2",
+        "typeMachine": "",
+        "typeStructure": "FolderType"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable1",
+        "structureName": "MyVariable1",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable2",
+        "structureName": "MyVariable2",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable3",
+        "structureName": "MyVariable3",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable4",
+        "structureName": "MyVariable4",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable5",
+        "structureName": "MyVariable5",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable6",
+        "structureName": "MyVariable6",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable7",
+        "structureName": "MyVariable7",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable8",
+        "structureName": "MyVariable8",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable9",
+        "structureName": "MyVariable9",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable10",
+        "structureName": "MyVariable10",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable11",
+        "structureName": "MyVariable11",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable12",
+        "structureName": "MyVariable12",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable13",
+        "structureName": "MyVariable13",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable14",
+        "structureName": "MyVariable14",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable15",
+        "structureName": "MyVariable15",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable16",
+        "structureName": "MyVariable16",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable17",
+        "structureName": "MyVariable17",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable18",
+        "structureName": "MyVariable18",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable19",
+        "structureName": "MyVariable19",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable110",
+        "structureName": "MyVariable110",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable21",
+        "structureName": "MyVariable21",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable22",
+        "structureName": "MyVariable22",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable23",
+        "structureName": "MyVariable23",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable24",
+        "structureName": "MyVariable24",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable25",
+        "structureName": "MyVariable25",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable26",
+        "structureName": "MyVariable26",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable27",
+        "structureName": "MyVariable27",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable28",
+        "structureName": "MyVariable28",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable29",
+        "structureName": "MyVariable29",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable210",
+        "structureName": "MyVariable210",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable31",
+        "structureName": "MyVariable31",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable32",
+        "structureName": "MyVariable32",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable33",
+        "structureName": "MyVariable33",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable34",
+        "structureName": "MyVariable34",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable35",
+        "structureName": "MyVariable35",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable36",
+        "structureName": "MyVariable36",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable37",
+        "structureName": "MyVariable37",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable38",
+        "structureName": "MyVariable38",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable39",
+        "structureName": "MyVariable39",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable310",
+        "structureName": "MyVariable310",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable41",
+        "structureName": "MyVariable41",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable42",
+        "structureName": "MyVariable42",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable43",
+        "structureName": "MyVariable43",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable44",
+        "structureName": "MyVariable44",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable45",
+        "structureName": "MyVariable45",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable46",
+        "structureName": "MyVariable46",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable47",
+        "structureName": "MyVariable47",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable48",
+        "structureName": "MyVariable48",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable49",
+        "structureName": "MyVariable49",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable410",
+        "structureName": "MyVariable410",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable51",
+        "structureName": "MyVariable51",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable52",
+        "structureName": "MyVariable52",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable53",
+        "structureName": "MyVariable53",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable54",
+        "structureName": "MyVariable54",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable55",
+        "structureName": "MyVariable55",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable56",
+        "structureName": "MyVariable56",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable57",
+        "structureName": "MyVariable57",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable58",
+        "structureName": "MyVariable58",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable59",
+        "structureName": "MyVariable59",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable510",
+        "structureName": "MyVariable510",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable61",
+        "structureName": "MyVariable61",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable62",
+        "structureName": "MyVariable62",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable63",
+        "structureName": "MyVariable63",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable64",
+        "structureName": "MyVariable64",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable65",
+        "structureName": "MyVariable65",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable66",
+        "structureName": "MyVariable66",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable67",
+        "structureName": "MyVariable67",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable68",
+        "structureName": "MyVariable68",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable69",
+        "structureName": "MyVariable69",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable610",
+        "structureName": "MyVariable610",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable71",
+        "structureName": "MyVariable71",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable72",
+        "structureName": "MyVariable72",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable73",
+        "structureName": "MyVariable73",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable74",
+        "structureName": "MyVariable74",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable75",
+        "structureName": "MyVariable75",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable76",
+        "structureName": "MyVariable76",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable77",
+        "structureName": "MyVariable77",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable78",
+        "structureName": "MyVariable78",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable79",
+        "structureName": "MyVariable79",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable710",
+        "structureName": "MyVariable710",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable81",
+        "structureName": "MyVariable81",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable82",
+        "structureName": "MyVariable82",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable83",
+        "structureName": "MyVariable83",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable84",
+        "structureName": "MyVariable84",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable85",
+        "structureName": "MyVariable85",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable86",
+        "structureName": "MyVariable86",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable87",
+        "structureName": "MyVariable87",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable88",
+        "structureName": "MyVariable88",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable89",
+        "structureName": "MyVariable89",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable810",
+        "structureName": "MyVariable810",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable91",
+        "structureName": "MyVariable91",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable92",
+        "structureName": "MyVariable92",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable93",
+        "structureName": "MyVariable93",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable94",
+        "structureName": "MyVariable94",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "0",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable95",
+        "structureName": "MyVariable95",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "1",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable96",
+        "structureName": "MyVariable96",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable97",
+        "structureName": "MyVariable97",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable98",
+        "structureName": "MyVariable98",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "2",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable99",
+        "structureName": "MyVariable99",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      },
+      {
+        "structureType": "Variable",
+        "start": "3",
+        "quantity": "1",
+        "structureParentNodeId": "ns=6;s=Machine2",
+        "structureNodeId": "ns=6;s=MyVariable910",
+        "structureName": "MyVariable910",
+        "typeMachine": "UInt16",
+        "typeStructure": "UInt16"
+      }
+    ],
+    "x": 630,
+    "y": 240,
+    "wires": [
+      [],
+      [],
+      [
+        "667a2f3b.1b1d2"
+      ]
+    ]
+  },
+  {
+    "id": "43fe8c0b.49f204",
+    "type": "modbusio-server",
+    "z": "a5e26f54.00ebc",
+    "host": "192.168.1.18",
+    "port": "502",
+    "unit_id": "1"
+  },
+  {
+    "id": "67fcec1e.19adb4",
+    "type": "modbusio-config",
+    "z": "a5e26f54.00ebc",
+    "name": "DeviceMapping",
+    "path": "/User/Shared/modbus/device.json",
+    "format": "utf8"
+  },
+  {
+    "id": "2a0c760c.a982ca",
+    "type": "modbus-client",
+    "z": "a5e26f54.00ebc",
+    "name": "",
+    "clienttype": "tcp",
+    "tcpHost": "192.168.1.18",
+    "tcpPort": "502",
+    "serialPort": "/dev/ttyS0",
+    "serialBaudrate": "9600",
+    "serialDatabits": "8",
+    "serialStopbits": "1",
+    "serialParity": "none",
+    "unit_id": "1",
+    "clientTimeout": "5000",
+    "reconnectTimeout": "5000"
+  },
+  {
+    "id": "e1f18642.202f68",
+    "type": "serial-port",
+    "z": "a5e26f54.00ebc",
+    "serialport": "/dev/cu.usbserial",
+    "serialbaud": "9600",
+    "databits": "8",
+    "parity": "none",
+    "stopbits": "1",
+    "newline": "\\n",
+    "bin": "bin",
+    "out": "char",
+    "addchar": false
+  },
+  {
+    "id": "57734543.9521bc",
+    "type": "mqtt-broker",
+    "z": "a5e26f54.00ebc",
+    "broker": "iot.eclipse.org",
+    "port": "1883",
+    "clientid": "",
+    "usetls": false,
+    "compatmode": true,
+    "keepalive": "60",
+    "cleansession": true,
+    "willTopic": "",
+    "willQos": "0",
+    "willPayload": "",
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthPayload": ""
+  },
+  {
+    "id": "d06e225d.3e4c7",
+    "type": "ISA-MachineId",
+    "z": "a5e26f54.00ebc",
+    "machine": "RealMachine",
+    "interface": "ModbusTCP"
+  }
+]

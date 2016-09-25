@@ -34,8 +34,11 @@
 
 module.exports = function (RED) {
     'use strict';
+    var opcua = require("node-opcua");
     var isaBasics = require('./isabasics');
     var isaOpcUa = require('./isaopcua');
+
+    isaOpcUa.opcua = opcua;
 
     function ISAMachineIOMapperNode(n) {
 
