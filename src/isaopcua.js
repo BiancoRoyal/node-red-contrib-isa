@@ -55,7 +55,7 @@ module.exports = {
      * @param {object} node - mapping node object
      * @returns {object} mapping object without payload to describe mapping to build address space
      */
-    newOpcUaMachineMapping: function (machineConfig, node) {
+    newOpcUaMachineMapping: function (machineConfig, node, structuredValues) {
         return {
             'mappingType': 'new',
             'machine': machineConfig.machine,
@@ -64,7 +64,8 @@ module.exports = {
             'topic': node.topic,
             'group': node.group,
             'order': node.order,
-            'mappings': node.mappings
+            'mappings': structuredValues,
+            'payload': structuredValues.length + ' values to write'
         }
     },
     /**
@@ -72,7 +73,7 @@ module.exports = {
      * @function
      * @param {object} machineConfig - machine config node object
      * @param {object} node - mapping node object
-     * @param {array} structuredValues - list of values to write to address space
+     * @param {set} structuredValues - list of values to write to address space
      * @returns {object} mapping object with payload to write data in address space
      */
     writeOpcUaMachineMapping: function (machineConfig, node, structuredValues) {

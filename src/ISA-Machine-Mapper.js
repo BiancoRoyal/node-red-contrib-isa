@@ -78,7 +78,7 @@ module.exports = function (RED) {
                 return;
             }
 
-            var structuredValues = [];
+            var structuredValues = {};
 
             if (node.mappings.length > 0 && data.length > 0) {
 
@@ -113,18 +113,22 @@ module.exports = function (RED) {
                         }
                     }
 
-                    structuredValues.add(isaOpcUa.mapOpcUaMachineValue(mapping, machineValue, bitValue));
+                    structuredValues[mapping.structureNodeId] = isaOpcUa.mapOpcUaMachineValue(mapping, machineValue, bitValue);
                 });
 
                 console.timeEnd("mapping");
             }
 
-            var sendMapping = isaOpcUa.newOpcUaMachineMapping(machineConfig, node);
+            var sendMapping = isaOpcUa.newOpcUaMachineMapping(machineConfig, node, structuredValues);
             var sendWriteValue = isaOpcUa.writeOpcUaMachineMapping(machineConfig, node, structuredValues);
 
             msg = [{payload: data}, {payload: sendWriteValue}, {payload: sendMapping}];
 
             node.send(msg);
+        });
+
+        this.on('close', function (msg) {
+
         });
     }
 

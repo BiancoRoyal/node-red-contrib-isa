@@ -39,7 +39,7 @@ var isaOpcUa;
  * @module ISAMapping
  */
 
-var dynamicNodes = [];
+var dynamicNodes = {};
 
 module.exports = {
 
@@ -91,12 +91,9 @@ module.exports = {
             throw new Error("search_mapped_to_read nodeId have to be a valid object");
         }
 
-        var filteredNode = dynamicNodes.filter(function (entry) {
-            if (entry.nodeId.toString() === nodeId.toString()
-                && entry.parentNodeId.toString() === parentNodeId.toString()) {
-                return entry;
-            }
-        });
+        if (dynamicNodes.hasOwnProperty(nodeId.toString())) {
+            return dynamicNodes[nodeId.toString()];
+        }
     },
     /**
      * Add mapped object of address space objects to dynamic list.
@@ -111,12 +108,9 @@ module.exports = {
             throw new Error("add_mapped_to_list nodeId have to be a valid object");
         }
 
-        var filteredNode = dynamicNodes.filter(function (entry) {
-            if (entry.nodeId.toString() === nodeId.toString()
-                && entry.parentNodeId.toString() === parentNodeId.toString()) {
-                return entry;
-            }
-        });
+        if (dynamicNodes.hasOwnProperty(nodeId.toString())) {
+            return dynamicNodes[nodeId.toString()];
+        }
 
         var item = {
             'parentNodeId': parentNodeId,
@@ -126,7 +120,7 @@ module.exports = {
             'variableDatatype': variableDatatype
         };
 
-        dynamicNodes.add(item);
+        dynamicNodes[nodeId.toString()] = item;
 
         return item;
     },
@@ -136,7 +130,7 @@ module.exports = {
      * @param {String} nodeId - nodeId to search for
      * @param {object} value - value to write
      * @param {object} typeStructure - to find the init value @see ISAOPCUA:mapOpcUaDatatypeAndInitValue
-     * @returns {boolean} true if found, otherwise false
+     * @returns {object} item if found, otherwise item created
      */
     search_mapped_to_write: function (parentNodeId, nodeId, value, typeStructure) {
 
@@ -144,33 +138,12 @@ module.exports = {
             throw new Error("search_mapped_to_write nodeId have to be a valid object");
         }
 
-        var filteredNode = dynamicNodes.filter(function (entry) {
-            if (entry.nodeId.toString() === nodeId.toString()
-                && entry.parentNodeId.toString() === parentNodeId.toString()) {
-                return entry;
-            }
-        });
-
         var item;
 
-        if (filteredNode.length) {
+        if (dynamicNodes.hasOwnProperty(nodeId.toString())) {
 
-            item = filteredNode[0];
-
-            if (item) {
-
-                if (item.variableDatatype === "Boolean") {
-                    if (value) {
-                        item.value = true;
-                    }
-                    else {
-                        item.value = false;
-                    }
-
-                } else {
-                    item.value = value;
-                }
-            }
+            item = dynamicNodes[nodeId.toString()];
+            this.set_item_value(item, value);
         }
         else {
 
@@ -186,10 +159,42 @@ module.exports = {
                     'variableDatatype': itemDefaultSettings.variableDatatype
                 };
 
-                dynamicNodes.add(item);
+                this.set_item_value(item, value);
+                dynamicNodes[nodeId.toString()] = item;
             }
         }
 
         return item;
+    },
+    /**
+     * Write value to item with special handling for boolean
+     * @function
+     * @param {object} item - item to write property value
+     * @param {object} value - value to write
+     * @returns {object} item with value
+     */
+    set_item_value: function (item, value) {
+
+        if (item.variableDatatype === "Boolean") {
+
+            if (value) {
+                item.value = true;
+            }
+            else {
+                item.value = false;
+            }
+
+        } else {
+            item.value = value;
+        }
+
+        return item;
+    },
+    /**
+     * Reset dynamic item list
+     * @function
+     */
+    reset_dynamic_nodes: function () {
+        dynamicNodes = {};
     }
 };

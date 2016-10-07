@@ -227,21 +227,32 @@ module.exports = function (RED) {
 
                 case 'new':
                     console.time("newmapping");
-                    payload.mappings.forEach(function (mapping) {
-                        new_mapping_entry_opcua(mapping);
-                    });
+                    for (var entry in payload.mappings) {
+                        if (entry) {
+                            new_mapping_entry_opcua(payload.mappings[entry].mapping);
+                        } else {
+                            verbose_log(JSON.stringify(entry) + " isn't a valid new object");
+                        }
+                    }
                     console.timeEnd("newmapping");
                     break;
 
                 case 'write':
                     console.time("writemapping");
-                    payload.mappings.forEach(function (mapping) {
-
-                        if (isaMapping.search_mapped_to_read(mapping.mapping.structureParentNodeId, mapping.nodeId)) {
-                            verbose_log("write " + mapping.mapping.structureParentNodeId + ' ' + mapping.nodeId + ' ' + mapping.value + ' ' + mapping.mapping.typeStructure);
-                            isaMapping.search_mapped_to_write(mapping.mapping.structureParentNodeId, mapping.nodeId, mapping.value, mapping.mapping.typeStructure);
+                    var item;
+                    for (var entry in payload.mappings) {
+                        if (entry) {
+                            item = payload.mappings[entry];
+                            if (item && isaMapping.search_mapped_to_read(item.mapping.structureParentNodeId, item.nodeId)) {
+                                verbose_log("write " + item.mapping.structureParentNodeId + ' ' + item.nodeId + ' ' + item.value + ' ' + item.datatype);
+                                isaMapping.search_mapped_to_write(item.mapping.structureParentNodeId, item.nodeId, item.value, item.datatype);
+                            }
                         }
-                    });
+                        else {
+                            verbose_log(JSON.stringify(entry) + " isn't a valid existing object");
+                        }
+
+                    }
                     console.timeEnd("writemapping");
                     break;
 
