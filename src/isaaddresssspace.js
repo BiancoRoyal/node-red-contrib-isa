@@ -258,12 +258,14 @@ module.exports = {
      * @function
      * @param {String} rootFolder - root reference to set componentOf
      * @param {object} mapping - mapping object with mapping information
+     * @returns {object} variableNode - opc ua node of type variable
      */
     add_opcua_variable: function (rootFolder, mapping) {
 
+        var variableNode;
         var itemDefaultSettings = module.exports.isaOpcUa.mapOpcUaDatatypeAndInitValue(mapping.typeStructure);
 
-        module.exports.serverAddressSpace.addVariable({
+        variableNode = module.exports.serverAddressSpace.addVariable({
 
             componentOf: rootFolder,
             nodeId: mapping.structureNodeId,
@@ -321,19 +323,22 @@ module.exports = {
             }
         });
 
-        return module.exports.isaResultMessages.AddressSpaceOperationDone;
+        return variableNode;
     },
     /**
      * Add object in the address space of the OPC UA server.
      * @function
      * @param {String} rootFolder - root reference to set organizedBy
      * @param {object} mapping - mapping object with mapping information
+     * @returns {object} objectNode - node of an OPC UA object
      */
     add_opcua_object: function (rootFolder, mapping) {
 
+        var objectNode;
+
         if (mapping.typeStructure) {
 
-            module.exports.serverAddressSpace.addObject({
+            objectNode = module.exports.serverAddressSpace.addObject({
                 organizedBy: rootFolder,
                 typeDefinition: mapping.typeStructure,
                 nodeId: mapping.structureNodeId,
@@ -342,11 +347,13 @@ module.exports = {
 
         } else {
 
-            module.exports.serverAddressSpace.addObject({
+            objectNode = module.exports.serverAddressSpace.addObject({
                 organizedBy: rootFolder,
                 nodeId: mapping.structureNodeId,
                 browseName: mapping.structureName
             });
         }
+
+        return objectNode;
     }
 };

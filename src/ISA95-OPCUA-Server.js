@@ -87,6 +87,7 @@ module.exports = function (RED) {
         var initialized = false;
         var server = null;
         var serverAddressSpace;
+        var dynamicNodes = {};
 
         function verbose_warn(logMessage) {
             if (RED.settings.verbose) {
@@ -180,7 +181,8 @@ module.exports = function (RED) {
                 console.timeEnd("initserver");
             }
             else {
-                set_server_stoped();
+                verbose_warn("got no OPC UA server");
+                set_server_error();
             }
         }
 
@@ -202,6 +204,10 @@ module.exports = function (RED) {
 
         function set_server_notrunning() {
             node.status({fill: "red", shape: "ring", text: "Not running"});
+        }
+
+        function set_server_error() {
+            node.status({fill: "red", shape: "dot", text: "error"});
         }
 
         /**
@@ -243,9 +249,20 @@ module.exports = function (RED) {
                     for (var entry in payload.mappings) {
                         if (entry) {
                             item = payload.mappings[entry];
-                            if (item && isaMapping.search_mapped_to_read(item.mapping.structureParentNodeId, item.nodeId)) {
-                                verbose_log("write " + item.mapping.structureParentNodeId + ' ' + item.nodeId + ' ' + item.value + ' ' + item.datatype);
-                                isaMapping.search_mapped_to_write(item.mapping.structureParentNodeId, item.nodeId, item.value, item.datatype);
+                            if (item
+                                && item.hasOwnProperty('mapping')
+                                && isaMapping.search_mapped_to_read(item.mapping.structureParentNodeId, item.nodeId, dynamicNodes)) {
+
+                                switch (item.mapping.structureType) {
+                                    case 'Variable':
+                                        verbose_log("write variable " + item.mapping.structureParentNodeId + ' ' + item.nodeId + ' ' + item.value + ' ' + item.datatype);
+                                        break;
+                                    // TODO: add more types
+                                    default:
+                                        verbose_log("write " + item.mapping.structureType + ' ' + item.mapping.structureParentNodeId + ' ' + item.nodeId + ' ' + item.datatype);
+                                }
+
+                                isaMapping.search_mapped_to_write(item.mapping.structureParentNodeId, item.nodeId, item.value, item.datatype, dynamicNodes);
                             }
                         }
                         else {
@@ -269,13 +286,38 @@ module.exports = function (RED) {
          */
         function new_mapping_entry_opcua(mapping) {
 
+            if (server.engine.addressSpace && serverAddressSpace !== server.engine.addressSpace) {
+
+                verbose_warn("new server.engine.addressSpace");
+
+                serverAddressSpace = server.engine.addressSpace;
+                if (!serverAddressSpace) {
+                    verbose_warn("post initialize - AddressSpace not ready to use");
+                    return;
+                }
+
+                isaAddressSpace.serverAddressSpace = serverAddressSpace;
+            } else {
+                if (!server.engine.addressSpace) {
+                    verbose_warn("server.engine.addressSpace invalid");
+                }
+            }
+
             var rootFolder = serverAddressSpace.findNode(mapping.structureParentNodeId);
 
             if (!rootFolder) {
+                verbose_warn(mapping.structureNodeId + ' ParentNodeReferenceNotFound:' + mapping.structureParentNodeId);
+                if (dynamicNodes[mapping.structureNodeId]) {
+                    delete dynamicNodes[mapping.structureNodeId];
+                }
                 return isaResultMessages.ParentNodeReferenceNotFound;
+            }
+            else {
+                verbose_log(mapping.structureNodeId + ' Reference found:' + mapping.structureParentNodeId)
             }
 
             if (!mapping.structureNodeId || !mapping.typeStructure) {
+                verbose_warn(mapping + ' NodeIdNotValid');
                 return isaResultMessages.NodeIdNotValid;
             }
 
@@ -292,22 +334,44 @@ module.exports = function (RED) {
 
             if (references
                 && !isaAddressSpace.findAddressSpaceReference(references, mapping.structureNodeId)
-                && !isaMapping.search_mapped_to_read(mapping.structureParentNodeId, mapping.structureNodeId)) {
+                && !dynamicNodes[mapping.structureNodeId]) {
 
-                verbose_log("new " + mapping.structureParentNodeId + ' ' + mapping.structureNodeId + ' ' + mapping.typeStructure);
-
+                var item;
                 switch (mapping.structureType) {
                     case 'Variable':
-                        var item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure);
-                        isaAddressSpace.add_opcua_variable(rootFolder, mapping);
+                        verbose_log("new Variable " + mapping.structureParentNodeId + ' ' + mapping.structureNodeId + ' ' + mapping.typeStructure);
+                        item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure, dynamicNodes);
+                        if (!isaAddressSpace.add_opcua_variable(rootFolder, mapping)) {
+                            verbose_warn("OPC UA variable not created");
+                        }
                         break;
                     case 'Object':
-                        var item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure);
-                        isaAddressSpace.add_opcua_object(rootFolder, mapping);
+                        verbose_log("new Object " + mapping.structureParentNodeId + ' ' + mapping.structureNodeId + ' ' + mapping.typeStructure);
+                        item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure, dynamicNodes);
+                        if (!isaAddressSpace.add_opcua_object(rootFolder, mapping)) {
+                            verbose_warn("OPC UA object not created");
+                        }
                         break;
                     default:
-                        var item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure);
+                        verbose_log("new Unknown without add " + mapping.structureParentNodeId + ' ' + mapping.structureNodeId + ' ' + mapping.typeStructure);
+                        item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure, dynamicNodes);
+                        verbose_warn("OPC UA node will not be created");
                         break;
+                }
+
+                if (!item) {
+                    verbose_warn("no item for " + mapping.structureNodeId);
+                }
+
+            } else {
+                if (!references) {
+                    verbose_warn("references for new not valid");
+                }
+                if (isaAddressSpace.findAddressSpaceReference(references, mapping.structureNodeId)) {
+                    verbose_log("reference for new found " + mapping.structureNodeId);
+                }
+                if (dynamicNodes[mapping.structureNodeId]) {
+                    verbose_log("dynamic node for new found " + mapping.structureNodeId);
                 }
             }
         }
@@ -385,10 +449,12 @@ module.exports = function (RED) {
          * @function
          */
         function reset_structure() {
+            verbose_log("reset structure");
             // manufacture
             enterprises = null;
             // examples
             examples = null;
+
         }
 
         /**
@@ -398,6 +464,8 @@ module.exports = function (RED) {
         function reset_internals() {
             server = null;
             reset_structure();
+            reset_dynamic_nodes();
+            verbose_log("reset internals done");
         }
 
         /**
@@ -407,14 +475,21 @@ module.exports = function (RED) {
         function stop_server() {
             verbose_warn("Stop OPC UA Server");
             if (server) {
-                server.shutdown(function () {
-                    reset_internals();
-                    set_server_stoped();
+                server.shutdown(function (err) {
+                    if(err) {
+                        verbose_warn(JSON.stringify(err));
+                        set_server_error();
+                        reset_internals();
+                    } else {
+                        set_server_stoped();
+                        reset_internals();
+                    }
                 });
 
             } else {
+                verbose_warn("None OPC UA Server on close");
                 reset_internals();
-                set_server_stoped();
+                set_server_notrunning();
             }
         }
 
@@ -434,7 +509,7 @@ module.exports = function (RED) {
             } else {
                 verbose_warn("Start OPC UA Server");
                 reset_internals();
-                set_server_stoped();
+                set_server_notrunning();
                 initNewServer();
             }
         }
@@ -480,8 +555,17 @@ module.exports = function (RED) {
         node.on("close", function () {
             verbose_warn("closing...");
             stop_server();
+            verbose_log("closed");
         });
 
+        /**
+         * Reset dynamic item list
+         * @function
+         */
+        function reset_dynamic_nodes() {
+            verbose_log("reset dynamic nodes");
+            dynamicNodes = {};
+        }
     }
 
     RED.nodes.registerType("ISA95-OPCUA-Server", ISA95OpcUaServerNode);

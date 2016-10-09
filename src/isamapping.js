@@ -39,18 +39,10 @@ var isaOpcUa;
  * @module ISAMapping
  */
 
-var dynamicNodes = {};
-
 module.exports = {
 
     isaOpcUa: isaOpcUa,
 
-    /**
-     * Dynamic list of known mapped items.
-     * @field
-     * @readonly
-     */
-    dynamicNodes: dynamicNodes,
     /**
      * Searching the containing of the property "mappingType".
      * @function
@@ -85,7 +77,7 @@ module.exports = {
      * @param {object} variableDatatype - OPC UA variable datatype
      * @returns {object} item of list
      */
-    search_mapped_to_read: function (parentNodeId, nodeId) {
+    search_mapped_to_read: function (parentNodeId, nodeId, dynamicNodes) {
 
         if (!nodeId) {
             throw new Error("search_mapped_to_read nodeId have to be a valid object");
@@ -102,7 +94,7 @@ module.exports = {
      * @param {object} variableDatatype - OPC UA variable datatype
      * @returns {object} item of list
      */
-    add_mapped_to_list: function (parentNodeId, nodeId, variableDatatype) {
+    add_mapped_to_list: function (parentNodeId, nodeId, variableDatatype, dynamicNodes) {
 
         if (!nodeId) {
             throw new Error("add_mapped_to_list nodeId have to be a valid object");
@@ -132,7 +124,7 @@ module.exports = {
      * @param {object} typeStructure - to find the init value @see ISAOPCUA:mapOpcUaDatatypeAndInitValue
      * @returns {object} item if found, otherwise item created
      */
-    search_mapped_to_write: function (parentNodeId, nodeId, value, typeStructure) {
+    search_mapped_to_write: function (parentNodeId, nodeId, value, typeStructure, dynamicNodes) {
 
         if (!nodeId) {
             throw new Error("search_mapped_to_write nodeId have to be a valid object");
@@ -189,12 +181,5 @@ module.exports = {
         }
 
         return item;
-    },
-    /**
-     * Reset dynamic item list
-     * @function
-     */
-    reset_dynamic_nodes: function () {
-        dynamicNodes = {};
     }
 };
