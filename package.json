@@ -4,7 +4,7 @@
   "description": "A Node-RED node to build ISA-95 and ISA-88 based connectivity.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/biancode/node-red-contrib-isa.git"
+    "url": "https://gitlab.com/biancode/node-red-contrib-isa"
   },
   "keywords": [
     "node-red",
