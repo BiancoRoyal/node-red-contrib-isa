@@ -68,7 +68,7 @@
             ];
 
             var variableNames = [
-                {val: 'dwColorSelection', text: 'dwColorSelection'},
+                {val: 'dwColorSelection', text: 'dwColorSelection'}
             ];
 
             var typesMachine = [{val: 'Boolean', text: 'Boolean'},
@@ -149,7 +149,7 @@
                 }).appendTo(row);
 
                 var typeMachineField,
-                        typeStructureField;
+                    typeStructureField;
 
                 if (mapping.structureType === 'Variable') {
 
@@ -208,7 +208,7 @@
                     console.log(structureTypeField.val());
 
                     var newTypeMachineField,
-                            newTypeStructureField;
+                        newTypeStructureField;
 
                     if (structureTypeField.val() == "Variable") {
 
@@ -432,6 +432,7 @@
     <div class="form-row">
         <a href="#" class="editor-button editor-button-small" id="node-input-add-button" style="margin-top: 4px;"><i class="fa fa-plus"></i> add</a>
     </div>
+
 </script>
 
 <script type="text/x-red" data-help-name="ISA-Machine-IOMapper">
@@ -440,4 +441,5 @@
     <p><strong>Output 1</strong> RAW</p>
     <p><strong>Output 2</strong> ISA structured model</p>
     <p><strong>Output 3</strong> Mappings</p>
+
 </script>

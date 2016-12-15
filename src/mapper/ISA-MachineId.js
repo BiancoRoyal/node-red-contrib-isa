@@ -1,4 +1,4 @@
-<!--
+/**
 
  The BSD 3-Clause License
 
@@ -28,40 +28,48 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  @author <a href="mailto:klaus.landsdorf@bianco-royal.de">Klaus Landsdorf</a> (Bianco Royal)
--->
 
-<script type="text/javascript">
-    RED.nodes.registerType('ISA95-Material-Sublot',{
-        category: 'isa',
-        color: '#ffbe3c',
-        defaults: {
-            action: {value:"default", required:true},
-            name: {value:""}
-        },
-        inputs:1,
-        outputs:1,
-        icon: "isa95-icon-blue.png",
-        label: function() {
-            return this.name||"ISA-95 Material Sublot";
+ **/
+
+/**
+ * That node is to centralize the information about the machine.
+ * With this node you have to configure the machine information only once
+ * and you can use it in many mapping nodes.
+ *
+ * @namespace ISAMachine
+ * @param RED
+ */
+module.exports = function (RED) {
+
+    function ISAMachineIdNode(configNode) {
+
+        RED.nodes.createNode(this, configNode);
+
+        this.machine = configNode.machine;
+        this.protocolName = configNode.protocolName;
+
+        var node = this;
+
+        var machineInfo = "machine " + node.machine + " on interface " + node.protocolName;
+
+        function verbose_warn(logMessage) {
+            if (RED.settings.verbose) {
+                node.warn('MachineId -> ' + logMessage + " " + machineInfo);
+            }
         }
-    });
-</script>
 
-<script type="text/x-red" data-template-name="ISA95-Material-Sublot">
-     <div class="form-row">
-        <label for="node-input-action"><i class="fa fa-tasks"></i> Action</label>
-        <select type="text" id="node-input-action" style="width:72%;">
-            <option value="default">default</option>
-            <option value="extended">extended</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-</script>
+        function verbose_log(logMessage) {
+            if (RED.settings.verbose) {
+                node.log('MachineId -> ' + logMessage + " " + machineInfo);
+            }
+        }
 
-<script type="text/x-red" data-help-name="ISA95-Material-Sublot">
-    <p>ISA-95 Material-Sublot Model</p>
-    <p>Action is default or extended.</p>
-</script>
+        verbose_log('initialization');
+
+        node.on("close", function () {
+            verbose_log("close");
+        });
+    }
+
+    RED.nodes.registerType("ISA-MachineId", ISAMachineIdNode);
+};

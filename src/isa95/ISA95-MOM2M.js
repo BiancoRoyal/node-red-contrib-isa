@@ -32,45 +32,48 @@
  **/
 
 
-module.exports = function(RED) {
-    function ISA95MaterialSublotNode(config) {
+module.exports = function (RED) {
+    'use strict';
+    var isaBasics = require('./../core/isabasics');
+
+    function ISA95MOM2MNode(config) {
 
         RED.nodes.createNode(this, config);
-        this.action = config.action;
+
+        this.name = config.name;
+        this.register = config.register;
+        this.mappings = config.mappings;
 
         var node = this;
+
+        var machineConfig = RED.nodes.getNode(config.machineid);
+
         this.on('input', function (msg) {
-            console.log("ISA95MaterialSublotTypeNode Action: " + node.action);
 
             var data = msg.payload;
-            console.log("ISA95MaterialSublotTypeNode Type:" + typeof data);
 
-            switch (node.action) {
-                case "default":
-                    if (typeof data === "string") {
-                        data = { 'version': 'MaterialSublotType', 'data': data };
-                    }
-                    else
-                    {
-                        data = { 'info': 'ISA95MaterialSublotTypeNode unknown data type for default action', 'data': data, 'type': typeof data }
-                    }
-                    break;
-                case "extended":
-                    if (typeof data === "string") {
-                        data = { 'version': 'MaterialSublotTypeExtended', 'data': data };
-                    }
-                    else
-                    {
-                        data = { 'info': 'ISA95MaterialSublotTypeNode unknown data type for extended action', 'data': data, 'type': typeof data }
-                    }
-                    break;
-                default:
-                    data = { 'info': 'ISA95MaterialSublotTypeNode unknown action or data type', 'data': data, 'type': typeof data };
+            if (msg.payload.length != node.register) {
+                node.send(msg);
+                return;
             }
 
-            msg.payload = data;
+            var bitValue = 0;
+            var namedValues = [];
+
+            node.mappings.forEach(function (mapping) {
+                bitValue = isaBasics.get_bits_from_quantity(mapping.quantity);
+                var machineValue = isaBasics.reconnect_values(bitValue, mapping.start, msg.payload);
+                namedValues.add(isaBasics.mapMachineValue(mapping, machineValue, bitValue));
+            });
+
+            var sendMapping = isaBasics.newMachineMapping(machineConfig, node);
+            var sendWriteValue = isaBasics.writeMachineMapping(machineConfig, node, namedValues);
+
+            msg = [{payload: data}, {payload: sendWriteValue}, {payload: sendMapping}];
+
             node.send(msg);
         });
     }
-    RED.nodes.registerType("ISA95-Material-Sublot", ISA95MaterialSublotNode);
+
+    RED.nodes.registerType("ISA95-MOM2M", ISA95MOM2MNode);
 };

@@ -29,38 +29,34 @@
 
  @author <a href="mailto:klaus.landsdorf@bianco-royal.de">Klaus Landsdorf</a> (Bianco Royal)
 -->
+
 <script type="text/javascript">
-    RED.nodes.registerType('ISA95-Equipment',{
-        category: 'isa',
-        color: '#ffbe3c',
+    RED.nodes.registerType('ISA-MachineId', {
+        category: 'config',
         defaults: {
-            action: {value:"default", required:true},
-            name: {value:""}
+            name: {value: ""},
+            machine: {value: '', required: true},
+            protocolName: {value: '', required: true}
         },
-        inputs:1,
-        outputs:1,
-        icon: "isa95-icon-blue.png",
-        label: function() {
-            return this.name||"ISA-95 Equipment";
+        label: function () {
+            return this.machine + ' (' + this.protocolName + ')';
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="ISA95-Equipment">
-     <div class="form-row">
-        <label for="node-input-action"><i class="fa fa-tasks"></i> Action</label>
-        <select type="text" id="node-input-action" style="width:72%;">
-            <option value="default">default</option>
-            <option value="extended">extended</option>
-        </select>
+
+
+<script type="text/x-red" data-template-name="ISA-MachineId">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name">
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label for="node-config-input-machine"><i class="icon-tag"></i> Machine</label>
+        <input type="text" id="node-config-input-machine">
     </div>
-</script>
-
-<script type="text/x-red" data-help-name="ISA95-Equipment">
-    <p>ISA-95 Equipment Model</p>
-    <p>Action is default or extended.</p>
+    <div class="form-row">
+        <label for="node-config-input-protocolName"><i class="icon-cogs"></i> Protocol</label>
+        <input type="text" id="node-config-input-protocolName" placeholder="ModbusTCP or MQTT or ...">
+    </div>
 </script>

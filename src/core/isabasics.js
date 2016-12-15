@@ -73,7 +73,7 @@ module.exports = {
      * @param {Number} bits - how many Bits to read - @see {@link get_bits_from_quantity}
      * @param {Number} start - where to start reading from register
      * @param {Array} register - array with minimum one value
-     * @returns {Number} value - value of reading bits (16, 32, 64) from start of register
+     * @returns {number} value - value of reading bits (16, 32, 64) from start of register
      */
     reconnect_values: function (bits, start, register) {
 
@@ -110,30 +110,50 @@ module.exports = {
 
         return value;
     },
-
+    /**
+     * Generates a new machine mapping template for machine to MOM mapping.
+     * @function
+     * @param machineConfig
+     * @param node
+     * @returns {{mappingType: string, machine: (*|defaults.machine|{value, required}), interface: (*|exports.closureTags.interface|{canHaveName, mustNotHaveValue}|defaults.interface|{value, required}|exports.baseTags.interface), name, topic, mappings: (*|defaults.mappings|{value}|set|Array)}}
+     */
     newMachineMapping: function (machineConfig, node) {
         return {
             'mappingType': 'm2mom-mapping',
             'machine': machineConfig.machine,
-            'interface': machineConfig.interface,
+            'protocolName': machineConfig.protocolName,
             'name': node.name,
             'topic': node.topic,
             'mappings': node.mappings
         };
     },
-
+    /**
+     * Generates a writing template for machine mapping data from machine to MOM.
+     * @function
+     * @param machineConfig
+     * @param node
+     * @param namedValues
+     * @returns {{mappingType: string, machine: (*|defaults.machine|{value, required}), interface: (*|exports.closureTags.interface|{canHaveName, mustNotHaveValue}|defaults.interface|{value, required}|exports.baseTags.interface), name, topic, mappings: *, payload: string}}
+     */
     writeMachineMapping: function (machineConfig, node, namedValues) {
         return {
             'mappingType': 'm2mom-write',
             'machine': machineConfig.machine,
-            'interface': machineConfig.interface,
+            'protocolName': machineConfig.protocolName,
             'name': node.name,
             'topic': node.topic,
             'mappings': namedValues,
             'payload': namedValues.length + ' values to write'
         };
     },
-
+    /**
+     * Generates a template to set a value for a OPC UA node by its node-id.
+     * @function
+     * @param mapping
+     * @param machineValue
+     * @param bits
+     * @returns {{nodeId: (string|string|*), value: *, bits: *, datatype: (string|string|*|string|string), mapping: *, payload: string}}
+     */
     mapMachineValue: function (mapping, machineValue, bits) {
         return {
             'nodeId': mapping.valueName,

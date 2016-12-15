@@ -31,24 +31,48 @@
 
  **/
 
-module.exports = function(RED) {
-    function ISA95M2MNode(config) {
-        RED.nodes.createNode(this,config);
+module.exports = function (RED) {
+    'use strict';
+    var isaBasics = require('./../core/isabasics');
+
+    function ISA95M2MOMNode(config) {
+
+        RED.nodes.createNode(this, config);
+
+        this.name = config.name;
+        this.register = config.register;
+        this.mappings = config.mappings;
+
         var node = this;
-        this.on('input', function(msg) {
-        	var data = msg.payload;
-            if ((typeof data === "object") && (!Buffer.isBuffer(data))) {
-                data = JSON.stringify(data);
+
+        var machineConfig = RED.nodes.getNode(config.machineid);
+
+        this.on('input', function (msg) {
+
+            var data = msg.payload;
+
+            if (msg.payload.length != node.register) {
+                node.send(msg);
+                return;
             }
 
-            var newMsg = { payload: { 'm2m': 'M2M Node action', 'data': data } };
+            var bitValue = 0;
+            var namedValues = [];
 
-            var newMsgLength = { payload: data.length };
+            node.mappings.forEach(function (mapping) {
+                bitValue = isaBasics.get_bits_from_quantity(mapping.quantity);
+                var machineValue = isaBasics.reconnect_values(bitValue, mapping.start, msg.payload);
+                namedValues.add(isaBasics.mapMachineValue(mapping, machineValue, bitValue));
+            });
 
-            msg = [newMsg, newMsgLength];
+            var sendMapping = isaBasics.newMachineMapping(machineConfig, node);
+            var sendWriteValue = isaBasics.writeMachineMapping(machineConfig, node, namedValues);
+
+            msg = [{payload: data}, {payload: sendWriteValue}, {payload: sendMapping}];
 
             node.send(msg);
         });
     }
-    RED.nodes.registerType("ISA95-M2M", ISA95M2MNode);
+
+    RED.nodes.registerType("ISA95-M2MOM", ISA95M2MOMNode);
 };

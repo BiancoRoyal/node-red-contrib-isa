@@ -36,9 +36,8 @@
  * @namespace ISAOpcUaServer
  * @module ISA95OpcUaServerNode
  */
-"use strict";
-
 module.exports = function (RED) {
+    'use strict';
 
     var opcua = require("node-opcua");
     // add server ISA95 extension to node-opcua
@@ -46,13 +45,14 @@ module.exports = function (RED) {
 
     var isaMapping = require('./isamapping');
     var isaAddressSpace = require('./isaaddresssspace');
-    var isaResultMessages = require('./isaconst').ISAResultMessage;
+    var isaResultMessages = require('./../core/isaconst').ISAResultMessage;
     var isaOpcUa = require('./isaopcua');
 
     isaOpcUa.opcua = opcua;
 
     isaMapping.isaOpcUa = isaOpcUa;
     isaMapping.isaResultMessage = isaResultMessages;
+    isaMapping.dynamicNodes = {};
 
     isaAddressSpace.isaOpcUa = isaOpcUa;
     isaAddressSpace.isaMapping = isaMapping;
@@ -73,12 +73,12 @@ module.exports = function (RED) {
      * @memberof ISAOpcUaServer
      * @constructor
      */
-    function ISA95OpcUaServerNode(n) {
+    function ISA95OpcUaServerNode(configNode) {
 
-        RED.nodes.createNode(this, n);
+        RED.nodes.createNode(this, configNode);
 
-        this.name = n.name;
-        this.port = n.port;
+        this.name = configNode.name;
+        this.port = configNode.port;
         var node = this;
 
         var examples;
@@ -87,7 +87,6 @@ module.exports = function (RED) {
         var initialized = false;
         var server = null;
         var serverAddressSpace;
-        var dynamicNodes = {};
 
         function verbose_warn(logMessage) {
             if (RED.settings.verbose) {
@@ -126,7 +125,7 @@ module.exports = function (RED) {
                 buildInfo: {
                     productName: node.name.concat("OPC UA server"),
                     buildNumber: "1911",
-                    buildDate: new Date(2016, 9, 25)
+                    buildDate: new Date(2016, 12, 15)
                 }
             });
 
@@ -156,7 +155,7 @@ module.exports = function (RED) {
                 isaAddressSpace.serverAddressSpace = serverAddressSpace;
                 isaOpcUa.serverAddressSpace = serverAddressSpace;
 
-                var instantiateSampleISA95Model = require("./helpers/isa95_demo_address_space").instantiateSampleISA95Model;
+                var instantiateSampleISA95Model = require("./../helpers/isa95_demo_address_space").instantiateSampleISA95Model;
                 instantiateSampleISA95Model(serverAddressSpace);
 
                 isaAddressSpace.construct_my_address_space(serverAddressSpace);
@@ -251,7 +250,7 @@ module.exports = function (RED) {
                             item = payload.mappings[entry];
                             if (item
                                 && item.hasOwnProperty('mapping')
-                                && isaMapping.search_mapped_to_read(item.mapping.structureParentNodeId, item.nodeId, dynamicNodes)) {
+                                && isaMapping.search_mapped_to_read(item.mapping.structureParentNodeId, item.nodeId)) {
 
                                 switch (item.mapping.structureType) {
                                     case 'Variable':
@@ -262,13 +261,13 @@ module.exports = function (RED) {
                                         verbose_log("write " + item.mapping.structureType + ' ' + item.mapping.structureParentNodeId + ' ' + item.nodeId + ' ' + item.datatype);
                                 }
 
-                                isaMapping.search_mapped_to_write(item.mapping.structureParentNodeId, item.nodeId, item.value, item.datatype, dynamicNodes);
+                                var itemOPCUA = isaMapping.search_mapped_to_write(item.mapping.structureParentNodeId, item.nodeId, item.value, item.datatype);
+                                verbose_log("write item: " + JSON.stringify(itemOPCUA));
                             }
                         }
                         else {
                             verbose_log(JSON.stringify(entry) + " isn't a valid existing object");
                         }
-
                     }
                     console.timeEnd("writemapping");
                     break;
@@ -307,8 +306,8 @@ module.exports = function (RED) {
 
             if (!rootFolder) {
                 verbose_warn(mapping.structureNodeId + ' ParentNodeReferenceNotFound:' + mapping.structureParentNodeId);
-                if (dynamicNodes[mapping.structureNodeId]) {
-                    delete dynamicNodes[mapping.structureNodeId];
+                if (isaMapping.dynamicNodes[mapping.structureNodeId]) {
+                    delete isaMapping.dynamicNodes[mapping.structureNodeId];
                 }
                 return isaResultMessages.ParentNodeReferenceNotFound;
             }
@@ -334,27 +333,27 @@ module.exports = function (RED) {
 
             if (references
                 && !isaAddressSpace.findAddressSpaceReference(references, mapping.structureNodeId)
-                && !dynamicNodes[mapping.structureNodeId]) {
+                && !isaMapping.dynamicNodes[mapping.structureNodeId]) {
 
                 var item;
                 switch (mapping.structureType) {
                     case 'Variable':
                         verbose_log("new Variable " + mapping.structureParentNodeId + ' ' + mapping.structureNodeId + ' ' + mapping.typeStructure);
-                        item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure, dynamicNodes);
+                        item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure);
                         if (!isaAddressSpace.add_opcua_variable(rootFolder, mapping)) {
                             verbose_warn("OPC UA variable not created");
                         }
                         break;
                     case 'Object':
                         verbose_log("new Object " + mapping.structureParentNodeId + ' ' + mapping.structureNodeId + ' ' + mapping.typeStructure);
-                        item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure, dynamicNodes);
+                        item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure);
                         if (!isaAddressSpace.add_opcua_object(rootFolder, mapping)) {
                             verbose_warn("OPC UA object not created");
                         }
                         break;
                     default:
                         verbose_log("new Unknown without add " + mapping.structureParentNodeId + ' ' + mapping.structureNodeId + ' ' + mapping.typeStructure);
-                        item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure, dynamicNodes);
+                        item = isaMapping.add_mapped_to_list(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure);
                         verbose_warn("OPC UA node will not be created");
                         break;
                 }
@@ -370,7 +369,7 @@ module.exports = function (RED) {
                 if (isaAddressSpace.findAddressSpaceReference(references, mapping.structureNodeId)) {
                     verbose_log("reference for new found " + mapping.structureNodeId);
                 }
-                if (dynamicNodes[mapping.structureNodeId]) {
+                if (isaMapping.dynamicNodes[mapping.structureNodeId]) {
                     verbose_log("dynamic node for new found " + mapping.structureNodeId);
                 }
             }
@@ -476,7 +475,7 @@ module.exports = function (RED) {
             verbose_warn("Stop OPC UA Server");
             if (server) {
                 server.shutdown(function (err) {
-                    if(err) {
+                    if (err) {
                         verbose_warn(JSON.stringify(err));
                         set_server_error();
                         reset_internals();
@@ -564,7 +563,7 @@ module.exports = function (RED) {
          */
         function reset_dynamic_nodes() {
             verbose_log("reset dynamic nodes");
-            dynamicNodes = {};
+            isaMapping.dynamicNodes = {};
         }
     }
 

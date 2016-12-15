@@ -38,13 +38,17 @@ var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var htmlmin = require('gulp-htmlmin');
 var jsdoc = require('gulp-jsdoc3');
+var clean = require('gulp-clean');
+
 
 gulp.task('default', function () {
     // place code for your default task here
 });
 
 gulp.task('docs', ['doc', 'docIcons', 'docExamples', 'docImages']);
-gulp.task('build', ['websites', 'nodejs']);
+gulp.task('websites', ['core-web', 'mapper-web', 'opcua-web']);
+gulp.task('nodejs', ['core', 'mapper', 'opcua']);
+gulp.task('build', ['nodejs', 'websites']);
 gulp.task('publish', ['build', 'icons', 'vendor', 'helpers', 'docs']);
 
 gulp.task('icons', function () {
@@ -71,24 +75,60 @@ gulp.task('helpers', function () {
     return gulp.src('src/helpers/**/*').pipe(gulp.dest('isa/helpers'));
 });
 
-gulp.task('websites', function () {
-    return gulp.src(['src/*Mapper.html', 'src/*Server.html', 'src/isa*.html', 'src/*Id.html'])
+gulp.task('clean', function () {
+    return gulp.src('isa')
+        .pipe(clean({force: true}))
+});
+
+gulp.task('core-web', function () {
+    return gulp.src('src/core/*.htm*')
         .pipe(htmlmin({
             minifyJS: true, minifyCSS: true, minifyURLs: true,
             maxLineLength: 120, preserveLineBreaks: false,
             collapseWhitespace: true, collapseInlineTagWhitespace: true, conservativeCollapse: true,
             processScripts: ["text/x-red"], quoteCharacter: "'"
         }))
-        .pipe(gulp.dest('isa'))
+        .pipe(gulp.dest('isa/core'))
 });
 
-gulp.task('nodejs', function () {
-    return gulp.src(['src/*Mapper.js', 'src/*Server.js', 'src/isa*', 'src/*Id.js'])
-        .pipe(gulp.dest('isa'));
+gulp.task('mapper-web', function () {
+    return gulp.src('src/mapper/*.htm*')
+        .pipe(htmlmin({
+            minifyJS: true, minifyCSS: true, minifyURLs: true,
+            maxLineLength: 120, preserveLineBreaks: false,
+            collapseWhitespace: true, collapseInlineTagWhitespace: true, conservativeCollapse: true,
+            processScripts: ["text/x-red"], quoteCharacter: "'"
+        }))
+        .pipe(gulp.dest('isa/mapper'))
+});
+
+gulp.task('opcua-web', function () {
+    return gulp.src('src/opcua/*.htm*')
+        .pipe(htmlmin({
+            minifyJS: true, minifyCSS: true, minifyURLs: true,
+            maxLineLength: 120, preserveLineBreaks: false,
+            collapseWhitespace: true, collapseInlineTagWhitespace: true, conservativeCollapse: true,
+            processScripts: ["text/x-red"], quoteCharacter: "'"
+        }))
+        .pipe(gulp.dest('isa/opcua'))
+});
+
+gulp.task('core', function () {
+    return gulp.src('src/core/*.js')
+        .pipe(gulp.dest('isa/core'));
+});
+
+gulp.task('mapper', function () {
+    return gulp.src('src/mapper/*.js')
+        .pipe(gulp.dest('isa/mapper'));
+});
+
+gulp.task('opcua', function () {
+    return gulp.src('src/opcua/*.js')
+        .pipe(gulp.dest('isa/opcua'));
 });
 
 gulp.task('doc', function (cb) {
-    gulp.src(['README.md', 'src/*Mapper.js', 'src/*Server.js',
-        'src/isa*.js', 'src/*Id.js'], {read: false})
+    gulp.src(['README.md', 'src/core/*.js', 'src/mapper/*.js', 'src/opcua/*.js'], {read: false})
         .pipe(jsdoc(cb));
 });

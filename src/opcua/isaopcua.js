@@ -37,11 +37,11 @@
 var opcua;
 var serverAddressSpace;
 var QualifiedName = require("node-opcua/lib/datamodel/qualified_name").QualifiedName;
+
 /**
  * Basic functions to build OPC UA mappings.
  * @module ISAOPCUA
  */
-
 module.exports = {
 
     opcua: opcua,
@@ -59,7 +59,7 @@ module.exports = {
         return {
             'mappingType': 'new',
             'machine': machineConfig.machine,
-            'interface': machineConfig.interface,
+            'protocolName': machineConfig.protocolName,
             'name': node.name,
             'topic': node.topic,
             'group': node.group,
@@ -80,7 +80,7 @@ module.exports = {
         return {
             'mappingType': 'write',
             'machine': machineConfig.machine,
-            'interface': machineConfig.interface,
+            'protocolName': machineConfig.protocolName,
             'name': node.name,
             'topic': node.topic,
             'group': node.group,

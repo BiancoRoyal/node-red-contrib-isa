@@ -31,50 +31,39 @@
 
  **/
 
-/**
- * Material Lot node.
- * @module ISA95MaterialLotNode
- */
 
-module.exports = function(RED) {
-    function ISA95MaterialLotNode(config) {
+module.exports = function (RED) {
+
+    function ISA95BatchMLHelperNode(config) {
 
         RED.nodes.createNode(this, config);
         this.action = config.action;
 
         var node = this;
-        this.on('input', function (msg) {
-            console.log("ISA95MaterialLotTypeNode Action: " + node.action);
 
-            var data = msg.payload;
-            console.log("ISA95MaterialLotTypeNode Type:" + typeof data);
-
-            switch (node.action) {
-                case "default":
-                    if (typeof data === "string") {
-                        data = { 'version': 'MaterialLotType', 'data': data };
-                    }
-                    else
-                    {
-                        data = { 'info': 'ISA95MaterialLotTypeNode unknown data type for default action', 'data': data, 'type': typeof data }
-                    }
-                    break;
-                case "extended":
-                    if (typeof data === "string") {
-                        data = { 'version': 'MaterialLotTypeExtended', 'data': data };
-                    }
-                    else
-                    {
-                        data = { 'info': 'ISA95MaterialLotTypeNode unknown data type for extended action', 'data': data, 'type': typeof data }
-                    }
-                    break;
-                default:
-                    data = { 'info': 'ISA95MaterialLotTypeNode unknown action or data type', 'data': data, 'type': typeof data };
+        function verbose_warn(logMessage) {
+            if (RED.settings.verbose) {
+                node.warn((node.name) ? node.name + ': ' + logMessage : 'BatchML-Helper: ' + logMessage);
             }
+        }
 
-            msg.payload = data;
+        function verbose_log(logMessage) {
+            if (RED.settings.verbose) {
+                node.log(logMessage);
+            }
+        }
+
+        node.on('input', function (msg) {
+
+            verbose_log("ISA95BatchMLHelperNodeAction: " + node.action);
+
             node.send(msg);
         });
+
+        node.on('close', function () {
+            verbose_log("close");
+        });
     }
-    RED.nodes.registerType("ISA95-Material-Lot", ISA95MaterialLotNode);
+
+    RED.nodes.registerType("BatchML-Helper", ISA95BatchMLHelperNode);
 };

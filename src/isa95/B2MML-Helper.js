@@ -59,7 +59,7 @@ module.exports = function (RED) {
             node.send(msg);
         });
 
-        node.on('close', function (msg) {
+        node.on('close', function () {
             verbose_log("close");
         });
     }

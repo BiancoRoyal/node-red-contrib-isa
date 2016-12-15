@@ -34,14 +34,15 @@
 'use strict';
 
 var isaOpcUa;
+var dynamicNodes;
 /**
  * ISA functions to work with mappings.
  * @module ISAMapping
  */
-
 module.exports = {
 
     isaOpcUa: isaOpcUa,
+    dynamicNodes: dynamicNodes,
 
     /**
      * Searching the containing of the property "mappingType".
@@ -77,31 +78,35 @@ module.exports = {
      * @param {object} variableDatatype - OPC UA variable datatype
      * @returns {object} item of list
      */
-    search_mapped_to_read: function (parentNodeId, nodeId, dynamicNodes) {
+    search_mapped_to_read: function (parentNodeId, nodeId) {
 
         if (!nodeId) {
             throw new Error("search_mapped_to_read nodeId have to be a valid object");
         }
 
-        if (dynamicNodes.hasOwnProperty(nodeId.toString())) {
-            return dynamicNodes[nodeId.toString()];
+        if (module.exports.dynamicNodes.hasOwnProperty(nodeId.toString())) {
+            // console.log(nodeId.toString() + " -> " + module.exports.dynamicNodes[nodeId.toString()]);
+            return module.exports.dynamicNodes[nodeId.toString()];
+        } else {
+            // console.log(nodeId.toString() + " is not in dynamic node set");
         }
     },
     /**
      * Add mapped object of address space objects to dynamic list.
      * @function
+     * @param parentNodeId - node id of parent
      * @param {String} nodeId - nodeId to search for
      * @param {object} variableDatatype - OPC UA variable datatype
-     * @returns {object} item of list
+     * @returns {*} item of list
      */
-    add_mapped_to_list: function (parentNodeId, nodeId, variableDatatype, dynamicNodes) {
+    add_mapped_to_list: function (parentNodeId, nodeId, variableDatatype) {
 
         if (!nodeId) {
             throw new Error("add_mapped_to_list nodeId have to be a valid object");
         }
 
-        if (dynamicNodes.hasOwnProperty(nodeId.toString())) {
-            return dynamicNodes[nodeId.toString()];
+        if (module.exports.dynamicNodes.hasOwnProperty(nodeId.toString())) {
+            return module.exports.dynamicNodes[nodeId.toString()];
         }
 
         var item = {
@@ -112,19 +117,21 @@ module.exports = {
             'variableDatatype': variableDatatype
         };
 
-        dynamicNodes[nodeId.toString()] = item;
+        // console.log("adding " + nodeId.toString() + " to dynamic node set");
+        module.exports.dynamicNodes[nodeId.toString()] = item;
 
         return item;
     },
     /**
      * Write mapped or adds mapping object to a dynamic list of address space objects.
      * @function
+     * @param parentNodeId - node id of parent
      * @param {String} nodeId - nodeId to search for
      * @param {object} value - value to write
      * @param {object} typeStructure - to find the init value @see ISAOPCUA:mapOpcUaDatatypeAndInitValue
-     * @returns {object} item if found, otherwise item created
+     * @returns {*} item if found, otherwise item created
      */
-    search_mapped_to_write: function (parentNodeId, nodeId, value, typeStructure, dynamicNodes) {
+    search_mapped_to_write: function (parentNodeId, nodeId, value, typeStructure) {
 
         if (!nodeId) {
             throw new Error("search_mapped_to_write nodeId have to be a valid object");
@@ -132,10 +139,10 @@ module.exports = {
 
         var item;
 
-        if (dynamicNodes.hasOwnProperty(nodeId.toString())) {
+        if (module.exports.dynamicNodes.hasOwnProperty(nodeId.toString())) {
 
-            item = dynamicNodes[nodeId.toString()];
-            this.set_item_value(item, value);
+            item = module.exports.dynamicNodes[nodeId.toString()];
+            item = this.set_item_value(item, value);
         }
         else {
 
@@ -152,7 +159,7 @@ module.exports = {
                 };
 
                 this.set_item_value(item, value);
-                dynamicNodes[nodeId.toString()] = item;
+                module.exports.dynamicNodes[nodeId.toString()] = item;
             }
         }
 

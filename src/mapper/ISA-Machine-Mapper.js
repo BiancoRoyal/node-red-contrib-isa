@@ -31,29 +31,36 @@
 
  **/
 
-
+/**
+ * That nodes is to communicate with the node-red-contrib-modbus node package nodes.
+ * see https://www.npmjs.com/package/node-red-contrib-modbus
+ *
+ * @namespace ISAMachineMapper
+ * @param RED
+ */
 module.exports = function (RED) {
     'use strict';
+
     var opcua = require("node-opcua");
-    var isaBasics = require('./isabasics');
-    var isaOpcUa = require('./isaopcua');
+    var isaBasics = require('./../core/isabasics');
+    var isaOpcUa = require('./../opcua/isaopcua');
 
     isaOpcUa.opcua = opcua;
 
-    function ISAMachineIOMapperNode(n) {
+    function ISAMachineMapperNode(configNode) {
 
-        RED.nodes.createNode(this, n);
+        RED.nodes.createNode(this, configNode);
 
-        this.name = n.name;
-        this.topic = n.topic;
-        this.register = n.register;
-        this.group = n.group;
-        this.order = n.order;
-        this.mappings = n.mappings;
+        this.name = configNode.name;
+        this.topic = configNode.topic;
+        this.register = configNode.register;
+        this.group = configNode.group;
+        this.order = configNode.order;
+        this.mappings = configNode.mappings;
 
         var node = this;
 
-        var machineConfig = RED.nodes.getNode(n.machineid);
+        var machineConfig = RED.nodes.getNode(configNode.machineid);
 
         function verbose_warn(logMessage) {
             if (RED.settings.verbose) {
@@ -67,19 +74,35 @@ module.exports = function (RED) {
             }
         }
 
+        verbose_log("machine mapper initialization " + machineConfig.machine);
+
+        /**
+         * The mapper node needs an array of 16Bit chunks (as read from Modbus) or values.
+         * The length of the array has to be the same as configured in the node config, otherwise it stops
+         * writing and mapping the incoming data.
+         *
+         *
+         */
         this.on('input', function (msg) {
 
             var data = msg.payload;
 
-            if (node.register != msg.payload.length) {
+            if (!Array.isArray(msg.payload)
+                || node.register != msg.payload.length) {
+
                 node.error("configured size doesn't match input length of register (array)");
                 node.send(msg);
                 return;
             }
 
-            var structuredValues = [];
+            verbose_log("machineConfig: " + machineConfig.machine + " on interface " + machineConfig.interface);
 
-            if (node.mappings.length > 0 && data.length > 0) {
+            var structuredValues = {};
+
+            if (node.mappings.length && node.mappings.length > 0 && data.length && data.length > 0) {
+
+                verbose_log("node.mappings.length: " + node.mappings.length + " data.length:" + data.length);
+                console.time("mapping");
 
                 node.mappings.forEach(function (mapping) {
 
@@ -110,18 +133,26 @@ module.exports = function (RED) {
                         }
                     }
 
-                    structuredValues.add(isaOpcUa.mapOpcUaMachineValue(mapping, machineValue, bitValue));
+                    structuredValues[mapping.structureNodeId] = isaOpcUa.mapOpcUaMachineValue(mapping, machineValue, bitValue);
+
                 });
+
+                console.timeEnd("mapping");
             }
 
-            var sendMapping = isaOpcUa.newOpcUaMachineMapping(machineConfig, node);
+            var sendMapping = isaOpcUa.newOpcUaMachineMapping(machineConfig, node, structuredValues);
             var sendWriteValue = isaOpcUa.writeOpcUaMachineMapping(machineConfig, node, structuredValues);
 
             msg = [{payload: data}, {payload: sendWriteValue}, {payload: sendMapping}];
 
             node.send(msg);
         });
+
+        this.on('close', function () {
+            verbose_log("machine mapper close");
+            machineConfig = null;
+        });
     }
 
-    RED.nodes.registerType("ISA-Machine-IOMapper", ISAMachineIOMapperNode);
+    RED.nodes.registerType("ISA-Machine-Mapper", ISAMachineMapperNode);
 };

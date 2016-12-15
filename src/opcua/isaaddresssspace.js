@@ -32,17 +32,18 @@
  **/
 
 'use strict';
+
 var isaOpcUa;
 var isaResultMessage;
 var serverAddressSpace;
 var isaMapping;
 var os = require("os");
 var counterValue = 0;
+
 /**
  * Basic functions to work with OPC UA address space of node-opcua.
  * @module ISAAddressSpace
  */
-
 module.exports = {
 
     isaOpcUa: isaOpcUa,
@@ -277,6 +278,7 @@ module.exports = {
                 get: function () {
 
                     var item = module.exports.isaMapping.search_mapped_to_read(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure);
+                    // console.log(mapping.structureParentNodeId + " " + mapping.structureNodeId + " " + mapping.typeStructure + " get as item:" + JSON.stringify(item));
 
                     if (item && item.value) {
 
@@ -303,6 +305,7 @@ module.exports = {
                 set: function (variant) {
 
                     var item = module.exports.isaMapping.search_mapped_to_read(mapping.structureParentNodeId, mapping.structureNodeId, mapping.typeStructure);
+                    // console.log(mapping.structureParentNodeId + " " + mapping.structureNodeId + " " + mapping.typeStructure + " get as item:" + JSON.stringify(item));
 
                     if (variant !== null
                         || variant
