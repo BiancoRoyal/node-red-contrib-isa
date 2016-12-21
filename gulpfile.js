@@ -46,8 +46,8 @@ gulp.task('default', function () {
 });
 
 gulp.task('docs', ['doc', 'docIcons', 'docExamples', 'docImages']);
-gulp.task('websites', ['core-web', 'mapper-web', 'opcua-web']);
-gulp.task('nodejs', ['core', 'mapper', 'opcua']);
+gulp.task('websites', ['core-web', 'web-nodes', 'opcua-web']);
+gulp.task('nodejs', ['core', 'nodes', 'opcua']);
 gulp.task('build', ['nodejs', 'websites']);
 gulp.task('publish', ['build', 'icons', 'vendor', 'helpers', 'docs']);
 
@@ -76,7 +76,7 @@ gulp.task('helpers', function () {
 });
 
 gulp.task('clean', function () {
-    return gulp.src('isa')
+    return gulp.src(['isa', 'docs/gen'])
         .pipe(clean({force: true}))
 });
 
@@ -91,15 +91,15 @@ gulp.task('core-web', function () {
         .pipe(gulp.dest('isa/core'))
 });
 
-gulp.task('mapper-web', function () {
-    return gulp.src('src/mapper/*.htm*')
+gulp.task('web-nodes', function () {
+    return gulp.src('src/*.htm*')
         .pipe(htmlmin({
             minifyJS: true, minifyCSS: true, minifyURLs: true,
             maxLineLength: 120, preserveLineBreaks: false,
             collapseWhitespace: true, collapseInlineTagWhitespace: true, conservativeCollapse: true,
             processScripts: ["text/x-red"], quoteCharacter: "'"
         }))
-        .pipe(gulp.dest('isa/mapper'))
+        .pipe(gulp.dest('isa'))
 });
 
 gulp.task('opcua-web', function () {
@@ -118,9 +118,9 @@ gulp.task('core', function () {
         .pipe(gulp.dest('isa/core'));
 });
 
-gulp.task('mapper', function () {
-    return gulp.src('src/mapper/*.js')
-        .pipe(gulp.dest('isa/mapper'));
+gulp.task('nodes', function () {
+    return gulp.src('src/*.js')
+        .pipe(gulp.dest('isa'));
 });
 
 gulp.task('opcua', function () {
