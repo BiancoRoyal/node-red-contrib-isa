@@ -43,10 +43,10 @@ module.exports = function (RED) {
     // add server ISA95 extension to node-opcua
     require("node-opcua-isa95")(opcua);
 
-    var isaMapping = require('./isamapping');
-    var isaAddressSpace = require('./isaaddresssspace');
-    var isaResultMessages = require('./../core/isaconst').ISAResultMessage;
-    var isaOpcUa = require('./isaopcua');
+    var isaMapping = require('./opcua/isamapping');
+    var isaAddressSpace = require('./opcua/isaaddresssspace');
+    var isaResultMessages = require('./core/isaconst').ISAResultMessage;
+    var isaOpcUa = require('./opcua/isaopcua');
 
     isaOpcUa.opcua = opcua;
 
@@ -155,7 +155,7 @@ module.exports = function (RED) {
                 isaAddressSpace.serverAddressSpace = serverAddressSpace;
                 isaOpcUa.serverAddressSpace = serverAddressSpace;
 
-                var instantiateSampleISA95Model = require("./../helpers/isa95_demo_address_space").instantiateSampleISA95Model;
+                var instantiateSampleISA95Model = require("./helpers/isa95_demo_address_space").instantiateSampleISA95Model;
                 instantiateSampleISA95Model(serverAddressSpace);
 
                 isaAddressSpace.construct_my_address_space(serverAddressSpace);

@@ -32,22 +32,22 @@
  **/
 
 /**
- * That nodes is to communicate with the node-red-contrib-modbusio node package nodes.
- * https://www.npmjs.com/package/node-red-contrib-modbusio
+ * That nodes is to communicate with the node-red-contrib-modbus node package nodes.
+ * see https://www.npmjs.com/package/node-red-contrib-modbus
  *
- * @namespace ISAMachineMapperIO
+ * @namespace ISAMachineMapper
  * @param RED
  */
-
 module.exports = function (RED) {
     'use strict';
+
     var opcua = require("node-opcua");
-    var isaBasics = require('./../core/isabasics');
-    var isaOpcUa = require('./../opcua/isaopcua');
+    var isaBasics = require('./core/isabasics');
+    var isaOpcUa = require('./opcua/isaopcua');
 
     isaOpcUa.opcua = opcua;
 
-    function ISAMachineIOMapperNode(configNode) {
+    function ISAMachineMapperNode(configNode) {
 
         RED.nodes.createNode(this, configNode);
 
@@ -74,8 +74,15 @@ module.exports = function (RED) {
             }
         }
 
-        verbose_log("machine io mapper initialization " + machineConfig.machine);
+        verbose_log("machine mapper initialization " + machineConfig.machine);
 
+        /**
+         * The mapper node needs an array of 16Bit chunks (as read from Modbus) or values.
+         * The length of the array has to be the same as configured in the node config, otherwise it stops
+         * writing and mapping the incoming data.
+         *
+         *
+         */
         this.on('input', function (msg) {
 
             var data = msg.payload;
@@ -88,12 +95,14 @@ module.exports = function (RED) {
                 return;
             }
 
-            var structuredValues = [];
+            verbose_log("machineConfig: " + machineConfig.machine + " on interface " + machineConfig.interface);
+
+            var structuredValues = {};
 
             if (node.mappings.length && node.mappings.length > 0 && data.length && data.length > 0) {
 
                 verbose_log("node.mappings.length: " + node.mappings.length + " data.length:" + data.length);
-                console.time("mappingio");
+                console.time("mapping");
 
                 node.mappings.forEach(function (mapping) {
 
@@ -124,17 +133,14 @@ module.exports = function (RED) {
                         }
                     }
 
-                    structuredValues.add(isaOpcUa.mapOpcUaMachineValue(mapping, machineValue, bitValue));
+                    structuredValues[mapping.structureNodeId] = isaOpcUa.mapOpcUaMachineValue(mapping, machineValue, bitValue);
 
                 });
 
-                console.timeEnd("mappingio");
-            }
-            else {
-                verbose_warn("there is no mapping configuration");
+                console.timeEnd("mapping");
             }
 
-            var sendMapping = isaOpcUa.newOpcUaMachineMapping(machineConfig, node);
+            var sendMapping = isaOpcUa.newOpcUaMachineMapping(machineConfig, node, structuredValues);
             var sendWriteValue = isaOpcUa.writeOpcUaMachineMapping(machineConfig, node, structuredValues);
 
             msg = [{payload: data}, {payload: sendWriteValue}, {payload: sendMapping}];
@@ -143,10 +149,10 @@ module.exports = function (RED) {
         });
 
         this.on('close', function () {
-            verbose_log("machine io mapper close");
+            verbose_log("machine mapper close");
             machineConfig = null;
         });
     }
 
-    RED.nodes.registerType("ISA-Machine-IOMapper", ISAMachineIOMapperNode);
+    RED.nodes.registerType("ISA-Machine-Mapper", ISAMachineMapperNode);
 };

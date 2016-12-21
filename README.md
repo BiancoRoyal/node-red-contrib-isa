@@ -31,7 +31,8 @@ Run the following command for global install
 
 # Author
 Copyright 2016 - [Klaus Landsdorf][3]
-BSD 3-Clause License
+
+[BSD 3-Clause License](LICENSE)
 
 # Important
 

@@ -1,10 +1,10 @@
 {
   "name": "node-red-contrib-isa",
-  "version": "0.4.1",
+  "version": "0.4.3",
   "description": "A Node-RED node to build ISA-95 and ISA-88 based connectivity.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/biancode/node-red-contrib-isa.git"
+    "url": "https://github.com/biancode/node-red-contrib-isa"
   },
   "keywords": [
     "node-red",
@@ -36,10 +36,10 @@
   },
   "node-red": {
     "nodes": {
-      "ISA95OpcUaServerNode": "isa/opcua/ISA95-OPCUA-Server.js",
-      "ISAMachineMapperNode": "isa/mapper/ISA-Machine-Mapper.js",
-      "ISAMachineIOMapperNode": "isa/mapper/ISA-Machine-IOMapper.js",
-      "ISAMachineIdNode": "isa/mapper/ISA-MachineId.js"
+      "ISA95OpcUaServerNode": "isa/ISA95-OPCUA-Server.js",
+      "ISAMachineMapperNode": "isa/ISA-Machine-Mapper.js",
+      "ISAMachineIOMapperNode": "isa/ISA-Machine-IOMapper.js",
+      "ISAMachineIdNode": "isa/ISA-MachineId.js"
     }
   },
   "dependencies": {
