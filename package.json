@@ -45,7 +45,7 @@
   "dependencies": {
     "async": "^2.1.4",
     "collections": "^5.0.6",
-    "node-opcua": "0.0.60",
+    "node-opcua": "2.74.0",
     "node-opcua-isa95": "0.0.2",
     "prettyjson": "^1.2.1",
     "should": "^11.1.2",
